@@ -1,0 +1,144 @@
+\documentclass[a4paper,10pt,DIV10,openright,openbib]{scrreprt}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage[fixlanguage]{babelbib}
+\selectbiblanguage{english}
+\usepackage{float}
+\usepackage{scrpage2}   %KOMA PG Settings
+\usepackage{tocloft}    %ToC Control
+\usepackage{graphicx}   %Better graphics
+\usepackage{wrapfig}    %Better wrap text around figures
+\usepackage{array}      %Array Evironments (Matrices,etc)
+\usepackage{tabularx}   %Better Tables
+\usepackage{tikz}       %Tikz
+\usepackage{pdfpages}   %Append PDF
+\usepackage[english]{varioref}  %Intelligent page refs
+\usepackage{makeidx}    %Index
+\usepackage{listings}   %Better Listings
+\usepackage{textcomp}   %Unicode Block
+\usepackage{hyperref}   %Clickable links in .pdf
+\usepackage{caption}    %Custom Caps in Floats
+\usepackage{rotating}
+\usepackage{mathtools}  %fancy arrows
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{titling}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{1}
+\usepackage[stable]{footmisc}
+\setlength{\textheight}{1.1\textheight} %BREAKS FOOTER?
+%\usepackage{showframe} %DEBUG
+
+% Bibliography no pagebreak:
+\let\oldbibliography\bibliography% Store \bibliography in \oldbibliography
+\renewcommand{\bibliography}[1]{{%
+  \let\chapter\section% Copy \section over \chapter
+  \oldbibliography{#1}}}% Old \bibliography
+
+
+\RedeclareSectionCommand[
+  beforeskip=-1.0\baselineskip,
+  afterskip=-1\baselineskip]{subsection}
+\RedeclareSectionCommand[
+  beforeskip=-.75\baselineskip,
+  afterskip=-1\baselineskip]{subsubsection}
+\RedeclareSectionCommand[
+  beforeskip=-2sp,
+  afterskip=2\baselineskip]{chapter}
+\makeindex
+    \renewcommand{\abstractname}{System Background}
+\usepackage{listings}
+\usepackage{color}
+ 
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+ 
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+ 
+\lstset{style=mystyle}
+
+\begin{document}
+
+
+%----------------------------
+% Title
+% ----------------------------
+%titlepage
+\thispagestyle{empty}
+\begin{center}
+\begin{minipage}{0.75\linewidth}
+    \centering
+%University logo
+    \includegraphics[width=120px,height=120px]{avatar-logo-blueonwhite.png} \\[0.3\baselineskip]
+    \vspace{2cm}
+%Thesis title
+    {\uppercase{\Large System Design Project: \\ Project Plan\par}}
+    \vspace{3cm}
+%Author's name
+    {\large Authors: \\
+      Stefani Genkova   - \textit{s1437453} \\
+      Tizzy MacGregor   - \textit{s1508959} \\
+      Glen Merry        - \textit{s1531807} \\
+      Alexander Pietz   - \textit{s1529373} \\
+      Jasper Snel       - \textit{s1452790} \\
+      Philip Van Biljon - \textit{s1545259} \\
+      Boyan Yotov       - \textit{s1509922} \\
+    \par} 
+    \vspace{3cm}
+%Degree
+    {\Large DispensED - Group 17 \par}
+    \vspace{3cm}
+%Date
+    {\Small Last Update: \today}
+\end{minipage}
+\end{center}
+\clearpage
+%----------------------------
+% /Title
+%----------------------------
+\newpage
+
+\tableofcontents
+% \listoffigures
+
+\pagestyle{plain}
+%\chapter{System Background}
+%\section{System Description}
+
+\section{Purpose of this Document}
+This document is prepared as part of the project for the System Design Project course
+at the University of Edinburgh. This project plan will highlight the goals we
+have set as a team as well as how we will achieve them - Including a breakdown
+of our resources and overview of our organisational structure.
+
+\chapter{2..}
+
+%\bibliographystyle{alpha}
+\bibliographystyle{alphadin}
+\bibliography{Bibl}
+%\begingroup
+%\printindex 
+%\endgroup
+
+   
+\end{document}
