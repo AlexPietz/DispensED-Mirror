@@ -28,7 +28,9 @@
 \setcounter{tocdepth}{1}
 \usepackage[stable]{footmisc}
 \setlength{\textheight}{1.1\textheight} %BREAKS FOOTER?
-%\usepackage{showframe} %DEBUG
+% \usepackage{showframe} %DEBUG
+\usepackage{pgf-pie}
+
 
 % Bibliography no pagebreak:
 \let\oldbibliography\bibliography% Store \bibliography in \oldbibliography
@@ -130,8 +132,8 @@ This document is prepared as part of the project for the System Design Project c
 at the University of Edinburgh. This project plan will highlight the goals we
 have set as a team as well as how we will achieve them - Including a breakdown
 of our resources and overview of our organisational structure.
-
-\chapter{Goals}
+\vspace{2cm}
+{\let\clearpage\relax  \chapter{Goals}}
 % 3 marks ~1.5 pages
 % The goal description should give an overview of the user problem and the robot
 % task solution you propose. This could be in the form of a user story. If
@@ -158,20 +160,52 @@ dispensed. The system will also have a wide range of administrative functions
 available to staff, such as setting alerts on low stock levels or non-admittance of drugs.
 
 \section{Technical Subgoals}
+\subsection{Communication}
+The robot needs to communicate with a DICE machine that will support vision and
+connection to the back-end.
 \subsection{Movement}
-
+The robot needs to be able to move along the facility it is being deployed in.
+The navigation will happen along predefined routes using marks on the floor.
+Additional care must be taken in regards to possible collisions as the robot
+will operate in a generally dynamic environment. 
 \subsection{Vision}
+Several vision systems are needed in order for the robot to accomplish its objective:
 \subsubsection{Orientation}
+The robot must be able to recognise and process the markings on the floor that
+are used for navigation. Additionally, the system must know where the rooms are
+it is trying to service - separate floor markings or an alternative kind of
+internal representation of the environment may be used for this.
 \subsubsection{Barcode Scanning}
+Medication is dispensed to the patient after they have authorised themselves.
+The main form of authorisation will be bar codes (these could be affixed to the
+patients' wristbands). The system must be able to read the barcodes
 
 \subsection{Dispensing of Medication}
-\subsubsection{Single Pills (Vitamins)}
-\subsubsection{Pre Packed Sets of Medication}
+The robot will support giving out medication in two different ways:
+\subsubsection{Pre Packed Sets of Medication} Most care homes get pharmaceutical drugs come
+pre-packed from the pharmacy, sorted by patient. In this case, the robot must
+give out the container with the pre-packaged drugs to the correct patient. There
+needs to be support to store drugs for several different people that may not
+collect their drugs in order.
+\subsubsection{Single Pills (Vitamins)} For pills that do not come pre-packed
+(such as vitamins), a different kind of dispenser is needed. This dispenser must
+be able to give out single pills, one at a time.
 
+\subsection{Back-end}
+The back-end will offer a range of configuration as well as storing the patient
+database. Configured alerts will be sent out from the back-end, too.
+\subsubsection{Database} The Database will store patient information, including
+which room they reside in and their daily medication preferences. These
+preferences include:
+\begin{itemize}
+  \item Patient information
+  \item Type of medication needed (pre-packaged and/or loose?)
+  \item Deadline for drug admission (to send out alerts)
+\end{itemize}
+\subsubsection{User Interface} There will be a user interface to serve as the
+front-end to the aforementioned configuration.
 
-\subsection{Backend}
-\subsubsection{Database}
-\subsubsection{User Interface}
+\\ TODO : ADD MILESTONES HERE \newpage
 
 {\let\clearpage\relax \chapter{Resource Allocation}}
 % 3 marks for time planning ~1.5 pages
@@ -188,25 +222,66 @@ available to staff, such as setting alerts on low stock levels or non-admittance
 % should also contain an assessment of the risks that you anticipate for the
 % project, and contingency planning that you have done to guard against them.
 
-
+% Guest lectures: 8hrs 
+% Demos and Pitches: 8hrs
+% Planning and Presenting: 30hrs
+% Development work: 150hrs
+% Miscellaneous: 4hrs
+\begin{figure}[h]
+  \centring
+  \includegraphics[width=\textwidth]{pie.png}
+  \caption{Planned Time Deployment}
+\end{figure}
 
 {\let\clearpage\relax \chapter{Organisational Structure}}
 % 3 marks ~1.5 pages
-% Finally, how you organise yourselves as a group and plan your work will be key to your success within the System Design project. You should detail the approach that you have taken to group organisation (e.g. specific roles of group members), meetings, communication, code-sharing, task allocation, and progress tracking. 
+% Finally, how you organise yourselves as a group and plan your work will be key
+% to your success within the System Design project. You should detail the
+% approach that you have taken to group organisation (e.g. specific roles of
+% group members), meetings, communication, code-sharing, task allocation, and
+% progress tracking.
+\section{Team Structure}
 The team structure follows loosely a Functional Matrix structure. Alexander was
-assigned as key contact and team mgr <..??>
+assigned as key contact and team manager. As previously mentioned, we split our
+team up into multiple sub-teams working towards the sub-goals of their area. The
+bold person is the ``owner'' of the groups work, meaning they are the first
+point of contact.
+\begin{table}[]
+\centering
+\begin{tabular}{@{}llll@{}}
+\toprule
+Medication Dispensing & \begin{tabular}[c]{@{}l@{}}Software\\ Back \& Front End\end{tabular} & \begin{tabular}[c]{@{}l@{}}Movement \\ (physical)\end{tabular} & Vision          \\ \midrule
+\textbf{Glen}         & \textbf{Alex}                                                        & \textbf{Philip}                                                & \textbf{Jasper} \\
+Tizzy                 & Bobby                                                                & Jasper                                                         & Stefani         \\
+Philip                & Glen                                                                 & Bobby                                                          &                 \\
+Stefani               & Tizzy                                                                & Alex                                                           &                 \\ \bottomrule
+\end{tabular}
+\caption{Sub Teams}
+\end{table}
+
+\section{Meetings}
+Every morning an informal catch-up is held so that everyone is able to be up to
+date with the current state of the system. These catch-ups usually just include
+any progress from the previous day as well as potential new issues / roadblocks
+that may have emerged.\\
+The whole team meets with our mentor during a one hour fixed meeting slot on
+Thursdays at noon - everyone is expected to attend these meetings.
+Additional meetings follow a drop-in approach and are conducted as needed.
 
 
-\\ There is a one hour fixed meeting slot with our mentor on Thursdays at noon -
-everyone is expected to attend these meetings. Additional meetings follow a
-drop-in approach and are conducted as needed. The main vector of communication
-is the team slack - we use
-Notion as platform for notes,
+\section{Communication and Tools}
+The main vector of communication is the team slack - we use Notion as platform for notes,
 drafts and project management. Specific tasks are allocated via trello-like boards in
 the To-Do section on notion. We decided to use Notion instead of Trello as it
 offers additional functionality. The way we manage both task allocation and
-progress tracking follows the scrumban management system, a mix between SCRUM
-and KANBAN  \\ A private GitHub repository for code version control has been set up for the project.\\
+progress tracking follows SCRUMBAN management system, a mix between SCRUM
+and KANBAN. This system picks out the most useful agile parts from KANBAN while
+maintaining clearly defined roles - We hope this will aid our team with more
+steady progress whilst not locking ourselves into an engineering process that
+requires planning very far ahead. \\
+A private GitHub repository for code version control has been set
+up for the project. We have used GitHub as it was the most accessible since
+everyone already had an account.\\
 \begin{table}[h]
 \centering
 \caption{Tool Overview}
