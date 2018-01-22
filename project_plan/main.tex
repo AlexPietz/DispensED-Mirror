@@ -109,7 +109,7 @@
     {\Large DispensED - Group 17 \par}
     \vspace{3cm}
 %Date
-    {\Small Last Update: \today}
+    {\small Last Update: \today}
 \end{minipage}
 \end{center}
 \clearpage
@@ -131,7 +131,94 @@ at the University of Edinburgh. This project plan will highlight the goals we
 have set as a team as well as how we will achieve them - Including a breakdown
 of our resources and overview of our organisational structure.
 
-\chapter{2..}
+\chapter{Goals}
+% 3 marks ~1.5 pages
+% The goal description should give an overview of the user problem and the robot
+% task solution you propose. This could be in the form of a user story. If
+% appropriate, include reference to existing systems that you are taking as
+% inspiration, or published evidence for the user need that you plan to address.
+% You should then breakdown the overall problem into the main technical
+% subgoals, i.e., what you need to accomplish to get to the desired final
+% result. For each subgoal you should provide an explicit milestone that states
+% what you should have achieved, by what date, and what evidence you will
+% present to show you have achieved it (e.g. a demonstration of the feature to
+% your client).
+
+There is a large shortage of nursing staff across the UK. The NHS alone reported
+that nurses account for 38\% of overall vacancies\footnote{http://digital.nhs.uk/catalogue/PUB30033}.
+Care home staff, specifically, spend about 40-50\% of their time with drug
+related activities. Administration errors occur 8.4\% of the time \cite{CHUMS},
+meaning if a patient receives medication three times a day, there is a 1 in 4
+chance that an error occurs.\\
+DispensED is aiming to develop a solution to the problems created by manual drug
+administration by creating a robot to do the bulk of the work. Our product will
+move around care homes to different residents' homes. The residents can then
+scan their identification and the appropriate drugs and vitamins will be
+dispensed. The system will also have a wide range of administrative functions
+available to staff, such as setting alerts on low stock levels or non-admittance of drugs.
+
+\section{Technical Subgoals}
+\subsection{Movement}
+
+\subsection{Vision}
+\subsubsection{Orientation}
+\subsubsection{Barcode Scanning}
+
+\subsection{Dispensing of Medication}
+\subsubsection{Single Pills (Vitamins)}
+\subsubsection{Pre Packed Sets of Medication}
+
+
+\subsection{Backend}
+\subsubsection{Database}
+\subsubsection{User Interface}
+
+{\let\clearpage\relax \chapter{Resource Allocation}}
+% 3 marks for time planning ~1.5 pages
+% 3 marks for identification of dependencies and risks ~1.5 pages
+% The plan should explain how you will deploy your resources - 200 hours per
+% group member over the semester - to achieve your goals. Note you should take
+% into account time required by scheduled sessions (guest lectures, demo days,
+% final presentations) and time used in planning and presenting (group meetings,
+% report writing etc.), as well as time for building the system. You should also
+% note the resources you have in terms of skills, equipment, etc. You must
+% include a Gantt chart, which should clearly identify any dependencies between
+% tasks. You may find it useful to make a revised version of your plan/gantt
+% chart at key points in the project, in discussion with your client. The report
+% should also contain an assessment of the risks that you anticipate for the
+% project, and contingency planning that you have done to guard against them.
+
+
+
+{\let\clearpage\relax \chapter{Organisational Structure}}
+% 3 marks ~1.5 pages
+% Finally, how you organise yourselves as a group and plan your work will be key to your success within the System Design project. You should detail the approach that you have taken to group organisation (e.g. specific roles of group members), meetings, communication, code-sharing, task allocation, and progress tracking. 
+The team structure follows loosely a Functional Matrix structure. Alexander was
+assigned as key contact and team mgr <..??>
+
+
+\\ There is a one hour fixed meeting slot with our mentor on Thursdays at noon -
+everyone is expected to attend these meetings. Additional meetings follow a
+drop-in approach and are conducted as needed. The main vector of communication
+is the team slack - we use
+Notion as platform for notes,
+drafts and project management. Specific tasks are allocated via trello-like boards in
+the To-Do section on notion. We decided to use Notion instead of Trello as it
+offers additional functionality. The way we manage both task allocation and
+progress tracking follows the scrumban management system, a mix between SCRUM
+and KANBAN  \\ A private GitHub repository for code version control has been set up for the project.\\
+\begin{table}[h]
+\centering
+\caption{Tool Overview}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Tool   & Purpose                                   & Link     \\ \midrule
+Slack  & Main Communications HUB, Chat             & \url{https://sdpgroup17.slack.com/} \\
+Notion & Meeting Notes, Drafts, Project Management & \url{https://www.notion.so/dispensed/} \\
+GitHub & Code Version Control                      & \url{https://github.com/xMythycle/DispensED/} \\ \bottomrule
+\end{tabular}
+\end{table}
+
 
 %\bibliographystyle{alpha}
 \bibliographystyle{alphadin}
