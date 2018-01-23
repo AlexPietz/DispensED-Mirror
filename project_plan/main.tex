@@ -159,52 +159,92 @@ dispensed. The system will also have a wide range of administrative functions
 available to staff, such as setting alerts on low stock levels or non-admittance of drugs.
 
 \section{Technical Subgoals}
-\subsection{Communication}
-The robot needs to communicate with a DICE machine that will support vision and
-connection to the back-end.
-\subsection{Movement}
-The robot needs to be able to move along the facility it is being deployed in.
-The navigation will happen along predefined routes using marks on the floor.
-Additional care must be taken in regards to possible collisions as the robot
-will operate in a generally dynamic environment. 
-\subsection{Vision}
-Several vision systems are needed in order for the robot to accomplish its objective:
-\subsubsection{Orientation}
-The robot must be able to recognise and process the markings on the floor that
-are used for navigation. Additionally, the system must know where the rooms are
-it is trying to service - separate floor markings or an alternative kind of
-internal representation of the environment may be used for this.
-\subsubsection{Barcode Scanning}
-Medication is dispensed to the patient after they have authorised themselves.
-The main form of authorisation will be bar codes (these could be affixed to the
-patients' wristbands). The system must be able to read the barcodes
+The system can roughly be divided into 4 parts, for each of which different milestones
+can be set. Those parts will be described in this chapter. The milestones are to be
+presented at each demonstration, with the final demonstration being for the entire
+system.
+
+\subsection{Movement and Physical Frame}
+The robot needs to be able to move along the facility it is being deployed in, using
+motors mounted on a frame. The frame will also have to accommodate the other
+physical parts of the system, and handle communication to the central system.I'm 
+The navigation will happen along predefined routes using marks on the floor.\\
+%Additional care must be taken in regards to possible collisions as the robot
+%will operate in a generally dynamic environment.
+The different milestones for these can be set as follows:
+\begin{itemize}
+  \item Initial control of simple frame with pre-programmed movement
+  \item Full frame with pre-programmed movement
+  \item Full frame with remote-controlled movement
+\end{itemize}
 
 \subsection{Dispensing of Medication}
 The robot will support giving out medication in two different ways:
-\subsubsection{Pre Packed Sets of Medication} Most care homes get pharmaceutical drugs come
+\begin{itemize}
+  \item \textbf{Pre Packed Sets of Medication} Most care homes get pharmaceutical drugs come
 pre-packed from the pharmacy, sorted by patient. In this case, the robot must
 give out the container with the pre-packaged drugs to the correct patient. There
 needs to be support to store drugs for several different people that may not
 collect their drugs in order.
-\subsubsection{Single Pills (Vitamins)} For pills that do not come pre-packed
+  \item \textbf{Single Pills (Vitamins)} For pills that do not come pre-packed
 (such as vitamins), a different kind of dispenser is needed. This dispenser must
 be able to give out single pills, one at a time.
-
-\subsection{Back-end}
-The back-end will offer a range of configuration as well as storing the patient
-database. Configured alerts will be sent out from the back-end, too.
-\subsubsection{Database} The Database will store patient information, including
-which room they reside in and their daily medication preferences. These
-preferences include:
-\begin{itemize}
-  \item Patient information
-  \item Type of medication needed (pre-packaged and/or loose?)
-  \item Deadline for drug admission (to send out alerts)
 \end{itemize}
-\subsubsection{User Interface} There will be a user interface to serve as the
-front-end to the aforementioned configuration.
+Based on these two, the following milestones can be set:
+\begin{itemize}
+  \item Dispensing of individual (vitamin) pills
+  \item Dispensing of pre-packaged pills for specific patients
+  \item Recognising when the pills have been taken by the patient
+\end{itemize}
 
-TODO : ADD MILESTONES HERE \newpage
+\subsection{Vision}
+Several vision systems are needed in order for the robot to accomplish its objective:
+\begin{itemize}
+  \item \textbf{Orientation}
+The robot must be able to recognise and process the markings on the floor that
+are used for navigation. Additionally, the system must know where the rooms are
+it is trying to service - separate floor markings or an alternative kind of
+internal representation of the environment may be used for this.
+  \item \textbf{Barcode Scanning}
+Medication is dispensed to the patient after they have authorised themselves.
+The main form of authorisation will be bar codes (these could be affixed to the
+patients' wristbands). The system must be able to read the barcodes
+\end{itemize}
+This leads to the following milestones:
+\begin{itemize}
+  \item Detecting target line and door markers
+  \item Scanning barcodes and reporting the ID
+  \item Generating directions for actual movement
+\end{itemize}
+
+\subsection{Software Back- and Front-end}
+To support the robot in getting the appropriate medication to patients, there will
+be a back-end system in place, running on a central computer. This will hold a 
+database of patients, medication, and what should be dispensed when. This, in
+turn will be accompanied by a user interface for nursing staff, to manage patients
+and monitor what medication has been delivered. \\
+This leads to the following milestones:
+\begin{itemize}
+  \item A design plan of how the software will be structured
+  \item Back-end operations (databases)
+  \item User interface
+\end{itemize}
+
+
+%\subsection{Back-end}
+%The back-end will offer a range of configuration as well as storing the patient
+%database. Configured alerts will be sent out from the back-end, too.
+%\subsubsection{Database} The Database will store patient information, including
+%which room they reside in and their daily medication preferences. These
+%preferences include:
+%\begin{itemize}
+%  \item Patient information
+%  \item Type of medication needed (pre-packaged and/or loose?)
+%  \item Deadline for drug admission (to send out alerts)
+%\end{itemize}
+%\subsubsection{User Interface} There will be a user interface to serve as the
+%front-end to the aforementioned configuration.
+
 
 {\let\clearpage\relax \chapter{Resource Allocation}}
 % 3 marks for time planning ~1.5 pages
@@ -242,7 +282,12 @@ resources based on progress.\\
 One thing that has been kept open is the period leading up to the final demonstration.
 As this is a complex system with many parts, plenty of time is necessary to add them.
 If this turns out to be too long, the time will instead be used to expand on functionalities
-and polish up the final product.
+and polish up the final product.\\
+In terms of  actual time spent on the project, the pie chart (2.1) shows roughly how
+much time is spent on actual development of the system. This comes down to about
+14 hours per person per week. This will not be tracked anywhere; instead, every member
+will compare his own contributions against those of others on the team, discussing any
+problems in the regular meetings.
 
 \section{Risks and Contingency Planning}
 The most apparent risk that would hinder project progress is absence of team members. 
@@ -269,18 +314,24 @@ assigned as key contact and team manager. As previously mentioned, we split our
 team up into multiple sub-teams working towards the sub-goals of their area. The
 bold person is the ``owner'' of the groups work, meaning they are the first
 point of contact.\\\\
-The teams were created based on a combination of preference and competence, meaning each member will get to work on aspects they find interesting and are competent in as much as possible. To ensure the teams are communicating properly, each member is on two different teams, to create as much possible overlap between the teams as possible. This has the added benefit of ensuring that each team has an understanding of the other parts of the system.\\
-While the teams are inherently flexible since members are on two teams simultaneously, there should also always be room for larger shifts. This could be due to unexpected workload, or if it turns out someone has valuable ideas for other aspects of the system. Any shifting like this would be discussed with the entire team.
+The teams were created based on a combination of preference and competence, meaning each member will get to work on aspects they
+find interesting and are competent in as much as possible. To ensure the teams are communicating properly, each member is on two
+different teams, to create as much possible overlap between the teams as possible. This has the added benefit of ensuring that
+each team has an understanding of the other parts of the system.\\
+While the teams are inherently flexible since members are on two teams simultaneously, there should also always be room for
+larger shifts. This could be due to unexpected workload, or if it turns out someone has valuable ideas for other aspects of the
+system. Any shifting like this would be discussed with the entire team.
 
 \begin{table}[]
 \centering
 \begin{tabular}{@{}llll@{}}
 \toprule
-Medication Dispensing & \begin{tabular}[c]{@{}l@{}}Software\\ Back \& Front End\end{tabular} & \begin{tabular}[c]{@{}l@{}}Movement \\ (physical)\end{tabular} & Vision          \\ \midrule
-\textbf{Glen}         & \textbf{Alex}                                                        & \textbf{Philip}                                                & \textbf{Jasper} \\
-Tizzy                 & Bobby                                                                & Jasper                                                         & Stefani         \\
-Philip                & Glen                                                                 & Bobby                                                          &                 \\
-Stefani               & Tizzy                                                                & Alex                                                           &                 \\ \bottomrule
+Medication Dispensing & \begin{tabular}[c]{@{}l@{}}Software\\ Back \& Front End\end{tabular} &
+\begin{tabular}[c]{@{}l@{}}Movement \\ (physical)\end{tabular} & Vision \\ \midrule
+\textbf{Glen} & \textbf{Alex} & \textbf{Philip} & \textbf{Jasper} \\
+Tizzy & Bobby & Jasper & Stefani \\
+Philip & Glen & Bobby & \\
+Stefani & Tizzy & Alex & \\ \bottomrule
 \end{tabular}
 \caption{Sub Teams}
 \end{table}
@@ -330,5 +381,4 @@ GitHub & Code Version Control                      & \url{https://github.com/xMy
 %\printindex 
 %\endgroup
 
-   
 \end{document}
