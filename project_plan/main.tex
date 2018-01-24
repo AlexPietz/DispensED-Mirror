@@ -22,6 +22,7 @@
 \usepackage{rotating}
 \usepackage{mathtools}  %fancy arrows
 \usepackage{amsmath}
+\usepackage{amsfonts}
 \usepackage{booktabs}
 \usepackage{titling}
 \setcounter{secnumdepth}{3}
@@ -126,13 +127,13 @@
 %\chapter{System Background}
 %\section{System Description}
 
-\section{Purpose of this Document}
+\section*{Purpose of this Document}
 This document is prepared as part of the project for the System Design Project course
 at the University of Edinburgh. This project plan will highlight the goals we
 have set as a team as well as how we will achieve them, including a breakdown
 of our resources and overview of our organisational structure.
 \vspace{2cm}
-{\let\clearpage\relax  \chapter{Goals}}
+{\let\clearpage\relax  \chapter{Introduction and Goals}}
 % 3 marks ~1.5 pages
 % The goal description should give an overview of the user problem and the robot
 % task solution you propose. This could be in the form of a user story. If
@@ -146,14 +147,18 @@ of our resources and overview of our organisational structure.
 % your client).
 
 There is a large shortage of nursing staff across the UK. The NHS alone reported
-that nurses account for 38\% of overall vacancies\footnote{http://digital.nhs.uk/catalogue/PUB30033}.
-Care home staff, specifically, spend about 40-50\% of their time with drug
-related activities. Administration errors occur 8.4\% of the time \cite{CHUMS},
-meaning that if a patient receives medication three times a day, there is a 1 in 4
-chance that an error will occur.\\
+that nurses account for 38\% of overall vacancies \cite{NHS}.
+The \textit{Care Home Use of Medication Study} has found that care home staff, specifically, spend about 40-50\% of their time with drug
+related activities. The study has also found, that administration errors occur
+8.4\% of the time \cite{CHUMS}, meaning that if a patient receives medication
+three times a day, there is a 1 in 4 chance that an error will
+occur\footnote{This can be viewed as Bernoulli experiment with 3 trials where the successive
+  event is the correct administration of drugs. It follows that
+  $\mathbb{P}(an\ error\ occurs) = 1 - \mathbb{P}(no\ error\ occurs) =
+  \binom{3}{0}*0.916^3*0.084^0 \approx 0.23$}. \\
 DispensED is aiming to develop a solution to the problems created by manual drug
 administration by creating a robot to do the bulk of the work. Our product will
-move around care homes to different residents' homes. The residents can then
+move around care homes to different residents' rooms. The residents can then
 scan their identification and the appropriate drugs and vitamins will be
 dispensed. The system will also have a wide range of administrative functions
 available to staff, such as setting alerts on low stock levels or non-admittance of drugs.
@@ -168,15 +173,15 @@ The robot needs to be able to move around the facility in which it is deployed, 
 motors mounted on a frame. The frame will also have to accommodate the other
 physical parts of the system, and handle communication to the central system. 
 The navigation will happen along predefined routes using marks on the floor. 
-These marks are made using black tape.\\
+These marks are made using coloured tape.\\
 %Additional care must be taken in regards to possible collisions as the robot
 %will operate in a generally dynamic environment.
 The different milestones for these can be set as follows:
-\begin{itemize}
+\begin{enumerate}
   \item Initial control of simple frame with pre-programmed movement
   \item Full frame with pre-programmed movement
-  \item Full frame with movement that is controlled remotely
-\end{itemize}
+  \item Full frame with movement that is controlled by a remote computer
+\end{enumerate}
 
 \subsection{Dispensing of Medication}
 The robot will support giving out medication that does not require a special environment
@@ -192,11 +197,12 @@ collect their drugs in order.
 be able to give out single pills, one at a time.
 \end{itemize}
 Based on these two aspects, the following milestones can be set:
-\begin{itemize}
+\begin{enumerate}
   \item Dispensing of individual (vitamin) pills
   \item Dispensing of pre-packaged pills for specific patients
   \item Recognising when the pills have been taken from the robot by the patient
-\end{itemize}
+    (dispensing tray empty)
+\end{enumerate}
 
 \subsection{Vision}
 Several vision systems are needed in order for the robot to accomplish its objective:
@@ -212,11 +218,12 @@ The main form of authorisation will be barcodes (these could be affixed to the
 patients' wristbands). The system must be able to read these barcodes
 \end{itemize}
 This leads to the following milestones:
-\begin{itemize}
+\begin{enumerate}
   \item Detecting target line and door markers
   \item Scanning barcodes and reporting the ID
-  \item Generating directions for actual movement
-\end{itemize}
+  \item Generating directions for actual movement: Using the lines to steer the
+    robot along the lines.
+\end{enumerate}
 
 \subsection{Software Back- and Front-end}
 To support the robot in getting the appropriate medication to patients, there will
@@ -225,11 +232,11 @@ database of patients, medication, and what should be dispensed when. This, in
 turn, will be accompanied by a user interface for nursing staff, to manage patients
 and monitor what medication has been delivered. \\
 This leads to the following milestones:
-\begin{itemize}
+\begin{enumerate}
   \item A design plan of how the software will be structured
-  \item Back-end operations (databases)
-  \item User interface
-\end{itemize}
+  \item Implementation of database and software interface (API) to modify the database.
+  \item Working User interface that inter-operates with the back-end
+\end{enumerate}
 
 
 %\subsection{Back-end}
@@ -267,26 +274,30 @@ This leads to the following milestones:
 % Planning and Presenting: 30hrs
 % Development work: 150hrs
 % Miscellaneous: 4hrs
+
+\section{Time Planning}
+
 \begin{figure}[h]
 %   \centring
   \includegraphics[width=\textwidth]{pie.png}
-  \caption{Planned Time Deployment}
+  \caption{Planned Individual Time Deployment}
+  \label{piec}
 \end{figure}
 
-\section{Time Planning}
-The Gantt chart (appendix 1) shows roughly what should be done when, and who is responsible.
+The Gantt chart (Appendix 1) shows what should be done when, and who is responsible.
 While we believe that Gantt charts are incredibly useful as tools to set goals and track
-progress, we don't think this should dictate the entire project, especially considering
+progress, we don't think this should dictate the entire project flow, especially considering
 the highly flexible nature of the sub-teams. The focus will be on meeting the deadlines set
 in the Gantt chart and analysing what resources should be dedicated to certain
 tasks based on progress.\\
-One thing that has been kept open is the period leading up to the final demonstration.
+We specifically left the period leading up to the final demonstration generic.
 As this is a complex system with many parts, plenty of time is necessary to integrate them.
 If there is time left over, then it will be used to expand funcitnality and polish up the final product.\\
-In terms of the total time to be spent on the project, the pie chart (2.1) shows roughly how
+In terms of the total time to be spent on the project, the pie chart (Figure \ref{piec}) shows roughly how
 much is allocated to actual development of the system. This equates to around
-14 hours per person per week. This will not be tracked anywhere; instead, every member
-will compare his own contributions against those of others on the team, discussing any
+14 hours per person per week. These can roughly be allocated to tasks. Every
+team member
+can then  compare their own contributions against those of others on the team, discussing any
 problems in the regular meetings.
 
 \section{Risks and Contingency Planning}
@@ -309,9 +320,25 @@ sub-teams to maintain regular communication with each other to make this process
 % group members), meetings, communication, code-sharing, task allocation, and
 % progress tracking.
 \section{Team Structure}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}llll@{}}
+\toprule
+Medication Dispensing & \begin{tabular}[c]{@{}l@{}}Software\\ Back \& Front End\end{tabular} &
+\begin{tabular}[c]{@{}l@{}}Movement \\ (physical)\end{tabular} & Vision \\ \midrule
+\textbf{Glen} & \textbf{Alex} & \textbf{Philip} & \textbf{Jasper} \\
+Tizzy & Bobby & Jasper & Stefani \\
+Philip & Glen & Bobby & \\
+Stefani & Tizzy & Alex & \\ \bottomrule
+\end{tabular}
+\caption{Sub Teams - Key Contacts marked in \textbf{bold}.}
+\label{subt}
+\end{table}
+
 The team structure loosely follows a Functional Matrix structure with Alexander
 assigned as the key contact and team manager. As previously mentioned, we split our
-team up into multiple sub-teams (table 3.1) working towards the sub-goals of their area. The
+team up into multiple sub-teams (Table \ref{subt}) working towards the sub-goals of their area. The
 person marked in bold assigned as the ``owner'' of the groups work, meaning they are the first
 point of contact.\\\\
 The teams were created based on a combination of preference and competence, meaning each member will get to work on aspects they
@@ -323,27 +350,15 @@ movements between sub-teams. This could be due to unexpected workload,
 or if it turns out someone has valuable ideas for other aspects of the system. 
 Any such shifts this would be discussed with the entire team.
 
-\begin{table}[]
-\centering
-\begin{tabular}{@{}llll@{}}
-\toprule
-Medication Dispensing & \begin{tabular}[c]{@{}l@{}}Software\\ Back \& Front End\end{tabular} &
-\begin{tabular}[c]{@{}l@{}}Movement \\ (physical)\end{tabular} & Vision \\ \midrule
-\textbf{Glen} & \textbf{Alex} & \textbf{Philip} & \textbf{Jasper} \\
-Tizzy & Bobby & Jasper & Stefani \\
-Philip & Glen & Bobby & \\
-Stefani & Tizzy & Alex & \\ \bottomrule
-\end{tabular}
-\caption{Sub Teams}
-\end{table}
-
 \section{Meetings}
-Every morning an informal catch-up is held so that everyone is able to be up to
+Every morning an informal stand-up is held so that everyone is able to be up to
 date with the current state of the system. These catch-ups usually just include
 any progress from the previous day as well as potential new issues / roadblocks
 that may have emerged.\\
 The whole team meets with our mentor during a one hour fixed meeting slot on
-Thursdays at noon - everyone is expected to attend these meetings.
+Thursdays at noon - everyone is expected to attend these meetings. Quick
+meetings will also happen directly after client demonstrations in order to
+identify any issues that arose during the demo and plan to mitigate these in future.
 Additional meetings follow a drop-in approach and are conducted as needed.
 We will also meet after each demnstration to reflect on how it went and to plan
 what needs to be improved before the next milestone.
@@ -356,7 +371,7 @@ the To-Do section on Notion. We decided to use Notion instead of Trello as it
 offers additional functionality. The way we manage both task allocation and
 progress tracking follows SCRUMBAN management system, a mix between SCRUM
 and KANBAN. This system picks out the most useful agile parts from KANBAN while
-maintaining clearly defined roles - We hope this will aid our team with more
+maintaining clearly defined roles - This will aid our team with more
 steady progress whilst not locking ourselves into an engineering process that
 requires planning very far ahead. \\
 A private GitHub repository for code version control has been set
@@ -383,5 +398,8 @@ GitHub & Code Version Control                      & \url{https://github.com/xMy
 %\begingroup
 %\printindex 
 %\endgroup
+
+% Gantt Chart:
+\includepdf[landscape=true]{gantt_chart}
 
 \end{document}
