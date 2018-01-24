@@ -149,8 +149,8 @@ There is a large shortage of nursing staff across the UK. The NHS alone reported
 that nurses account for 38\% of overall vacancies\footnote{http://digital.nhs.uk/catalogue/PUB30033}.
 Care home staff, specifically, spend about 40-50\% of their time with drug
 related activities. Administration errors occur 8.4\% of the time \cite{CHUMS},
-meaning if a patient receives medication three times a day, there is a 1 in 4
-chance that an error occurs.\\
+meaning that if a patient receives medication three times a day, there is a 1 in 4
+chance that an error will occur.\\
 DispensED is aiming to develop a solution to the problems created by manual drug
 administration by creating a robot to do the bulk of the work. Our product will
 move around care homes to different residents' homes. The residents can then
@@ -159,13 +159,12 @@ dispensed. The system will also have a wide range of administrative functions
 available to staff, such as setting alerts on low stock levels or non-admittance of drugs.
 
 \section{Technical Subgoals}
-The system can roughly be divided into 4 parts, for each of which different milestones
-can be set. Those parts will be described in this chapter. The milestones are to be
+The system can roughly be divided into 4 parts, which will be desribed in this chapter, with different milestones set for each. The milestones are to be
 presented at each demonstration, with the final demonstration being for the entire
 system.
 
 \subsection{Movement and Physical Frame}
-The robot needs to be able to move along the facility it is being deployed in, using
+The robot needs to be able to move around the facility in which it is deployed, using
 motors mounted on a frame. The frame will also have to accommodate the other
 physical parts of the system, and handle communication to the central system. 
 The navigation will happen along predefined routes using marks on the floor. 
@@ -181,9 +180,9 @@ The different milestones for these can be set as follows:
 
 \subsection{Dispensing of Medication}
 The robot will support giving out medication that does not require a special environment
-(for example frozen). It does this in two different ways:
+(for example requiring temperature control). It does this in two different ways:
 \begin{itemize}
-  \item \textbf{Pre Packed Sets of Medication} Most care homes get pharmaceutical drugs come
+  \item \textbf{Pre Packed Sets of Medication} Most care homes get pharmaceutical drugs
 pre-packed from the pharmacy, sorted by patient. In this case, the robot must
 give out the container with the pre-packaged drugs to the correct patient. There
 needs to be support to store drugs for several different people that may not
@@ -192,7 +191,7 @@ collect their drugs in order.
 (such as vitamins), a different kind of dispenser is needed. This dispenser must
 be able to give out single pills, one at a time.
 \end{itemize}
-Based on these two, the following milestones can be set:
+Based on these two aspects, the following milestones can be set:
 \begin{itemize}
   \item Dispensing of individual (vitamin) pills
   \item Dispensing of pre-packaged pills for specific patients
@@ -204,13 +203,13 @@ Several vision systems are needed in order for the robot to accomplish its objec
 \begin{itemize}
   \item \textbf{Orientation}
 The robot must be able to recognise and process the markings on the floor that
-are used for navigation. Additionally, the system must know where the rooms are
+are used for navigation. Additionally, the system must know where the rooms are that
 it is trying to service - separate floor markings or an alternative kind of
 internal representation of the environment may be used for this.
   \item \textbf{Barcode Scanning}
 Medication is dispensed to the patient after they have authorised themselves.
-The main form of authorisation will be bar codes (these could be affixed to the
-patients' wristbands). The system must be able to read the barcodes
+The main form of authorisation will be barcodes (these could be affixed to the
+patients' wristbands). The system must be able to read these barcodes
 \end{itemize}
 This leads to the following milestones:
 \begin{itemize}
@@ -223,7 +222,7 @@ This leads to the following milestones:
 To support the robot in getting the appropriate medication to patients, there will
 be a back-end system in place, running on a central computer. This will hold a 
 database of patients, medication, and what should be dispensed when. This, in
-turn will be accompanied by a user interface for nursing staff, to manage patients
+turn, will be accompanied by a user interface for nursing staff, to manage patients
 and monitor what medication has been delivered. \\
 This leads to the following milestones:
 \begin{itemize}
@@ -276,32 +275,31 @@ This leads to the following milestones:
 
 \section{Time Planning}
 The Gantt chart (appendix 1) shows roughly what should be done when, and who is responsible.
-While we believe Gantt charts are incredibly useful as tools to set goals and track
-progress, we don't think this should dictate the entire project. Especially considering
-the highly flexible nature of the sub-teams, the focus will be on meeting deadlines set
-in the Gantt chart, analysing what resources should be dedicated to certain
-resources based on progress.\\
+While we believe that Gantt charts are incredibly useful as tools to set goals and track
+progress, we don't think this should dictate the entire project, especially considering
+the highly flexible nature of the sub-teams. The focus will be on meeting the deadlines set
+in the Gantt chart and analysing what resources should be dedicated to certain
+tasks based on progress.\\
 One thing that has been kept open is the period leading up to the final demonstration.
-As this is a complex system with many parts, plenty of time is necessary to add them.
-If this turns out to be too long, the time will instead be used to expand on functionalities
-and polish up the final product.\\
-In terms of  actual time spent on the project, the pie chart (2.1) shows roughly how
-much time is spent on actual development of the system. This comes down to about
+As this is a complex system with many parts, plenty of time is necessary to integrate them.
+If there is time left over, then it will be used to expand funcitnality and polish up the final product.\\
+In terms of the total time to be spent on the project, the pie chart (2.1) shows roughly how
+much is allocated to actual development of the system. This equates to around
 14 hours per person per week. This will not be tracked anywhere; instead, every member
 will compare his own contributions against those of others on the team, discussing any
 problems in the regular meetings.
 
 \section{Risks and Contingency Planning}
 The most apparent risk that would hinder project progress is absence of team members. 
-As will be discussed in the next chapter, we split our team into different sub-teams. 
-Every sub team has multiple members and the project management ensures that no 
+As will be discussed in the next chapter, we split our team into multiple sub-teams. 
+Every sub-team has multiple members and the project management ensures that no 
 one team member has knowledge that no other 
 team member possesses. This way, the impact of any one team member being ill or 
 otherwise unable to work is minimised.\\
-Other risks arise from needing to recombine 
-the smaller parts into one robot. Initially, the time leading up to the final demonstration
-will be used for this purpose, which should be enough. It is still essential for the 
-sub-teams to keep communicating to keep this process as straightforward as possible.
+Other risks arise from needing to integrate 
+the smaller parts of the system into one robot. We plan to use the time leading up to the final demonstration 
+for this purpose, which should be adequate. It is still essential for the 
+sub-teams to maintain regular communication with each other to make this process as straightforward as possible.
 
 {\let\clearpage\relax \chapter{Organisational Structure}}
 % 3 marks ~1.5 pages
@@ -311,18 +309,19 @@ sub-teams to keep communicating to keep this process as straightforward as possi
 % group members), meetings, communication, code-sharing, task allocation, and
 % progress tracking.
 \section{Team Structure}
-The team structure follows loosely a Functional Matrix structure. Alexander was
-assigned as key contact and team manager. As previously mentioned, we split our
+The team structure loosely follows a Functional Matrix structure with Alexander
+assigned as the key contact and team manager. As previously mentioned, we split our
 team up into multiple sub-teams (table 3.1) working towards the sub-goals of their area. The
-bold person is the ``owner'' of the groups work, meaning they are the first
+person marked in bold assigned as the ``owner'' of the groups work, meaning they are the first
 point of contact.\\\\
 The teams were created based on a combination of preference and competence, meaning each member will get to work on aspects they
-find interesting and are competent in as much as possible. To ensure the teams are communicating properly, each member is on two
-different teams, to create as much possible overlap between the teams as possible. This has the added benefit of ensuring that
+find interesting and are most competent in. To ensure that the teams communicate effectively, each member is assigned to two
+different teams, to create as much overlap between the teams as possible. This has the added benefit of ensuring that
 each team has an understanding of the other parts of the system.\\
-While the teams are inherently flexible since members are on two teams simultaneously, there should also always be room for
-larger shifts. This could be due to unexpected workload, or if it turns out someone has valuable ideas for other aspects of the
-system. Any shifting like this would be discussed with the entire team.
+While the teams are inherently flexible, since members are on two teams simultaneously, there is also room for
+movements between sub-teams. This could be due to unexpected workload, 
+or if it turns out someone has valuable ideas for other aspects of the system. 
+Any such shifts this would be discussed with the entire team.
 
 \begin{table}[]
 \centering
@@ -351,9 +350,9 @@ what needs to be improved before the next milestone.
 
 
 \section{Communication and Tools}
-The main vector of communication is the team Slack - we use Notion as platform for notes,
+The main vector of communication is the team Slack, while Notion is used as a platform for notes,
 drafts and project management. Specific tasks are allocated via trello-like boards in
-the To-Do section on notion. We decided to use Notion instead of Trello as it
+the To-Do section on Notion. We decided to use Notion instead of Trello as it
 offers additional functionality. The way we manage both task allocation and
 progress tracking follows SCRUMBAN management system, a mix between SCRUM
 and KANBAN. This system picks out the most useful agile parts from KANBAN while
