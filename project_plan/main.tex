@@ -129,7 +129,7 @@
 \section{Purpose of this Document}
 This document is prepared as part of the project for the System Design Project course
 at the University of Edinburgh. This project plan will highlight the goals we
-have set as a team as well as how we will achieve them - Including a breakdown
+have set as a team as well as how we will achieve them, including a breakdown
 of our resources and overview of our organisational structure.
 \vspace{2cm}
 {\let\clearpage\relax  \chapter{Goals}}
@@ -167,19 +167,21 @@ system.
 \subsection{Movement and Physical Frame}
 The robot needs to be able to move along the facility it is being deployed in, using
 motors mounted on a frame. The frame will also have to accommodate the other
-physical parts of the system, and handle communication to the central system.I'm 
-The navigation will happen along predefined routes using marks on the floor.\\
+physical parts of the system, and handle communication to the central system. 
+The navigation will happen along predefined routes using marks on the floor. 
+These marks are made using black tape.\\
 %Additional care must be taken in regards to possible collisions as the robot
 %will operate in a generally dynamic environment.
 The different milestones for these can be set as follows:
 \begin{itemize}
   \item Initial control of simple frame with pre-programmed movement
   \item Full frame with pre-programmed movement
-  \item Full frame with remote-controlled movement
+  \item Full frame with movement that is controlled remotely
 \end{itemize}
 
 \subsection{Dispensing of Medication}
-The robot will support giving out medication in two different ways:
+The robot will support giving out medication that does not require a special environment
+(for example frozen). It does this in two different ways:
 \begin{itemize}
   \item \textbf{Pre Packed Sets of Medication} Most care homes get pharmaceutical drugs come
 pre-packed from the pharmacy, sorted by patient. In this case, the robot must
@@ -194,7 +196,7 @@ Based on these two, the following milestones can be set:
 \begin{itemize}
   \item Dispensing of individual (vitamin) pills
   \item Dispensing of pre-packaged pills for specific patients
-  \item Recognising when the pills have been taken by the patient
+  \item Recognising when the pills have been taken from the robot by the patient
 \end{itemize}
 
 \subsection{Vision}
@@ -273,7 +275,7 @@ This leads to the following milestones:
 \end{figure}
 
 \section{Time Planning}
-The Gantt chart (appendix 1) shows roughly what should be done when, and who responsible.
+The Gantt chart (appendix 1) shows roughly what should be done when, and who is responsible.
 While we believe Gantt charts are incredibly useful as tools to set goals and track
 progress, we don't think this should dictate the entire project. Especially considering
 the highly flexible nature of the sub-teams, the focus will be on meeting deadlines set
@@ -344,10 +346,12 @@ that may have emerged.\\
 The whole team meets with our mentor during a one hour fixed meeting slot on
 Thursdays at noon - everyone is expected to attend these meetings.
 Additional meetings follow a drop-in approach and are conducted as needed.
+We will also meet after each demnstration to reflect on how it went and to plan
+what needs to be improved before the next milestone.
 
 
 \section{Communication and Tools}
-The main vector of communication is the team slack - we use Notion as platform for notes,
+The main vector of communication is the team Slack - we use Notion as platform for notes,
 drafts and project management. Specific tasks are allocated via trello-like boards in
 the To-Do section on notion. We decided to use Notion instead of Trello as it
 offers additional functionality. The way we manage both task allocation and
