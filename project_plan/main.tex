@@ -132,8 +132,8 @@
 \section*{Purpose of this Document}
 This document is prepared as part of the project for the System Design Project course
 at the University of Edinburgh. This project plan will highlight the goals we
-have set as a team as well as how we will achieve them, including a breakdown
-of our resources and overview of our organisational structure.
+have set as a team, as well as how we will achieve them, and includes a breakdown
+of our resources and an overview of our organisational structure.
 \vspace{2cm}
 {\let\clearpage\relax  \chapter{Introduction and Goals}}
 % 3 marks ~1.5 pages
@@ -148,10 +148,10 @@ of our resources and overview of our organisational structure.
 % present to show you have achieved it (e.g. a demonstration of the feature to
 % your client).
 
-There is a large shortage of nursing staff across the UK. The NHS alone reported
-that nurses account for 38\% of overall vacancies \cite{NHS}.
+There is a large shortage of nursing staff across the UK. The NHS reported in 2017
+that nurses account for 38\% of overall vacancies in England \cite{NHS}.
 The \textit{Care Home Use of Medication Study} has found that care home staff, specifically, spend about 40-50\% of their time with drug
-related activities. The study has also found, that administration errors occur
+related activities. The study also found that administration errors occur
 8.4\% of the time \cite{CHUMS}, meaning that if a patient receives medication
 three times a day, there is a 1 in 4 chance that an error will
 occur\footnote{This can be viewed as Bernoulli experiment with 3 trials where the successive
@@ -192,11 +192,11 @@ The robot will support giving out medication that does not require a special env
   \item \textbf{Pre Packed Sets of Medication} Most care homes get pharmaceutical drugs
 pre-packed from the pharmacy, sorted by patient. In this case, the robot must
 give out the container with the pre-packaged drugs to the correct patient. There
-needs to be support to store drugs for several different people that may not
-collect their drugs in order.
+needs to be support for storing drugs for several different people who may not
+collect their drugs in any predefined order.
   \item \textbf{Single Pills (Vitamins)} For pills that do not come pre-packed
-(such as vitamins), a different kind of dispenser is needed. This dispenser must
-be able to give out single pills, one at a time.
+(such as vitamins), a different kind of dispenser is needed. This dispenser must be able to hold a collection 
+of a type of pill and give out single pills, one at a time.
 \end{itemize}
 Based on these two aspects, the following milestones can be set:
 \begin{enumerate}
@@ -211,7 +211,7 @@ Several vision systems are needed in order for the robot to accomplish its objec
 \begin{itemize}
   \item \textbf{Orientation}
 The robot must be able to recognise and process the markings on the floor that
-are used for navigation. Additionally, the system must know where the rooms are that
+are used for navigation. Additionally, the system must know the location of the rooms that
 it is trying to service - separate floor markings or an alternative kind of
 internal representation of the environment may be used for this.
   \item \textbf{Barcode Scanning}
@@ -222,7 +222,7 @@ patients' wristbands). The system must be able to read these barcodes
 This leads to the following milestones:
 \begin{enumerate}
   \item Detecting target line and door markers
-  \item Scanning barcodes and reporting the ID
+  \item Scanning barcodes and using them to report the ID of the patient
   \item Generating directions for actual movement: Using the lines to steer the
     robot along the lines.
 \end{enumerate}
@@ -230,14 +230,14 @@ This leads to the following milestones:
 \subsection{Software Back- and Front-end}
 To support the robot in getting the appropriate medication to patients, there will
 be a back-end system in place, running on a central computer. This will hold a 
-database of patients, medication, and what should be dispensed when. This, in
-turn, will be accompanied by a user interface for nursing staff, to manage patients
+database of patients, medication, and what should be dispensed at which times. This, in
+turn, will be accompanied by a user interface, which nursing staff can use to manage patients
 and monitor what medication has been delivered. \\
 This leads to the following milestones:
 \begin{enumerate}
   \item A design plan of how the software will be structured
   \item Implementation of database and software interface (API) to modify the database.
-  \item Working User interface that inter-operates with the back-end
+  \item Working user interface that inter-operates with the back-end
 \end{enumerate}
 
 
@@ -294,9 +294,9 @@ in the Gantt chart and analysing what resources should be dedicated to certain
 tasks based on progress.\\
 We specifically left the period leading up to the final demonstration generic.
 As this is a complex system with many parts, plenty of time is necessary to integrate them.
-If there is time left over, then it will be used to expand funcitnality and polish up the final product.\\
+If there is time left over, then it will be used to expand functionality and polish up the final product.\\
 In terms of the total time to be spent on the project, the pie chart (Figure \ref{piec}) shows roughly how
-much is allocated to actual development of the system. This equates to around
+much time per person is allocated to actual development of the system. This equates to around
 14 hours per person per week. These can roughly be allocated to tasks. Every
 team member
 can then  compare their own contributions against those of others on the team, discussing any
@@ -323,7 +323,7 @@ combined into the risk matrix \ref{risks} below.
   \begin{tabular}[c]{@{}l@{}}Team Members may be absent\\due to illness, etc\end{tabular}                       & \cellcolor{red!50} High     & \cellcolor{green!50} Low    & \begin{tabular}[c]{@{}l@{}}Division into sub-teams.\\ Multiple members in sub-teams create\\ redundancy. No one team member has \\ unique knowledge about the product.\end{tabular} \\ \midrule[0.1pt]
   \begin{tabular}[c]{@{}l@{}}Integration of sub-systems \\may be delayed if \\sub-systems are delayed\end{tabular} & \cellcolor{yellow!50} Medium & \cellcolor{red!50} High     & \begin{tabular}[c]{@{}l@{}}Regular communication between sub-\\teams ensures that they can maintain a\\ similar level of progress.\end{tabular}                                     \\ \midrule[0.1pt] 
 \begin{tabular}[c]{@{}l@{}}Acquisition of critical items \\ may be delayed\end{tabular}                        & \cellcolor{green!50} Low     & \cellcolor{red!50} High     & \begin{tabular}[c]{@{}l@{}}Critical items must be ordered as soon\\ as possible.\end{tabular}                                                                                       \\ \midrule[0.1pt]
-\begin{tabular}[c]{@{}l@{}}Support Staff may be unavailable\\ (Garry, Mentor, ..)\end{tabular}                 & \cellcolor{yellow!50} Medium & \cellcolor{yellow!50}Medium & \begin{tabular}[c]{@{}l@{}}Maintaining good progress towards our\\ milestones should minimise any last\\-minute support needs.\end{tabular}                                         \\ \midrule[0.1pt]
+\begin{tabular}[c]{@{}l@{}}Support Staff may be unavailable\\ (Garry, Mentor, ..)\end{tabular}                 & \cellcolor{yellow!50} Medium & \cellcolor{yellow!50}Medium & \begin{tabular}[c]{@{}l@{}}Maintaining good progress towards our\\ milestones should minimise any \\last-minute support needs.\end{tabular}                                         \\ \midrule[0.1pt]
   Unrealistic Schedules                                                                                          & \cellcolor{yellow!50} Medium & \cellcolor{red!50}Low       & \begin{tabular}[c]{@{}l@{}}SCRUMBAN will enable us to re-plan\\ to meet deadlines accordingly\end{tabular}                                                                          \\ \midrule[0.1pt]
   Software compatibility issues                                                                                  & \cellcolor{green!50} Low     & \cellcolor{red!50}High      & \begin{tabular}[c]{@{}l@{}}Software is to be vigorously tested\\ on DICE \end{tabular}                                                                                               \\ \midrule[0.1pt]
 User Interface unusable                                                                                        & \cellcolor{green!50} Low     & \cellcolor{green!50}Low     & Test UX with client prior to demo.                                                                                                           \\\bottomrule                                      
@@ -358,7 +358,7 @@ Stefani & Tizzy & Alex & \\ \bottomrule
 
 The team structure loosely follows a Functional Matrix structure with Alexander
 assigned as the key contact and team manager. As previously mentioned, we split our
-team up into multiple sub-teams (Table \ref{subt}) working towards the sub-goals of their area. The
+team up into multiple sub-teams, (Table \ref{subt}) each working towards the sub-goals of their area. The
 person marked in bold assigned as the ``owner'' of the groups work, meaning they are the first
 point of contact.\\\\
 The teams were created based on a combination of preference and competence, meaning each member will get to work on aspects they
@@ -373,7 +373,7 @@ Any such shifts this would be discussed with the entire team.
 \section{Meetings}
 Every morning an informal stand-up is held so that everyone is able to be up to
 date with the current state of the system. These catch-ups usually just include
-any progress from the previous day as well as potential new issues / roadblocks
+any progress from the previous day as well as any potential new issues or roadblocks
 that may have emerged.\\
 The whole team meets with our mentor during a one hour fixed meeting slot on
 Thursdays at noon - everyone is expected to attend these meetings. Quick
@@ -391,7 +391,7 @@ the To-Do section on Notion. We decided to use Notion instead of Trello as it
 offers additional functionality. The way we manage both task allocation and
 progress tracking follows SCRUMBAN management system, a mix between SCRUM
 and KANBAN. This system picks out the most useful agile parts from KANBAN while
-maintaining clearly defined roles - This will aid our team with more
+maintaining clearly defined roles. This will aid our team with more
 steady progress whilst not locking ourselves into an engineering process that
 requires planning very far ahead. \\
 A private GitHub repository for code version control has been set
