@@ -1,26 +1,33 @@
-import os
-import zxing
 import cv2
 
 
-def scan_qrcode(img):
+def detect_qr(img):
     """
-    Tries to find a QR code the supplied image (which can be cropped).
-    This uses the zxing QR decoder, written in Java unfortunately. (Way) Too slow for real-time reading
-    :param img: An opencv image (potentially) containing a QR code
-    :return: A list of data in QR codes found, None if none are found.
+    Scans an image for QR codes. If it finds one, it returns True, else False. Should be fast enough to use
+    in real-time applications, might have to add robustness for situations where QR is not on the ground
+    :param img: CV image to scan
+    :return: True if QR code is found, otherwise False
     """
-    # Create folder for opencv to write a temp image to
-    temp_path = "./temp"
-    if not os.path.exists(temp_path):
-        os.makedirs(temp_path)
+    edges = cv2.Canny(img, 100, 200)
+    (_, contours, hierarchy) = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-    cv2.imwrite("temp/qr.jpg", img)
+    mark = 0
 
-    # Have zxing decode the qr
-    reader = zxing.BarCodeReader()
-    barcode = reader.decode("temp/qr.jpg", "QR_CODE")
-    if barcode == None:
-        return None
+    for i in range(0, len(contours)):
+        k = i
+        c = 0
+
+        while hierarchy[0][k][2] != -1:
+            k = hierarchy[0][k][2]
+            c += 1
+
+        if hierarchy[0][k][2] != -1:
+            c += 1
+
+        if c >= 5:
+            mark += 1
+
+    if mark >= 3:
+        return True
     else:
-        return barcode.parsed
+        return False

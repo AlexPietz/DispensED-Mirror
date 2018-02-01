@@ -1,3 +1,2 @@
 numpy==1.14.0
 opencv-python==3.4.0.12
-zxing==0.9.1
