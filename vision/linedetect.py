@@ -11,7 +11,6 @@ def detect_line(img, hue):
     """
     hue_lower = hue - 10
     hue_upper = hue + 10
-    print(str(hue_upper) + str(hue_lower))
 
     hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
@@ -31,3 +30,19 @@ def detect_line(img, hue):
     return thresholded
 
 
+def extract_direction(img, center):
+    clean = cv2.morphologyEx(img, cv2.MORPH_OPEN, np.ones((8, 8), np.uint8))
+    contours = cv2.findContours(clean, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    contours = contours[1]
+    if len(contours) == 0:
+        return None
+
+    contour = max(contours, key=cv2.contourArea)
+
+    def get_y(pair): return pair[0][1]
+    highest_point = min(contour, key=get_y)
+
+    dx = highest_point[0][0] - center[0]
+    dy = center[1] - highest_point[0][1]
+
+    return np.sin(dx/dy)
