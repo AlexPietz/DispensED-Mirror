@@ -2,6 +2,12 @@ import cv2
 
 
 def detect_line(img, hue):
+    """
+    Tries to threshold based on hue.
+    :param img: The (COLOUR!) image to threshold
+    :param hue: The hue value to Threshold on
+    :return: A binary (thresholded) image
+    """
     hue_lower = hue - 15
     hue_upper = hue + 15
 
