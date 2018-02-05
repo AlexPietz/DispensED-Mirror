@@ -4,34 +4,53 @@ import cv2
 def detect_qr(img):
     """
     Scans an image for QR codes. If it finds one, it returns True, else False. Should be fast enough to use
-    in real-time applications, might have to add robustness for situations where QR is not on the ground
+    in real-time applications.
     :param img: CV image to scan
-    :return: True if QR code is found, otherwise False
+    :return: Contours for the markers found, otherwise None
     """
-    # Find edges
-    edges = cv2.Canny(img, 100, 200)
+    # Checks if nested contours are indeed markers
+    def is_marker(contours):
+        if len(contours) != 6:
+            return False
+
+        area_1 = cv2.contourArea(contours[1])
+        area_2 = cv2.contourArea(contours[3])
+        area_3 = cv2.contourArea(contours[5])
+
+        if abs((area_1 / area_2) - (49 / 25)) > 0.5:
+            return False
+        if abs((area_2 / area_3) - (25 / 9)) > 1:
+            return False
+
+        print(abs((area_1 / area_2) - (49 / 25)))
+        print(abs((area_2 / area_3) - (25 / 9)) )
+
+        return True
+
+    # Find edges and contours
+    edges = cv2.Canny(img, 200, 300)
     (_, contours, hierarchy) = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-    mark = 0
+    markers = []
 
-    # Find nested contours, if we find 6 of the (1 parent with 5 children), we assume this is one of the corners
-    # of a QR code. Additional robustness may be added by looking at surface enclosed by the contours and
-    # center of masses.
+    # Go over all of the contours and check how many  children they have
     for i in range(0, len(contours)):
-        k = i
-        c = 0
+        check_next = i
+        contour_list = [contours[check_next]]
 
-        while hierarchy[0][k][2] != -1:
-            k = hierarchy[0][k][2]
-            c += 1
+        while hierarchy[0][check_next][2] != -1:
+            check_next = hierarchy[0][check_next][2]
+            contour_list.append(contours[check_next])
 
-        if hierarchy[0][k][2] != -1:
-            c += 1
+        if hierarchy[0][check_next][2] != -1:
+            contour_list.append(contours[check_next])
 
-        if c >= 5:
-            mark += 1
+        # Check if the contour + its children make for a marker
+        if is_marker(contour_list):
+            markers.append(contour_list[0])
 
-    if mark >= 3:
-        return True
+    # If we have three (or more - will need fixing) markers, we've got a QR
+    if len(markers) >= 3:
+        return markers
     else:
-        return False
+        return None
