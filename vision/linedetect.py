@@ -29,12 +29,9 @@ def detect_line(img, hue):
     else:
         thresholded = cv2.inRange(hsv_img, np.array([hue_lower, 100, 100]), np.array([hue_upper, 255, 255]))
 
-    return thresholded
-
-
-def extract_direction(img, center):
     # Remove noise, we can be fairly aggressive with the kernel as the line should be thick
-    clean = cv2.morphologyEx(img, cv2.MORPH_OPEN, np.ones((8, 8), np.uint8))
+    clean = cv2.morphologyEx(thresholded, cv2.MORPH_OPEN, np.ones((8, 8), np.uint8))
+    clean = cv2.dilate(clean, np.ones((5,5), np.uint8))
     contours = cv2.findContours(clean, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     contours = contours[1]
     if len(contours) == 0:
@@ -43,6 +40,10 @@ def extract_direction(img, center):
     # Find the largest contour, which we assume is the line
     contour = max(contours, key=cv2.contourArea)
 
+    return contour
+
+
+def extract_direction(contour, center):
     # Get the highest point (CV images count y top to bottom, so we want the min y value)
     def get_y(pair): return pair[0][1]
     highest_point = min(contour, key=get_y)
