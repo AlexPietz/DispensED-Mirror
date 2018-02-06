@@ -9,8 +9,8 @@ def detect_line(img, hue):
     :param hue: The hue value to Threshold on
     :return: A binary (thresholded) image
     """
-    hue_lower = hue - 10
-    hue_upper = hue + 10
+    hue_lower = hue - 15
+    hue_upper = hue + 15
 
     hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
