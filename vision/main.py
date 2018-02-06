@@ -4,14 +4,14 @@ import qrscanner
 
 
 if __name__ == "__main__":
-    cap = cv2.VideoCapture("test_orange.mp4")
+    cap = cv2.VideoCapture("test_green_5.mp4")
 
     while cap.isOpened():
         ret, frame = cap.read()
         frame = cv2.resize(frame, (0,0), fx=0.7, fy=0.7)
         qr_contours = qrscanner.detect_qr(frame)
         frame = cv2.drawContours(frame, qr_contours, -1, (0, 255, 0), 3)
-        line_contour = linedetect.detect_line(frame, 15)
+        line_contour = linedetect.detect_line(frame, 70)
         # if not (line_contour == None):
         frame = cv2.drawContours(frame, [line_contour], -1, (0, 0, 255), 3)
 
