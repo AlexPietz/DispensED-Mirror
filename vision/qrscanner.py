@@ -1,4 +1,5 @@
 import cv2
+import zxing
 
 
 def detect_qr(img):
@@ -54,3 +55,13 @@ def detect_qr(img):
         return markers
     else:
         return None
+
+def read_qr(img):
+    """
+    Reads the QR code spotted in the image
+    :param img: image to inspect
+    :return: the parsed QR code
+    """
+    cv2.imwrite("tmp.jpg", img)
+    barcode = zxing.BarCodeReader().decode("tmp.jpg")
+    return barcode.parsed
