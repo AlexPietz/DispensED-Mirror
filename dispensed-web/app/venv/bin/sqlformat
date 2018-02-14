@@ -1,0 +1,10 @@
+#!/afs/inf.ed.ac.uk/user/s15/s1529373/sdp/dispensed-web/app/venv/bin/python
+# EASY-INSTALL-ENTRY-SCRIPT: 'sqlparse==0.2.4','console_scripts','sqlformat'
+__requires__ = 'sqlparse==0.2.4'
+import sys
+from pkg_resources import load_entry_point
+
+if __name__ == '__main__':
+    sys.exit(
+        load_entry_point('sqlparse==0.2.4', 'console_scripts', 'sqlformat')()
+    )
