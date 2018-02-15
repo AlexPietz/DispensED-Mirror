@@ -87,24 +87,30 @@ def read_qr(img, contours):
         markers[2] = markers[1]
         markers[1] = tmp
 
-    ratio = (np.linalg.norm(markers[0][0] - markers[2][2]) / np.linalg.norm(markers[0][0] - markers[0][2]) +
-             np.linalg.norm(markers[0][0] - markers[1][1]) / np.linalg.norm(markers[0][0] - markers[0][1])) / 2
-    ratio = np.sqrt(ratio)
-    ratio = 4.714
+    ratio = 33/7.0 #ratio between marker and the entire qr
 
+    # Define the source QR
     src = [markers[0][0] - 5,
            markers[1][1] + [5, -5],
            markers[2][2] + [-5, 5]]
-    src.append([markers[1][1][0] + (markers[1][3][0] - markers[1][1][0]) * ratio,
-                markers[1][1][1] + (markers[1][3][0] - markers[1][1][1]) * ratio])
-    src[3] = markers[0][0] + ratio * (markers[0][3] - markers[0][0]) + 5
+    # Find the fourth corner (which doesn't have a marker)
+    src.append(markers[1][1] + ratio * (markers[1][3] - markers[1][1]) + 5)
+    src[3] = (src[3] + markers[2][2] + ratio * (markers[2][3] - markers[2][2]) + 5) / 2
+    src[3] = (src[3] + markers[0][0] + ratio * (markers[0][3] - markers[0][0]) + 5) / 2
+
+    # Define a target to map to
+    qr_size = 100
     matrix = cv2.getPerspectiveTransform(np.array(src, dtype="float32"), np.array([
         [0,0],
-        [199, 0],
-        [0, 199],
-        [199, 199]], dtype="float32"))
-    qr_img = cv2.warpPerspective(img, matrix, (200, 200))
-    qr_img = cv2.cvtColor(qr_img, cv2.COLOR_BGR2GRAY)
+        [qr_size - 1, 0],
+        [0, qr_size - 1],
+        [qr_size - 1, qr_size - 1]], dtype="float32"))
+
+    # Do the perspective warp
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    qr_img = cv2.warpPerspective(img, matrix, (qr_size, qr_size))
+
+    # Scan and return results (many diagnostics)
     scanner = zbar.Scanner()
     results = scanner.scan(qr_img)
     if len(results) == 0:
