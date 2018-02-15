@@ -1,9 +1,25 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block app_content %}
 <h1>Hi, {{ current_user.nurse_id }}!</h1>
 Patients:
-{% for patient in patients %}
-<div><p>{{ patient.name }}</p></div>
-{% endfor %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>name</th>
+            <th>age</th>
+            <th>option</th>
+            <tr>
+    </thead>
+    <tbody>
+        {% for patient in patients %}
+        <tr> 
+            <td>{{ patient.name }}</td>
+            <td>{{ patient.age }}</td>
+            <td> ⚙ </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 {% endblock %}
