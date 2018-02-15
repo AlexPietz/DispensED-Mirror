@@ -24,9 +24,6 @@ def detect_qr(img):
         if abs((area_2 / area_3) - (25 / 9)) > 1:
             return False
 
-        print(abs((area_1 / area_2) - (49 / 25)))
-        print(abs((area_2 / area_3) - (25 / 9)) )
-
         return True
 
     # Find edges and contours
@@ -110,13 +107,7 @@ def read_qr(img, contours):
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     qr_img = cv2.warpPerspective(img, matrix, (qr_size, qr_size))
 
-    # Scan and return results (many diagnostics)
+    # Scan and return results
     scanner = zbar.Scanner()
     results = scanner.scan(qr_img)
-    if len(results) == 0:
-        print("NONE=====================")
-        cv2.imshow("Missed", qr_img)
-        cv2.waitKey(0)
-    for result in results:
-        print(result.type, result.data, result.quality, result.position)
-    return qr_img
+    return results
