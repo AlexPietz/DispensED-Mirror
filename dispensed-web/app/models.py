@@ -1,6 +1,20 @@
-from app import db
+from app import db, login
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
-class Nurse(db.Model):
+def str2int(s, chars):
+    i = 0
+    for c in reversed(s):
+        i *= len(chars)
+        i += chars.index(c)
+    return i
+
+@login.user_loader
+def load_user(id):
+    return User.query.get(id)
+
+class Nurse(UserMixin, db.Model):
+    __tablename__ = 'nurse'
     nurse_id = db.Column(db.String(32), primary_key=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
@@ -8,8 +22,15 @@ class Nurse(db.Model):
     def __repr__(self):
         return '<User {}>'.format(self.nurse_id)
 
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
 
 class Patient(db.Model):
+    __tablename__ = 'patient' 
     patient_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True)
     age = db.Column(db.Integer, index=True)
@@ -19,17 +40,20 @@ class Patient(db.Model):
 
 
 class Drug(db.Model):
+    __tablename__ = 'drug'
     drug_id = db.Column(db.Integer, primary_key=True)
     side_effects = db.Column(db.String(256))
     restricted = db.Column(db.Integer, index=True)
     barcode = db.Column(db.String(64))
 
 
-drug_identifier = db.Table('drug_identifier',
+drug_identifier = db.Table('drug_identifier', db.Model.metadata,
     db.Column('drug_id', db.Integer, db.ForeignKey('drug.drug_id')),
-    db.Column('patient_id', db.Integer, db.ForeignKey('patient.patient_id'))
+    db.Column('package_id', db.Integer, db.ForeignKey('package.package_id'))
 )
 
 class DrugPackage(db.Model):
+    __tablename__ = 'package'
     package_id = db.Column(db.Integer, primary_key=True)
     drugs = db.relationship('Drug', secondary=drug_identifier)
+    patient_id = db.Column(db.Integer, db.ForeignKey('patient.patient_id'))
