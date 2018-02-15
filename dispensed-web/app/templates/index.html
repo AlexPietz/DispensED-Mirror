@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Hi, {{ user.username }}!</h1>
+<h1>Hi, {{ current_user.nurse_id }}!</h1>
+Patients:
+{% for patient in patients %}
+<div><p>{{ patient.name }}</p></div>
+{% endfor %}
 {% endblock %}

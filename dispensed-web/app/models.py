@@ -11,13 +11,16 @@ def str2int(s, chars):
 
 @login.user_loader
 def load_user(id):
-    return User.query.get(id)
+    return Nurse.query.get(id)
 
 class Nurse(UserMixin, db.Model):
     __tablename__ = 'nurse'
     nurse_id = db.Column(db.String(32), primary_key=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
+
+    def get_id(self):
+        return self.nurse_id
 
     def __repr__(self):
         return '<User {}>'.format(self.nurse_id)
