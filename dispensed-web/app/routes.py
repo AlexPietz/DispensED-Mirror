@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
-from app import app, login, db
+from app import app, login, db, auto
 from app.forms import LoginForm, RegistrationForm, NewPatientForm
 from app.models import Nurse, Patient, DrugPackage
 from werkzeug.urls import url_parse
@@ -12,21 +12,29 @@ def unauthorized_callback():
 
 @app.route('/')
 @app.route('/index')
+@auto.doc('private')
 @login_required
 def index():
+    """Homepage - Shows patient list to logged in users."""
     patients = Patient.query.all()
     return render_template('index.html', title='Home', patients=patients)
 
 @app.route('/patient', methods=['GET', 'POST'])
+@auto.doc('private')
 @login_required
 def patient():
+    """Displays details for a single patient of the given id."""
     p = request.args.get('patient_id')
     patient = Patient.query.filter_by(patient_id=p).first()
     dp = DrugPackage.query.filter_by(patient_id=p).first()
     return render_template('patient.html', title='Patient Info', patient=patient, drug_package=dp)
 
 @app.route('/login', methods=['GET', 'POST'])
+@auto.doc('public')
 def login():
+    """Login Page
+    Redirects user to previous page after login (if applicable)
+    """
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = LoginForm()
@@ -43,12 +51,18 @@ def login():
     return render_template('login.html', title='Sign In', form=form)
 
 @app.route('/logout')
+@auto.doc('public')
 def logout():
+    """Logs the user out"""
     logout_user()
     return redirect(url_for('index'))
 
 @app.route('/register', methods=['GET', 'POST'])
+@auto.doc('public')
 def register():
+    """Register a new user.
+    TODO: This will eventually be behind an admin interface so that nurses can not self-register.
+    """
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = RegistrationForm()
@@ -62,8 +76,10 @@ def register():
     return render_template('register.html', title='Register', form=form)
 
 @app.route('/newpatient', methods=['GET', 'POST'])
+@auto.doc('private')
 @login_required
 def newpatient():
+    """Form to add a new patient to the database."""
     form = NewPatientForm()
     if form.validate_on_submit():
         p = Patient(name=form.name.data, age=int(form.age.data))
@@ -72,3 +88,7 @@ def newpatient():
         flash('New Patient Registered ' + form.name.data)
         return redirect(url_for('index'))
     return render_template('addpatient.html', title='Add Patient', form=form)
+
+@app.route('/doc')
+def documentation():
+    return auto.html(groups=['public','private'])

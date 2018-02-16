@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
 def str2int(s, chars):
+    """Turns alphabetic string into pseudo-unique integer"""
     i = 0
     for c in reversed(s):
         i *= len(chars)
