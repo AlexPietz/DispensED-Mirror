@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import current_user, login_user, logout_user, login_required
 from app import app, login, db, auto
 from app.forms import LoginForm, RegistrationForm, NewPatientForm
@@ -92,3 +92,40 @@ def newpatient():
 @app.route('/doc')
 def documentation():
     return auto.html(groups=['public','private'])
+
+@app.route('/test')
+@auto.doc('public')
+def test():
+    """Some explaination"""
+    e = {
+        "dispensing": [
+            {
+                "patient_id": 1,
+                "qr_code": "1679091c5a880faf6fb5e6087eb1b2dc",
+                "drug_package": "1",
+                "drugs": [
+                    {
+                        "drug_id": "5",
+                        "qty": "1",
+                    },
+                    {
+                        "drug_id": "6",
+                        "qty": "2",
+                    }
+                ]
+            },
+            {
+                "patient_id": 2,
+                "qr_code": "8f14e45fceea167a5a36dedd4bea2543",
+                "drug_package": "None",
+                "drugs": [
+                    {
+                        "drug_id": "5",
+                        "qty": "1",
+                    }
+                ]
+            }
+        ]
+    }
+    return jsonify(e)
+
