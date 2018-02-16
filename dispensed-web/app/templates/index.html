@@ -63,9 +63,15 @@
             <th>{{ patient.patient_id }}</th>
             <td>{{ patient.name }}</td>
             <td>{{ patient.age }}</td>
-            <td>{{ utils.form_button(url_for('index', id=patient.patient_id), utils.icon('hand-right') + ' Edit', class="btn btn-success btn-outline") }}</td>
+            <td>{{ utils.form_button(url_for('patient', patient_id=patient.patient_id), utils.icon('hand-right') + ' Info', class="btn btn-success btn-outline") }}</td>
         </tr>
         {% endfor %}
+        <tr>
+            <th>{{ utils.form_button(url_for('newpatient'), utils.icon('plus') + ' Add Patient', class="btn btn-primary", method='get') }}</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
     </tbody>
 </table>
 

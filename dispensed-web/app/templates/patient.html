@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% import "bootstrap/utils.html" as utils %}
+
+{% block styles %}
+{{super()}}
+<style>
+ /*Bootstrap button outline override*/
+ .btn-outline {
+     background-color: transparent;
+     color: inherit;
+     transition: all .5s;
+ }
+
+ .btn-primary.btn-outline {
+     color: #428bca;
+ }
+
+ .btn-success.btn-outline {
+     color: #5cb85c;
+ }
+
+ .btn-info.btn-outline {
+     color: #5bc0de;
+ }
+
+ .btn-warning.btn-outline {
+     color: #f0ad4e;
+ }
+
+ .btn-danger.btn-outline {
+     color: #d9534f;
+ }
+
+ .btn-primary.btn-outline:hover,
+ .btn-success.btn-outline:hover,
+ .btn-info.btn-outline:hover,
+ .btn-warning.btn-outline:hover,
+ .btn-danger.btn-outline:hover {
+     color: #fff;
+ }
+
+ /* Patient Card Css */
+ .patient-card {
+     border: 1px solid #cccccc;
+     background: #f8f8f8;
+     padding: 10px;
+     border-radius: 4px;
+     margin-bottom: 10px;
+ }
+ .profile-img {
+     height: 120px;
+     background: white;
+ }
+ .age {
+     color: #666666;
+     font-size: 17px;
+ }
+ .pid {
+     font-size: 16px;
+ }
+
+</style>
+{% endblock %}
+
+{% block app_content %}
+{{super()}}
+
+<div class="row">
+    <div class="col-sm-6">
+        <h1>Patient Info </h1>
+    </div>
+    <div class="col-sm-6">
+        <div class="patient-card">
+            <div class="media">
+                <div class="media-left">
+                    <img class="media-object img-circle profile-img" src="http://s3.amazonaws.com/37assets/svn/765-default-avatar.png">
+                </div>
+                <div class="media-body">
+                    <h2 class="media-heading">{{ patient.name}}</h2>
+                    <div class="age">Age: {{ patient.age }} </div>
+                    <div class="pid">Unique Patient ID: {{ patient.patient_id}} </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr>
+<h2>Medication</h2>
+
+<div class="alert alert-info">
+    {% if drug_package is none %}
+    This patient does not have a prepackaged drug package assigned. <button class="btn"> Assign now</button>
+    {% else %}
+    <b>Drug Package:</b> {{ drug_package.package_id }}
+    {% endif %}
+</div>
+
+<h3>List of Drugs:</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>to</th>
+            <th>be</th>
+            <th>done</th>
+            <th>option</th>
+            <tr>
+    </thead>
+    <tbody>
+        {% for drug in patient_drugs %}
+        <tr>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <th>{{ utils.form_button(url_for('newpatient'), utils.icon('plus') + ' Assign Drug', class="btn btn-primary", method='get') }}</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </tbody>
+</table>
+
+{% endblock %}

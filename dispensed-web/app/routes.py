@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 from app import app, login, db
 from app.forms import LoginForm, RegistrationForm, NewPatientForm
-from app.models import Nurse, Patient
+from app.models import Nurse, Patient, DrugPackage
 from werkzeug.urls import url_parse
 
 # Redirect to login if not logged in
@@ -16,6 +16,14 @@ def unauthorized_callback():
 def index():
     patients = Patient.query.all()
     return render_template('index.html', title='Home', patients=patients)
+
+@app.route('/patient', methods=['GET', 'POST'])
+@login_required
+def patient():
+    p = request.args.get('patient_id')
+    patient = Patient.query.filter_by(patient_id=p).first()
+    dp = DrugPackage.query.filter_by(patient_id=p).first()
+    return render_template('patient.html', title='Patient Info', patient=patient, drug_package=dp)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
