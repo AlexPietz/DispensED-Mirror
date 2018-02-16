@@ -15,6 +15,20 @@ $ pip install -r requirements.txt
 ## Deployment
 Run `./avenv.sh` in a console. Then visit `http://127.0.0.1:5000/`
 
+### Project Structure
+```
+app
+|-- forms.py      # Form settings
+|-- __init__.py   # Init module vars
+|-- models.py     # Database interface
+|-- routes.py     # What URL triggers what function
+|-- static
+|   `-- <images and other static content>
+`-- templates
+    `-- <.html templates>
+
+```
+
 ### Adding additional packages from pip
 You may have to install additional packages, make sure you are in the virtual environment and in the "dispensed-web" directory, then
 ```
