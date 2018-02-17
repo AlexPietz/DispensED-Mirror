@@ -101,25 +101,25 @@
 <table class="table">
     <thead>
         <tr>
-            <th>to</th>
-            <th>be</th>
-            <th>done</th>
-            <th>option</th>
+            <th>id</th>
+            <th>name</th>
+            <th></th>
+            <th></th>
             <tr>
     </thead>
     <tbody>
-        {% for drug in patient_drugs %}
+        {% for drug in patient.drugs %}
         <tr>
-           <td></td>
-           <td></td>
+           <td>{{ drug.drug_id }}</td>
+           <td>{{ drug.name }}</td>
            <td></td>
            <td></td>
         </tr>
         {% endfor %}
         <tr>
-            <th>{{ utils.form_button(url_for('newpatient'), utils.icon('plus') + ' Assign Drug', class="btn btn-primary", method='get') }}</th>
-            <th></th>
-            <th></th>
+            <th>{{ utils.form_button(url_for('assign_drug', patient_id=patient.patient_id ), utils.icon('plus') + ' Assign Drug', class="btn btn-primary") }}</th> <!-- TODO: This button should not try to submit the post! -->
+            <th>{{ patient }}</th>
+            <th>{{ patient.patient_id }}</th>
             <th></th>
         </tr>
     </tbody>

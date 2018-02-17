@@ -1,8 +1,8 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import current_user, login_user, logout_user, login_required
 from app import app, login, db, auto
-from app.forms import LoginForm, RegistrationForm, NewPatientForm
-from app.models import Nurse, Patient, DrugPackage
+from app.forms import LoginForm, RegistrationForm, NewPatientForm, NewDrugForm, AssignDrugForm
+from app.models import Nurse, Patient, DrugPackage, Drug
 from werkzeug.urls import url_parse
 
 # Redirect to login if not logged in
@@ -18,6 +18,30 @@ def index():
     """Homepage - Shows patient list to logged in users."""
     patients = Patient.query.all()
     return render_template('index.html', title='Home', patients=patients)
+
+@app.route('/drugs')
+@auto.doc('private')
+@login_required
+def drugs():
+    """Shows list of drugs."""
+    drugs = Drug.query.all()
+    return render_template('drugs.html', title='Drugs', drugs=drugs)
+
+@app.route('/assigndrug', methods=['GET', 'POST'])
+@login_required
+def assign_drug():
+    """Assign drug to a patient"""
+    p = request.args.get('patient_id')
+    patient = Patient.query.filter_by(patient_id=p).first()
+    form = AssignDrugForm()
+    form.drug.choices = [(d.drug_id, d.name) for d in Drug.query.all()]
+    if form.validate_on_submit():
+        d = Drug.query.filter_by(drug_id = form.drug.data).first()
+        patient.drugs.append(d)
+        db.session.add(patient)
+        db.session.commit()
+        return redirect(url_for('index'))
+    return render_template('assigndrug.html', title='Sign In', patient=patient, form=form)
 
 @app.route('/patient', methods=['GET', 'POST'])
 @auto.doc('private')
@@ -85,9 +109,28 @@ def newpatient():
         p = Patient(name=form.name.data, age=int(form.age.data))
         db.session.add(p)
         db.session.commit()
-        flash('New Patient Registered ' + form.name.data)
+        flash('New Patient Registered :' + form.name.data)
         return redirect(url_for('index'))
     return render_template('addpatient.html', title='Add Patient', form=form)
+
+@app.route('/newdrug', methods=['GET', 'POST'])
+@auto.doc('private')
+@login_required
+def newdrug():
+    """Form to add a new drug."""
+    form = NewDrugForm()
+    if form.validate_on_submit():
+        d = Drug(
+            name = form.name.data,
+            side_effects = form.side_effects.data,
+            restricted = int(form.restricted.data),
+            barcode = form.side_effects.data
+        )
+        db.session.add(d)
+        db.session.commit()
+        flash('New Drug Registered :' + form.name.data)
+        return redirect(url_for('drugs'))
+    return render_template('adddrug.html', title='Add Drug', form=form)
 
 @app.route('/doc')
 def documentation():

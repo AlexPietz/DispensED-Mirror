@@ -1,8 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, IntegerField, PasswordField, BooleanField, SubmitField, SelectField
 from wtforms.validators import DataRequired
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, NumberRange
 from app.models import Nurse
+import random, string
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -33,3 +34,15 @@ class NewPatientForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     age = IntegerField('Age', validators=[DataRequired(), NumberRange(min=0)])
     submit = SubmitField('Add Patient')
+
+class NewDrugForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    side_effects = StringField('Side Effects')
+    restricted = BooleanField('Restricted Drug?')
+    barcode = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(64))
+    # barcode is currently randomly generated!!!!
+    submit = SubmitField('Add Patient')
+
+class AssignDrugForm(FlaskForm):
+    drug = SelectField('Drug', choices=["Select Drug"], coerce=int)
+    submit = SubmitField('Add')

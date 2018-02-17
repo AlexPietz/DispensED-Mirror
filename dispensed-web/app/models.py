@@ -14,6 +14,18 @@ def str2int(s, chars):
 def load_user(id):
     return Nurse.query.get(id)
 
+# Association Tables:
+drug_patient = db.Table('drug_patient', db.Model.metadata,
+    db.Column('drug_id', db.Integer, db.ForeignKey('drug.drug_id')),
+    db.Column('patient_id', db.Integer, db.ForeignKey('patient.patient_id'))
+)
+
+drug_identifier = db.Table('drug_identifier', db.Model.metadata,
+    db.Column('drug_id', db.Integer, db.ForeignKey('drug.drug_id')),
+    db.Column('package_id', db.Integer, db.ForeignKey('package.package_id'))
+)
+
+
 class Nurse(UserMixin, db.Model):
     __tablename__ = 'nurse'
     nurse_id = db.Column(db.String(32), primary_key=True)
@@ -38,6 +50,7 @@ class Patient(db.Model):
     patient_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True)
     age = db.Column(db.Integer, index=True)
+    drugs = db.relationship('Drug', secondary=drug_patient)
 
     def __repr__(self):
         return '<Patient {}>'.format(self.name)
@@ -46,15 +59,11 @@ class Patient(db.Model):
 class Drug(db.Model):
     __tablename__ = 'drug'
     drug_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
     side_effects = db.Column(db.String(256))
     restricted = db.Column(db.Integer, index=True)
     barcode = db.Column(db.String(64))
 
-
-drug_identifier = db.Table('drug_identifier', db.Model.metadata,
-    db.Column('drug_id', db.Integer, db.ForeignKey('drug.drug_id')),
-    db.Column('package_id', db.Integer, db.ForeignKey('package.package_id'))
-)
 
 class DrugPackage(db.Model):
     __tablename__ = 'package'
