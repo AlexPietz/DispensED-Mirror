@@ -106,6 +106,7 @@ def read_qr(img, contours):
     # Do the perspective warp
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     qr_img = cv2.warpPerspective(img, matrix, (qr_size, qr_size))
+    _, qr_img = cv2.threshold(qr_img, 0, 255, cv2.THRESH_OTSU)
 
     # Scan and return results
     scanner = zbar.Scanner()
