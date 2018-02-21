@@ -103,15 +103,17 @@
         <tr>
             <th>id</th>
             <th>name</th>
+            <th>qty</th>
             <th></th>
             <th></th>
             <tr>
     </thead>
     <tbody>
-        {% for drug in patient.drugs %}
+        {% for assoc in patient.drugs %}
         <tr>
-           <td>{{ drug.drug_id }}</td>
-           <td>{{ drug.name }}</td>
+           <td>{{ assoc.drug.drug_id }}</td>
+           <td>{{ assoc.drug.name }}</td>
+           <td>{{ assoc.qty }}</td>
            <td></td>
            <td></td>
         </tr>

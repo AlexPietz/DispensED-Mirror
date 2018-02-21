@@ -41,8 +41,9 @@ class NewDrugForm(FlaskForm):
     restricted = BooleanField('Restricted Drug?')
     barcode = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(64))
     # barcode is currently randomly generated!!!!
-    submit = SubmitField('Add Patient')
+    submit = SubmitField('Add Drug')
 
 class AssignDrugForm(FlaskForm):
     drug = SelectField('Drug', choices=["Select Drug"], coerce=int)
+    qty = IntegerField('Quantity', validators=[DataRequired(), NumberRange(min=1)])
     submit = SubmitField('Add')

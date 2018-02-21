@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import current_user, login_user, logout_user, login_required
 from app import app, login, db, auto
 from app.forms import LoginForm, RegistrationForm, NewPatientForm, NewDrugForm, AssignDrugForm
-from app.models import Nurse, Patient, DrugPackage, Drug
+from app.models import Nurse, Patient, DrugPackage, Drug, PatientDrug
 from werkzeug.urls import url_parse
 
 # Redirect to login if not logged in
@@ -37,11 +37,13 @@ def assign_drug():
     form.drug.choices = [(d.drug_id, d.name) for d in Drug.query.all()]
     if form.validate_on_submit():
         d = Drug.query.filter_by(drug_id = form.drug.data).first()
-        patient.drugs.append(d)
+        pd = PatientDrug(qty=int(form.qty.data))
+        pd.drug = d
+        patient.drugs.append(pd)
         db.session.add(patient)
         db.session.commit()
         return redirect(url_for('index'))
-    return render_template('assigndrug.html', title='Sign In', patient=patient, form=form)
+    return render_template('assigndrug.html', title='Assign Drug', patient=patient, form=form)
 
 @app.route('/patient', methods=['GET', 'POST'])
 @auto.doc('private')
@@ -124,7 +126,7 @@ def newdrug():
             name = form.name.data,
             side_effects = form.side_effects.data,
             restricted = int(form.restricted.data),
-            barcode = form.side_effects.data
+            barcode = form.barcode
         )
         db.session.add(d)
         db.session.commit()

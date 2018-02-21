@@ -25,6 +25,13 @@ drug_identifier = db.Table('drug_identifier', db.Model.metadata,
     db.Column('package_id', db.Integer, db.ForeignKey('package.package_id'))
 )
 
+# Patient-Drug Association Class
+class PatientDrug(db.Model):
+    __tablename__ = 'patient_drug'
+    patient_id = db.Column(db.Integer, db.ForeignKey('patient.patient_id'), primary_key=True)
+    drug_id = db.Column(db.Integer, db.ForeignKey('drug.drug_id'), primary_key=True)
+    qty = db.Column(db.Integer, index=True)
+    drug = db.relationship("Drug")
 
 class Nurse(UserMixin, db.Model):
     __tablename__ = 'nurse'
@@ -50,7 +57,7 @@ class Patient(db.Model):
     patient_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True)
     age = db.Column(db.Integer, index=True)
-    drugs = db.relationship('Drug', secondary=drug_patient)
+    drugs = db.relationship('PatientDrug')
 
     def __repr__(self):
         return '<Patient {}>'.format(self.name)
