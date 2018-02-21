@@ -33,6 +33,7 @@ class RegistrationForm(FlaskForm):
 class NewPatientForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     age = IntegerField('Age', validators=[DataRequired(), NumberRange(min=0)])
+    qr_code = StringField('QR Code', validators=[DataRequired()])
     submit = SubmitField('Add Patient')
 
 class NewDrugForm(FlaskForm):

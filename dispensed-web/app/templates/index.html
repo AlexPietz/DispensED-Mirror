@@ -54,6 +54,7 @@
             <th>id</th>
             <th>name</th>
             <th>age</th>
+            <th>qr code</th>
             <th>option</th>
             <tr>
     </thead>
@@ -63,6 +64,7 @@
             <th>{{ patient.patient_id }}</th>
             <td>{{ patient.name }}</td>
             <td>{{ patient.age }}</td>
+            <td>{{ patient.qr_code }}</td>
             <td>{{ utils.form_button(url_for('patient', patient_id=patient.patient_id), utils.icon('hand-right') + ' Info', class="btn btn-success btn-outline") }}</td>
         </tr>
         {% endfor %}

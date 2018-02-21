@@ -108,7 +108,7 @@ def newpatient():
     """Form to add a new patient to the database."""
     form = NewPatientForm()
     if form.validate_on_submit():
-        p = Patient(name=form.name.data, age=int(form.age.data))
+        p = Patient(name=form.name.data, age=int(form.age.data), qr_code=form.qr_code.data)
         db.session.add(p)
         db.session.commit()
         flash('New Patient Registered :' + form.name.data)
