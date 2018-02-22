@@ -138,6 +138,21 @@ def newdrug():
 def documentation():
     return auto.html(groups=['public','private'])
 
+@app.route('/dbread')
+@auto.doc('public')
+def dbread():
+    """Read the database and return the patients data in json format"""
+    patients = Patient.query.all()
+    patients_list = []
+    for patient in patients:
+        dp = DrugPackage.query.filter_by(patient_id=patient.patient_id).first()
+        drugs = []
+        for assoc in patient.drugs:
+            drugs.append({'drug_id': assoc.drug.drug_id, 'qty': assoc.qty})
+        patients_list.append({'patient_id': patient.patient_id, 'qr_code': patient.qr_code, 'drug_package': dp, 'drugs': drugs})
+    e = {'dispensing': patients_list}
+    return jsonify(e)
+
 @app.route('/test')
 @auto.doc('public')
 def test():
