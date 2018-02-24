@@ -28,11 +28,13 @@ drug_identifier = db.Table('drug_identifier', db.Model.metadata,
 # Patient-Drug Association Class
 class PatientDrug(db.Model):
     __tablename__ = 'patient_drug'
-    patient_id = db.Column(db.Integer, db.ForeignKey('patient.patient_id'), primary_key=True)
-    drug_id = db.Column(db.Integer, db.ForeignKey('drug.drug_id'), primary_key=True)
-    qty = db.Column(db.Integer, index=True)
+    id = db.Column(db.Integer, primary_key=True)
+    patient_id = db.Column(db.Integer, db.ForeignKey('patient.patient_id'))
+    drug_id = db.Column(db.Integer, db.ForeignKey('drug.drug_id'))
     drug = db.relationship("Drug")
-
+    qty = db.Column(db.Integer, index=True)
+    time = db.Column(db.DateTime, index=True)
+    
 class Nurse(UserMixin, db.Model):
     __tablename__ = 'nurse'
     nurse_id = db.Column(db.String(32), primary_key=True)

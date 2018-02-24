@@ -4,6 +4,7 @@ from app import app, login, db, auto
 from app.forms import LoginForm, RegistrationForm, NewPatientForm, NewDrugForm, AssignDrugForm
 from app.models import Nurse, Patient, DrugPackage, Drug, PatientDrug
 from werkzeug.urls import url_parse
+import datetime
 
 # Redirect to login if not logged in
 @login.unauthorized_handler
@@ -37,7 +38,7 @@ def assign_drug():
     form.drug.choices = [(d.drug_id, d.name) for d in Drug.query.all()]
     if form.validate_on_submit():
         d = Drug.query.filter_by(drug_id = form.drug.data).first()
-        pd = PatientDrug(qty=int(form.qty.data))
+        pd = PatientDrug(qty=int(form.qty.data), time=form.time.data)
         pd.drug = d
         patient.drugs.append(pd)
         db.session.add(patient)
@@ -148,8 +149,13 @@ def dbread():
         dp = DrugPackage.query.filter_by(patient_id=patient.patient_id).first()
         drugs = []
         for assoc in patient.drugs:
-            drugs.append({'drug_id': assoc.drug.drug_id, 'qty': assoc.qty})
-        patients_list.append({'patient_id': patient.patient_id, 'qr_code': patient.qr_code, 'drug_package': dp, 'drugs': drugs})
+            drug_time = assoc.time.time();
+            time1 = datetime.datetime.now() - datetime.timedelta(minutes=15)
+            time2 = datetime.datetime.now() + datetime.timedelta(minutes=15)
+            if (time1.time() < drug_time and drug_time < time2.time()): 
+                drugs.append({'drug_id': assoc.drug.drug_id, 'qty': assoc.qty, 'time': assoc.time.strftime('%H:%M')})
+        if (len(drugs) > 0):
+            patients_list.append({'patient_id': patient.patient_id, 'qr_code': patient.qr_code, 'drug_package': dp, 'drugs': drugs})
     e = {'dispensing': patients_list}
     return jsonify(e)
 

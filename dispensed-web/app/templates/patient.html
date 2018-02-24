@@ -104,7 +104,7 @@
             <th>id</th>
             <th>name</th>
             <th>qty</th>
-            <th></th>
+            <th>time</th>
             <th></th>
             <tr>
     </thead>
@@ -114,7 +114,7 @@
            <td>{{ assoc.drug.drug_id }}</td>
            <td>{{ assoc.drug.name }}</td>
            <td>{{ assoc.qty }}</td>
-           <td></td>
+           <td>{{ assoc.time.strftime('%H:%M') }}</td>
            <td></td>
         </tr>
         {% endfor %}

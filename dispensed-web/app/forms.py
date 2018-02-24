@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, PasswordField, BooleanField, SubmitField, SelectField
+from wtforms import StringField, IntegerField, PasswordField, BooleanField, SubmitField, SelectField, DateTimeField
 from wtforms.validators import DataRequired
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, NumberRange
 from app.models import Nurse
@@ -47,4 +47,5 @@ class NewDrugForm(FlaskForm):
 class AssignDrugForm(FlaskForm):
     drug = SelectField('Drug', choices=["Select Drug"], coerce=int)
     qty = IntegerField('Quantity', validators=[DataRequired(), NumberRange(min=1)])
+    time = DateTimeField('Time (HH:MM)', format='%H:%M', validators=[DataRequired()])
     submit = SubmitField('Add')
