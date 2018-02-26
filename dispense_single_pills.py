@@ -5,7 +5,7 @@ import time
 
 cl = ev3.ColorSensor(ev3.INPUT_2)
 cl.mode='COL-REFLECT'
-motor=ev3.LargeMotor('outA')
+motor=ev3.MediumMotor('outA')
 
 numberPills = int(sys.argv[1]) # number of pills to be dispensed
 count_dispensed = 0 # number of pills that have been dispensed so far
@@ -17,7 +17,7 @@ less = False # represents whether cl.value() decreases (or increases) at start o
 stopfor = 0 # if cl value increases, then we stop checking colour sensor for 10 iterations
 dispense_attempts = 0
 
-motor.run_timed(speed_sp=-400, time_sp=80)
+motor.run_timed(speed_sp=-450, time_sp=120)
 
 while (count_dispensed < numberPills):
 
@@ -29,10 +29,10 @@ while (count_dispensed < numberPills):
     # reverse direction every 200 iterations
     if (direction_count > 200):
         if (forward):
-            motor.run_timed(speed_sp=400, time_sp=80)
+            motor.run_timed(speed_sp=450, time_sp=120)
         else:
             dispense_attempts += 1
-            motor.run_timed(speed_sp=-400, time_sp=80)
+            motor.run_timed(speed_sp=-450, time_sp=120)
         forward = not forward
         direction_count = 0
 
