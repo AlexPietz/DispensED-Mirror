@@ -49,3 +49,7 @@ class AssignDrugForm(FlaskForm):
     qty = IntegerField('Quantity', validators=[DataRequired(), NumberRange(min=1)])
     time = DateTimeField('Time (HH:MM)', format='%H:%M', validators=[DataRequired()])
     submit = SubmitField('Add')
+
+class AssignDrugPackageForm(FlaskForm):
+    drug = SelectField('Drug', choices=["Select Drug"], coerce=int)
+    submit = SubmitField('Add')

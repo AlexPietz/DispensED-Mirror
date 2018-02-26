@@ -4,70 +4,8 @@
 
 {% block styles %}
 {{super()}}
-<style>
- /*Bootstrap button outline override*/
- .btn-outline {
-     background-color: transparent;
-     color: inherit;
-     transition: all .5s;
- }
-
- .btn-primary.btn-outline {
-     color: #428bca;
- }
-
- .btn-success.btn-outline {
-     color: #5cb85c;
- }
-
- .btn-info.btn-outline {
-     color: #5bc0de;
- }
-
- .btn-warning.btn-outline {
-     color: #f0ad4e;
- }
-
- .btn-danger.btn-outline {
-     color: #d9534f;
- }
-
- .btn-primary.btn-outline:hover,
- .btn-success.btn-outline:hover,
- .btn-info.btn-outline:hover,
- .btn-warning.btn-outline:hover,
- .btn-danger.btn-outline:hover {
-     color: #fff;
- }
-
- /* Patient Card Css */
- .patient-card {
-     border: 1px solid #cccccc;
-     background: #f8f8f8;
-     padding: 10px;
-     height:auto;
-     width:350px;
-     border-radius: 4px;
-     margin-bottom: 10px;
- }
- .profile-img {
-     height: 120px;
-     background: white;
- }
- .qr {
-     float:right;
- }
-
- .age {
-     color: #666666;
-     font-size: 17px;
- }
- .pid {
-     font-size: 16px;
-     word-wrap: break-word;
- }
-
-</style>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="{{url_for('static', filename='patient.css')}}" rel="stylesheet">
 {% endblock %}
 
 {% block app_content %}
@@ -97,43 +35,99 @@
 <hr>
 <h2>Medication</h2>
 
-<div class="alert alert-info">
-    {% if drug_package is none %}
-    This patient does not have a prepackaged drug package assigned. <button class="btn"> Assign now</button>
-    {% else %}
-    <b>Drug Package:</b> {{ drug_package.package_id }}
-    {% endif %}
-</div>
+<div class="panel-group wrap" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel">
+        <div class="panel-heading" role="tab" id="headingOne">
+            <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Drug Package
+                </a>
+            </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body">
+                <div class="alert alert-info">
+                    {% if drug_package is none %}
+                    This patient does not have a prepackaged drug package assigned. {{ utils.form_button(url_for('new_package', patient_id=patient.patient_id ), 'Assign now', class="btn") }}
+                    {% else %}
+                    <table class="table">
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>name</th>
+                            <th>{{utils.icon('trash')}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for drug in drug_package.drugs %}
+                        <tr>
+                            <td>{{ drug.drug_id }}</td>
+                            <td>{{ drug.name }}</td>
+                            <td></td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <th> <a href="{{url_for('assign_drug', patient_id=patient.patient_id, dp_id=drug_package.package_id )}}" class="btn btn-primary"> {{utils.icon('plus')}} Add drug</a> </th>
+                            <th>{{ patient }}</th>
+                            <th>{{ patient.patient_id }}</th>
+                            <th></th>
+                        </tr>
+                    </tbody>
+                </table>
+                    {% endif %}
+                </div>
 
-<h3>List of Drugs:</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th>id</th>
-            <th>name</th>
-            <th>qty</th>
-            <th>time</th>
-            <th></th>
-            <tr>
-    </thead>
-    <tbody>
-        {% for assoc in patient.drugs %}
-        <tr>
-           <td>{{ assoc.drug.drug_id }}</td>
-           <td>{{ assoc.drug.name }}</td>
-           <td>{{ assoc.qty }}</td>
-           <td>{{ assoc.time.strftime('%H:%M') }}</td>
-           <td></td>
-        </tr>
-        {% endfor %}
-        <tr>
-            <th> <a href="{{url_for('assign_drug', patient_id=patient.patient_id )}}" class="btn btn-primary"> {{utils.icon('plus')}} Assign drug</button> </th>
-            <th>{{ patient }}</th>
-            <th>{{ patient.patient_id }}</th>
-            <th></th>
-        </tr>
-    </tbody>
-</table>
+            </div>
+        </div>
+    </div>
+    <!-- end of panel -->
+
+    <div class="panel">
+        <div class="panel-heading" role="tab" id="headingTwo">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Unpackaged Drugs
+                </a>
+            </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+            <div class="panel-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>name</th>
+                            <th>qty</th>
+                            <th>time</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for assoc in patient.drugs %}
+                        <tr>
+                            <td>{{ assoc.drug.drug_id }}</td>
+                            <td>{{ assoc.drug.name }}</td>
+                            <td>{{ assoc.qty }}</td>
+                            <td>{{ assoc.time.strftime('%H:%M') }}</td>
+                            <td></td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <th> <a href="{{url_for('assign_drug', patient_id=patient.patient_id )}}" class="btn btn-primary"> {{utils.icon('plus')}} Assign drug</a> </th>
+                            <th>{{ patient }}</th>
+                            <th>{{ patient.patient_id }}</th>
+                            <th></th>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+    <!-- end of panel -->
+
+</div>
+<!-- end of #accordion -->
 
 {% endblock %}
 
@@ -148,6 +142,19 @@
      width:128,
      height:128,
      text:"{{ patient.qr_code }}"
-});	
+ });	
+</script>
+<!-- Accordeon -->
+<script type="text/javascript">
+ $(document).ready(function() {
+     $('.collapse.in').prev('.panel-heading').addClass('active');
+     $('#accordion, #bs-collapse')
+         .on('show.bs.collapse', function(a) {
+             $(a.target).prev('.panel-heading').addClass('active');
+         })
+         .on('hide.bs.collapse', function(a) {
+             $(a.target).prev('.panel-heading').removeClass('active');
+         });
+ });
 </script>
 {% endblock%}

@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import current_user, login_user, logout_user, login_required
 from app import app, login, db, auto
-from app.forms import LoginForm, RegistrationForm, NewPatientForm, NewDrugForm, AssignDrugForm
+from app.forms import LoginForm, RegistrationForm, NewPatientForm, NewDrugForm, AssignDrugForm, AssignDrugPackageForm
 from app.models import Nurse, Patient, DrugPackage, Drug, PatientDrug
 from werkzeug.urls import url_parse
 import datetime
@@ -34,16 +34,26 @@ def assign_drug():
     """Assign drug to a patient"""
     p = request.args.get('patient_id')
     patient = Patient.query.filter_by(patient_id=p).first()
-    form = AssignDrugForm()
+    dp = request.args.get('dp_id')
+    drug_package = DrugPackage.query.filter_by(package_id=dp).first()
+    if (dp is not None):
+        form = AssignDrugPackageForm()
+        field = drug_package
+    else:
+        form = AssignDrugForm()
+        field = patient
     form.drug.choices = [(d.drug_id, d.name) for d in Drug.query.all()]
     if form.validate_on_submit():
         d = Drug.query.filter_by(drug_id = form.drug.data).first()
-        pd = PatientDrug(qty=int(form.qty.data), time=form.time.data)
-        pd.drug = d
-        patient.drugs.append(pd)
+        if (dp is not None):
+            pd = d
+        else:
+            pd = PatientDrug(qty=int(form.qty.data), time=form.time.data)
+            pd.drug = d
+        field.drugs.append(pd)
         db.session.add(patient)
         db.session.commit()
-        return redirect(url_for('index'))
+        return redirect(url_for('patient', patient_id=p))
     return render_template('assigndrug.html', title='Assign Drug', patient=patient, form=form)
 
 @app.route('/patient', methods=['GET', 'POST'])
@@ -134,6 +144,23 @@ def newdrug():
         flash('New Drug Registered :' + form.name.data)
         return redirect(url_for('drugs'))
     return render_template('adddrug.html', title='Add Drug', form=form)
+
+@app.route('/patient/newpackage', methods=['POST'])
+@auto.doc('private')
+@login_required
+def new_package():
+    pid = request.args['patient_id']
+    dp = DrugPackage.query.filter_by(patient_id=pid).first()
+    if (dp is None):  # Sanity check
+        dp = DrugPackage(
+            patient_id = pid
+        )
+        db.session.add(dp)
+        db.session.commit()
+        flash("Successfully assigned new drug package")
+        return redirect(url_for('patient', patient_id=pid))
+    return "Error - Invalid POST data."
+
 
 @app.route('/doc')
 def documentation():
