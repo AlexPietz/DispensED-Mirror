@@ -1,11 +1,11 @@
-#! /usr/bin/env python3
+#! /usr/bin/env python30
 import sys
 import ev3dev.ev3 as ev3
 import time
 
 cl = ev3.ColorSensor(ev3.INPUT_2)
 cl.mode='COL-REFLECT'
-motor=ev3.Motor('outA')
+motor=ev3.LargeMotor('outA')
 
 numberPills = int(sys.argv[1]) # number of pills to be dispensed
 count_dispensed = 0 # number of pills that have been dispensed so far
@@ -15,16 +15,24 @@ dispensing = False # whether dispenser is curently in the process of dispensing
 initial = cl.value() # initial value of colour sensor
 less = False # represents whether cl.value() decreases (or increases) at start of dispensing
 stopfor = 0 # if cl value increases, then we stop checking colour sensor for 10 iterations
+dispense_attempts = 0
 
-motor.run_timed(speed_sp=-450, time_sp=120)
+motor.run_timed(speed_sp=-400, time_sp=80)
 
 while (count_dispensed < numberPills):
+
+    if (dispense_attempts >= 10):
+        print('Error: dispenser time-out! - pill not dispensed')
+        motor.stop()
+        break
+
     # reverse direction every 200 iterations
     if (direction_count > 200):
         if (forward):
-           motor.run_timed(speed_sp=450, time_sp=120)
+            motor.run_timed(speed_sp=400, time_sp=80)
         else:
-           motor.run_timed(speed_sp=-450, time_sp=120)
+            dispense_attempts += 1
+            motor.run_timed(speed_sp=-400, time_sp=80)
         forward = not forward
         direction_count = 0
 
@@ -44,17 +52,20 @@ while (count_dispensed < numberPills):
             # if sensor value originally decreased, and value has now increased
             # then dispense is complete
             dispensing = False
-            count_dispensed = count_dispensed + 1
+            count_dispensed += 1
+            dispense_attempts = 0
             print(str(count_dispensed) + ' pills dispensed')
         elif (not less and cl.value() <= (initial+1) and cl.value() >= (initial-1)):
             # if sensor value originally increased, it may decrease below normal
             # before returning to normal, so stop monitoring sensor value for 10 iterations
             dispensing = False
-            count_dispensed = count_dispensed + 1
+            count_dispensed += 1
+            dispense_attempts = 0
             print(str(count_dispensed) + ' pills dispensed')
             stopfor = 10
 
-    direction_count = direction_count + 1
+    direction_count += 1
     if (stopfor != 0):
-        stopfor = stopfor - 1
+        stopfor -= 1
     time.sleep(0.0005) # increase length of iteration
+motor.stop()
