@@ -45,6 +45,8 @@
      border: 1px solid #cccccc;
      background: #f8f8f8;
      padding: 10px;
+     height:auto;
+     width:350px;
      border-radius: 4px;
      margin-bottom: 10px;
  }
@@ -52,12 +54,17 @@
      height: 120px;
      background: white;
  }
+ .qr {
+     float:right;
+ }
+
  .age {
      color: #666666;
      font-size: 17px;
  }
  .pid {
      font-size: 16px;
+     word-wrap: break-word;
  }
 
 </style>
@@ -80,6 +87,7 @@
                     <h2 class="media-heading">{{ patient.name}}</h2>
                     <div class="age">Age: {{ patient.age }} </div>
                     <div class="pid">Unique Patient ID: {{ patient.patient_id}} </div>
+                    <div class="pid">Patient QR-Code:<div id="qr"></div></div>
                 </div>
             </div>
         </div>
@@ -94,7 +102,7 @@
     This patient does not have a prepackaged drug package assigned. <button class="btn"> Assign now</button>
     {% else %}
     <b>Drug Package:</b> {{ drug_package.package_id }}
-    {% endif %}
+d    {% endif %}
 </div>
 
 <h3>List of Drugs:</h3>
@@ -119,7 +127,7 @@
         </tr>
         {% endfor %}
         <tr>
-            <th>{{ utils.form_button(url_for('assign_drug', patient_id=patient.patient_id ), utils.icon('plus') + ' Assign Drug', class="btn btn-primary") }}</th> <!-- TODO: This button should not try to submit the post! -->
+            <th> <a href="{{url_for('assign_drug', patient_id=patient.patient_id )}}" class="btn btn-primary"> {{utils.icon('plus')}} Assign drug</button> </th>
             <th>{{ patient }}</th>
             <th>{{ patient.patient_id }}</th>
             <th></th>
@@ -128,3 +136,18 @@
 </table>
 
 {% endblock %}
+
+{% block scripts %}
+{{super()}}
+
+<script type="text/javascript" src="{{url_for('static', filename='jquery.qrcode.min.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='qrcode.js')}}"></script>
+<!-- Render QR -->
+<script type="text/javascript"> 
+ jQuery('#qr').qrcode({
+     width:128,
+     height:128,
+     text:"{{ patient.qr_code }}"
+});	
+</script>
+{% endblock%}
