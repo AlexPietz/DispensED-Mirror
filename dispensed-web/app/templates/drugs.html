@@ -55,6 +55,7 @@
             <th>name</th>
             <th>side effects</th>
             <th>restricted</th>
+            <th>actions</th>
         </tr>
     </thead>
     <tbody>
@@ -70,13 +71,21 @@
                 {{ utils.icon('remove') }}
                 {% endif %}
             </td>
+            <td>
+                {{
+                utils.form_button(url_for('delete_drug',
+                drug_id=drug.drug_id),
+                utils.icon('trash'))
+                }}
+            </td>
         </tr>
         {% endfor %}
         <tr>
-            <th>{{ utils.form_button(url_for('newdrug'), utils.icon('plus') + ' Add Drug', class="btn btn-primary", method='get') }}</th>
-            <th></th>
-            <th></th>
-            <th></th>
+            <td>{{ utils.form_button(url_for('newdrug'), utils.icon('plus') + ' Add Drug', class="btn btn-primary", method='get') }}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
         </tr>
     </tbody>
 </table>
