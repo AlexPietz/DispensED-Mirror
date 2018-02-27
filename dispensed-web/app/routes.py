@@ -249,7 +249,11 @@ def dbread():
             time2 = datetime.datetime.now() + datetime.timedelta(minutes=15)
             if (time1.time() < drug_time and drug_time < time2.time()): 
                 drugs.append({'drug_id': assoc.drug.drug_id, 'qty': assoc.qty, 'time': assoc.time.strftime('%H:%M')})
-        if (len(drugs) > 0):
-            patients_list.append({'patient_id': patient.patient_id, 'qr_code': patient.qr_code, 'drug_package': dp.package_id, 'drugs': drugs})
+        if(dp is not None):
+            dp_insert = dp.package_id
+        else:
+            dp_insert = 0
+        if (len(drugs) > 0 or dp_insert != 0):
+            patients_list.append({'patient_id': patient.patient_id, 'qr_code': patient.qr_code, 'drug_package': dp_insert, 'drugs': drugs})
     e = {'dispensing': patients_list}
     return jsonify(e)
