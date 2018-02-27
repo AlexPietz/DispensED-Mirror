@@ -1,4 +1,4 @@
-#! /usr/bin/env python30
+#! /usr/bin/env python3
 import sys
 import ev3dev.ev3 as ev3
 import time
