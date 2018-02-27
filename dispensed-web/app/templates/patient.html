@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% import "bootstrap/utils.html" as utils %}
+
+{% block styles %}
+{{super()}}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="{{url_for('static', filename='patient.css')}}" rel="stylesheet">
+{% endblock %}
+
+{% block app_content %}
+{{super()}}
+
+<div class="row">
+    <div class="col-sm-6">
+        <h1>Patient Info </h1>
+    </div>
+    <div class="col-sm-6">
+        <div class="patient-card">
+            <div class="media">
+                <div class="media-left">
+                    <img class="media-object img-circle profile-img" src="http://s3.amazonaws.com/37assets/svn/765-default-avatar.png">
+                </div>
+                <div class="media-body">
+                    <h2 class="media-heading">{{ patient.name}}</h2>
+                    <div class="age">Age: {{ patient.age }} </div>
+                    <div class="pid">Unique Patient ID: {{ patient.patient_id}} </div>
+                    <div class="pid">Patient QR-Code:<div id="qr"></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr>
+<h2>Medication</h2>
+
+<div class="panel-group wrap" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel">
+        <div class="panel-heading" role="tab" id="headingOne">
+            <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Drug Package
+                </a>
+            </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body">
+                <div class="alert alert-info">
+                    {% if drug_package is none %}
+                    This patient does not have a prepackaged drug package assigned. {{ utils.form_button(url_for('new_package', patient_id=patient.patient_id ), 'Assign now', class="btn") }}
+                    {% else %}
+                    <table class="table">
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>name</th>
+                            <th>{{utils.icon('trash')}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for drug in drug_package.drugs %}
+                        <tr>
+                            <td>{{ drug.drug_id }}</td>
+                            <td>{{ drug.name }}</td>
+                            <td></td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <th> <a href="{{url_for('assign_drug', patient_id=patient.patient_id, dp_id=drug_package.package_id )}}" class="btn btn-primary"> {{utils.icon('plus')}} Add drug</a> </th>
+                            <th>{{ patient }}</th>
+                            <th>{{ patient.patient_id }}</th>
+                            <th></th>
+                        </tr>
+                    </tbody>
+                </table>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- end of panel -->
+
+    <div class="panel">
+        <div class="panel-heading" role="tab" id="headingTwo">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Unpackaged Drugs
+                </a>
+            </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+            <div class="panel-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>name</th>
+                            <th>qty</th>
+                            <th>time</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for assoc in patient.drugs %}
+                        <tr>
+                            <td>{{ assoc.drug.drug_id }}</td>
+                            <td>{{ assoc.drug.name }}</td>
+                            <td>{{ assoc.qty }}</td>
+                            <td>{{ assoc.time.strftime('%H:%M') }}</td>
+                            <td></td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <th> <a href="{{url_for('assign_drug', patient_id=patient.patient_id )}}" class="btn btn-primary"> {{utils.icon('plus')}} Assign drug</a> </th>
+                            <th>{{ patient }}</th>
+                            <th>{{ patient.patient_id }}</th>
+                            <th></th>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+    <!-- end of panel -->
+
+</div>
+<!-- end of #accordion -->
+
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+
+<script type="text/javascript" src="{{url_for('static', filename='jquery.qrcode.min.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='qrcode.js')}}"></script>
+<!-- Render QR -->
+<script type="text/javascript"> 
+ jQuery('#qr').qrcode({
+     width:128,
+     height:128,
+     text:"{{ patient.qr_code }}"
+ });	
+</script>
+<!-- Accordeon -->
+<script type="text/javascript">
+ $(document).ready(function() {
+     $('.collapse.in').prev('.panel-heading').addClass('active');
+     $('#accordion, #bs-collapse')
+         .on('show.bs.collapse', function(a) {
+             $(a.target).prev('.panel-heading').addClass('active');
+         })
+         .on('hide.bs.collapse', function(a) {
+             $(a.target).prev('.panel-heading').removeClass('active');
+         });
+ });
+</script>
+{% endblock%}

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% import "bootstrap/utils.html" as utils %}
+
+{% block styles %}
+{{super()}}
+<style>
+ /*Bootstrap button outline override*/
+ .btn-outline {
+     background-color: transparent;
+     color: inherit;
+     transition: all .5s;
+ }
+
+ .btn-primary.btn-outline {
+     color: #428bca;
+ }
+
+ .btn-success.btn-outline {
+     color: #5cb85c;
+ }
+
+ .btn-info.btn-outline {
+     color: #5bc0de;
+ }
+
+ .btn-warning.btn-outline {
+     color: #f0ad4e;
+ }
+
+ .btn-danger.btn-outline {
+     color: #d9534f;
+ }
+
+ .btn-primary.btn-outline:hover,
+ .btn-success.btn-outline:hover,
+ .btn-info.btn-outline:hover,
+ .btn-warning.btn-outline:hover,
+ .btn-danger.btn-outline:hover {
+     color: #fff;
+ }
+
+
+</style>
+{% endblock %}
+
+{% block app_content %}
+{{super()}}
+
+<h1>Patients </h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>name</th>
+            <th>age</th>
+            <th>qr code</th>
+            <th>option</th>
+            <tr>
+    </thead>
+    <tbody>
+        {% for patient in patients %}
+        <tr>
+            <th>{{ patient.patient_id }}</th>
+            <td>{{ patient.name }}</td>
+            <td>{{ patient.age }}</td>
+            <td>{{ patient.qr_code }}</td>
+            <td>{{ utils.form_button(url_for('patient', patient_id=patient.patient_id), utils.icon('hand-right') + ' Info', class="btn btn-success btn-outline") }}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <th>{{ utils.form_button(url_for('newpatient'), utils.icon('plus') + ' Add Patient', class="btn btn-primary", method='get') }}</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </tbody>
+</table>
+
+{% endblock %}
