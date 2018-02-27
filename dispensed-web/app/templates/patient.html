@@ -22,7 +22,7 @@
                     <img class="media-object img-circle profile-img" src="http://s3.amazonaws.com/37assets/svn/765-default-avatar.png">
                 </div>
                 <div class="media-body">
-                    <h2 class="media-heading">{{ patient.name}}</h2>
+                    <h2 class="media-heading">{{ patient.name }}</h2>
                     <div class="age">Age: {{ patient.age }} </div>
                     <div class="pid">Unique Patient ID: {{ patient.patient_id}} </div>
                     <div class="pid">Patient QR-Code:<div id="qr"></div></div>
@@ -48,14 +48,14 @@
             <div class="panel-body">
                 <div class="alert alert-info">
                     {% if drug_package is none %}
-                    This patient does not have a prepackaged drug package assigned. {{ utils.form_button(url_for('new_package', patient_id=patient.patient_id ), 'Assign now', class="btn") }}
+                    This patient does not have a prepackaged drug package assigned. {{ utils.form_button(url_for('change_package', patient_id=patient.patient_id ), 'Assign now', class="btn") }}
                     {% else %}
                     <table class="table">
                     <thead>
                         <tr>
                             <th>id</th>
                             <th>name</th>
-                            <th>{{utils.icon('trash')}}</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -63,13 +63,20 @@
                         <tr>
                             <td>{{ drug.drug_id }}</td>
                             <td>{{ drug.name }}</td>
-                            <td></td>
+                            <td>
+                                {{
+                                utils.form_button(url_for('unassign_drug',
+                                package_drug_id=drug.drug_id,
+                                patient_id=patient.patient_id),
+                                utils.icon('trash'))
+                                }}
+                            </td>
                         </tr>
                         {% endfor %}
                         <tr>
                             <th> <a href="{{url_for('assign_drug', patient_id=patient.patient_id, dp_id=drug_package.package_id )}}" class="btn btn-primary"> {{utils.icon('plus')}} Add drug</a> </th>
-                            <th>{{ patient }}</th>
-                            <th>{{ patient.patient_id }}</th>
+                            <th></th>
+                            <th></th>
                             <th></th>
                         </tr>
                     </tbody>
@@ -99,7 +106,7 @@
                             <th>name</th>
                             <th>qty</th>
                             <th>time</th>
-                            <th></th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -109,14 +116,22 @@
                             <td>{{ assoc.drug.name }}</td>
                             <td>{{ assoc.qty }}</td>
                             <td>{{ assoc.time.strftime('%H:%M') }}</td>
-                            <td></td>
+                            <td>
+                                {{
+                                utils.form_button(url_for('unassign_drug',
+                                dp_id=assoc.id,
+                                patient_id=patient.patient_id),
+                                utils.icon('trash'))
+                                }}
+                            </td>
                         </tr>
                         {% endfor %}
                         <tr>
-                            <th> <a href="{{url_for('assign_drug', patient_id=patient.patient_id )}}" class="btn btn-primary"> {{utils.icon('plus')}} Assign drug</a> </th>
-                            <th>{{ patient }}</th>
-                            <th>{{ patient.patient_id }}</th>
-                            <th></th>
+                            <td> <a href="{{url_for('assign_drug', patient_id=patient.patient_id )}}" class="btn btn-primary"> {{utils.icon('plus')}} Assign drug</a> </th>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>
@@ -125,7 +140,26 @@
         </div>
     </div>
     <!-- end of panel -->
+    <div class="panel">
+        <div class="panel-heading" role="tab" id="headingThree">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    Maintainance
+                </a>
+            </h4>
+        </div>
 
+        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+            <div class="panel-body">
+                <div class="container">
+                    <div class="col-sm-12" style="float: right; margin: auto auto 0 auto">
+                        {{ utils.form_button(url_for('change_package', patient_id=patient.patient_id, delete="True" ), 'Unassign Drug Package', class="btn btn-warning") }}
+                        {{ utils.form_button(url_for('delete_patient', patient_id=patient.patient_id ), utils.icon('trash') + 'Remove Patient', class="btn btn-danger") }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- End of Panel -->
 </div>
 <!-- end of #accordion -->
 
@@ -139,10 +173,11 @@
 <!-- Render QR -->
 <script type="text/javascript"> 
  jQuery('#qr').qrcode({
+    render	: "table",
      width:128,
      height:128,
      text:"{{ patient.qr_code }}"
- });	
+ });
 </script>
 <!-- Accordeon -->
 <script type="text/javascript">

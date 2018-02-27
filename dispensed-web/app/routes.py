@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import current_user, login_user, logout_user, login_required
 from app import app, login, db, auto
 from app.forms import LoginForm, RegistrationForm, NewPatientForm, NewDrugForm, AssignDrugForm, AssignDrugPackageForm
-from app.models import Nurse, Patient, DrugPackage, Drug, PatientDrug
+from app.models import Nurse, Patient, DrugPackage, Drug, PatientDrug, drug_identifier
 from werkzeug.urls import url_parse
 import datetime
 
@@ -28,7 +28,35 @@ def drugs():
     drugs = Drug.query.all()
     return render_template('drugs.html', title='Drugs', drugs=drugs)
 
-@app.route('/assigndrug', methods=['GET', 'POST'])
+@app.route('/drugs/delete', methods=['POST'])
+@auto.doc('private')
+@login_required
+def delete_drug():
+    """Delete a Drug and all associations of it."""
+    d = request.args['drug_id']
+    if (d is None):  # Sanity check
+        return "Error Invalid POST data."
+    drug = Drug.query.filter_by(drug_id=d).first()
+    # Delete all associations
+    assocs = PatientDrug.query.filter_by(drug_id=d).all()
+    for a in assocs:
+        db.session.delete(a)
+    packs = DrugPackage.query.all()
+    for pack in packs:
+        print("checking pack " + str(pack.package_id))
+        print(pack.drugs)
+        if (drug in pack.drugs):
+            print("DRUG FOUND HERE")
+            pack.drugs.remove(drug)
+    # Delete the drug
+    db.session.delete(drug)
+    db.session.commit()
+    flash("Successfully deleted " + drug.name)
+    return redirect(url_for('drugs'))
+
+
+
+@app.route('/patient/assigndrug', methods=['GET', 'POST'])
 @login_required
 def assign_drug():
     """Assign drug to a patient"""
@@ -55,6 +83,25 @@ def assign_drug():
         db.session.commit()
         return redirect(url_for('patient', patient_id=p))
     return render_template('assigndrug.html', title='Assign Drug', patient=patient, form=form)
+
+@app.route('/patient/unassigndrug', methods=['POST'])
+@login_required
+def unassign_drug():
+    """Unassign drug from a patient""" 
+    p = request.args.get('patient_id')
+    dp_id = request.args.get('dp_id')
+    package_drug_id = request.args.get('package_drug_id')
+    if (package_drug_id is None):  # We want to delete a drug from a patient 
+        drug_patient = PatientDrug.query.filter_by(id=dp_id).first()
+        db.session.delete(drug_patient)
+        flash("Drug successfully unassigned from Patient.")
+    else:  # We want to delete a drug from a package
+        drug_package = DrugPackage.query.filter_by(patient_id=p).first()
+        drug = Drug.query.filter_by(drug_id=package_drug_id).first()
+        drug_package.drugs.remove(drug)
+        flash("Drug successfully unassigned from Package")
+    db.session.commit()
+    return redirect(url_for('patient', patient_id=p))
 
 @app.route('/patient', methods=['GET', 'POST'])
 @auto.doc('private')
@@ -145,10 +192,11 @@ def newdrug():
         return redirect(url_for('drugs'))
     return render_template('adddrug.html', title='Add Drug', form=form)
 
-@app.route('/patient/newpackage', methods=['POST'])
+@app.route('/patient/changepackage', methods=['POST'])
 @auto.doc('private')
 @login_required
-def new_package():
+def change_package():
+    """Adds or deletes the package assigned to a patient."""
     pid = request.args['patient_id']
     dp = DrugPackage.query.filter_by(patient_id=pid).first()
     if (dp is None):  # Sanity check
@@ -158,9 +206,29 @@ def new_package():
         db.session.add(dp)
         db.session.commit()
         flash("Successfully assigned new drug package")
-        return redirect(url_for('patient', patient_id=pid))
-    return "Error - Invalid POST data."
+    elif (request.args['delete']):
+        db.session.delete(dp)
+        db.session.commit()
+        flash("Successfully deleted patient's drug package")
+    else:
+        flash("Error: Invalid POST Data")
+    return redirect(url_for('patient', patient_id=pid))
 
+@app.route('/patient/delete', methods=['POST'])
+@auto.doc('private')
+@login_required
+def delete_patient():
+    pid = request.args['patient_id']
+    if (pid is None):  # Sanity check
+        return "Error Invalid POST data."
+    patient = Patient.query.filter_by(patient_id=pid).first()
+    drug_package = DrugPackage.query.filter_by(patient_id=pid).first()
+    db.session.delete(patient)
+    if (drug_package is not None):
+        db.session.delete(drug_package)
+    db.session.commit()
+    flash("Successfully deleted " + patient.name)
+    return redirect(url_for('index'))
 
 @app.route('/doc')
 def documentation():
@@ -182,6 +250,6 @@ def dbread():
             if (time1.time() < drug_time and drug_time < time2.time()): 
                 drugs.append({'drug_id': assoc.drug.drug_id, 'qty': assoc.qty, 'time': assoc.time.strftime('%H:%M')})
         if (len(drugs) > 0):
-            patients_list.append({'patient_id': patient.patient_id, 'qr_code': patient.qr_code, 'drug_package': dp, 'drugs': drugs})
+            patients_list.append({'patient_id': patient.patient_id, 'qr_code': patient.qr_code, 'drug_package': dp.package_id, 'drugs': drugs})
     e = {'dispensing': patients_list}
     return jsonify(e)
