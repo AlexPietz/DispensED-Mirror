@@ -17,10 +17,10 @@ less = False # represents whether cl.value() decreases (or increases) at start o
 stopfor = 0 # if cl value increases, then we stop checking colour sensor for 10 iterations
 dispense_attempts = 0
 
-motor.run_timed(speed_sp=-450, time_sp=120)
+motor.run_timed(speed_sp=-250, time_sp=190)
 
 while (count_dispensed < numberPills):
-
+    print(cl.value())
     if (dispense_attempts >= 10):
         print('Error: dispenser time-out! - pill not dispensed')
         motor.stop()
@@ -29,10 +29,10 @@ while (count_dispensed < numberPills):
     # reverse direction every 200 iterations
     if (direction_count > 200):
         if (forward):
-            motor.run_timed(speed_sp=450, time_sp=120)
+            motor.run_timed(speed_sp=250, time_sp=190)
         else:
+            motor.run_timed(speed_sp=-250, time_sp=190)
             dispense_attempts += 1
-            motor.run_timed(speed_sp=-450, time_sp=120)
         forward = not forward
         direction_count = 0
 
@@ -48,13 +48,14 @@ while (count_dispensed < numberPills):
            dispensing = True
 
     elif (stopfor == 0):
-        if (less and cl.value() > (initial-2)):
+        if (less and cl.value() >= (initial-2)):
             # if sensor value originally decreased, and value has now increased
             # then dispense is complete
             dispensing = False
             count_dispensed += 1
             dispense_attempts = 0
             print(str(count_dispensed) + ' pills dispensed')
+            stopfor = 20
         elif (not less and cl.value() <= (initial+1) and cl.value() >= (initial-1)):
             # if sensor value originally increased, it may decrease below normal
             # before returning to normal, so stop monitoring sensor value for 10 iterations
@@ -62,7 +63,7 @@ while (count_dispensed < numberPills):
             count_dispensed += 1
             dispense_attempts = 0
             print(str(count_dispensed) + ' pills dispensed')
-            stopfor = 10
+            stopfor = 20
 
     direction_count += 1
     if (stopfor != 0):
