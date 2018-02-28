@@ -26,6 +26,7 @@
 \usepackage{amsfonts}
 \usepackage{booktabs}
 \usepackage{titling}
+\usepackage[xcolor]{changebar}
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{1}
 \usepackage[stable]{footmisc}
@@ -82,7 +83,7 @@
 \lstset{style=mystyle}
 
 \begin{document}
-
+\cbcolor{green}
 
 %----------------------------
 % Title
@@ -113,7 +114,12 @@
     {\Large DispensED - Group 17 \par}
     \vspace{3cm}
 %Date
-    {\small Last Update: \today}
+    {\small Last Update: \today
+      \\
+      \cbstart
+      \textit{Changes highlighted with a green bar.}
+      \cbend
+    }
 \end{minipage}
 \end{center}
 \clearpage
@@ -182,10 +188,12 @@ These marks are made using coloured tape.\\
 %will operate in a generally dynamic environment.
 The different milestones for these can be set as follows:
 \begin{enumerate}
-  \item Initial control of simple frame with pre-programmed movement
-  \item Full frame with pre-programmed movement
-  \item Full frame with movement that is controlled by a remote computer
+  \item \textbf{2018-02-07} Initial control of simple frame with pre-programmed movement
+  \item \textbf{2018-02-28} Full frame with pre-programmed movement
+\cbstart
+  \item \textbf{2018-03-14} Integration of frame with dispensers and vision
 \end{enumerate}
+\cbend
 
 \subsection{Dispensing of Medication}
 The robot will support giving out medication that does not require a special environment
@@ -202,9 +210,9 @@ of a type of pill and give out single pills, one at a time.
 \end{itemize}
 Based on these two aspects, the following milestones can be set:
 \begin{enumerate}
-  \item Dispensing of individual (vitamin) pills
-  \item Dispensing of pre-packaged pills for specific patients
-  \item Recognising when the pills have been taken from the robot by the patient
+  \item \textbf{2018-02-07} Dispensing of individual (vitamin) pills
+  \item \textbf{2018-02-28} Dispensing of pre-packaged pills for specific patients
+  \item \textbf{2018-03-14} Recognising when the pills have been taken from the robot by the patient
     (dispensing tray empty)
 \end{enumerate}
 
@@ -223,9 +231,12 @@ patients' wristbands). The system must be able to read these barcodes
 \end{itemize}
 This leads to the following milestones:
 \begin{enumerate}
-  \item Detecting target line and door markers
-  \item Scanning barcodes and using them to report the ID of the patient
-  \item Generating directions for actual movement: Using the lines to steer the
+\item \textbf{2018-02-07} Detecting target line and door markers.
+\cbstart
+  \item \textbf{2018-02-28} Scanning QR codes on the floor and using them to
+    report the ID of the patient.
+\cbend
+  \item \textbf{2018-03-14} Generating directions for actual movement: Using the lines to steer the
     robot along the lines.
 \end{enumerate}
 
@@ -237,13 +248,16 @@ turn, will be accompanied by a user interface, which nursing staff can use to ma
 and monitor what medication has been delivered. \\
 This leads to the following milestones:
 \begin{enumerate}
-  \item A design plan of how the software will be structured. The current idea is to have a 
+  \item \textbf{2018-02-07} A design plan of how the software will be structured. The current idea is to have a 
   modular design to maximise flexibility. This stage will also define the contents of 
   the different modules and how they will be approached.
-  \item Implementation of database and software interface (API) to modify the database.
-  \item Working user interface that inter-operates with the back-end
+\cbstart
+\item \textbf{2018-02-28} Implementation of database and software interface
+    (API) to modify the database as well as basic user interface to enter /
+    remove data from the database.
+  \item \textbf{2018-03-14} Implementation of polished interface and alerting engine.
 \end{enumerate}
-
+\cbend
 
 %\subsection{Back-end}
 %The back-end will offer a range of configuration as well as storing the patient
