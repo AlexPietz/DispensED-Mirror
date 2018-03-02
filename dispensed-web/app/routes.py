@@ -93,7 +93,8 @@ def unassign_drug():
     package_drug_id = request.args.get('package_drug_id')
     if (package_drug_id is None):  # We want to delete a drug from a patient 
         drug_patient = PatientDrug.query.filter_by(id=dp_id).first()
-        db.session.delete(drug_patient)
+        if (drug_patient is not None):
+            db.session.delete(drug_patient)
         flash("Drug successfully unassigned from Patient.")
     else:  # We want to delete a drug from a package
         drug_package = DrugPackage.query.filter_by(patient_id=p).first()

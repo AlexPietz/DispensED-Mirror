@@ -64,12 +64,8 @@
                             <td>{{ drug.drug_id }}</td>
                             <td>{{ drug.name }}</td>
                             <td>
-                                {{
-                                utils.form_button(url_for('unassign_drug',
-                                package_drug_id=drug.drug_id,
-                                patient_id=patient.patient_id),
-                                utils.icon('trash'))
-                                }}
+                                <form id='del_dp{{drug.drug_id}}' action='{{url_for('unassign_drug',package_drug_id=drug.drug_id,patient_id=patient.patient_id)}}' method='post'></form>
+                                <button class='btn-link' onclick="ConfirmDelete('del_dp{{drug.drug_id}}')">{{utils.icon('trash')}}</button>
                             </td>
                         </tr>
                         {% endfor %}
@@ -117,17 +113,13 @@
                             <td>{{ assoc.qty }}</td>
                             <td>{{ assoc.time.strftime('%H:%M') }}</td>
                             <td>
-                                {{
-                                utils.form_button(url_for('unassign_drug',
-                                dp_id=assoc.id,
-                                patient_id=patient.patient_id),
-                                utils.icon('trash'))
-                                }}
+                                <form id='del_dr{{assoc.id}}' action='{{url_for('unassign_drug',dp_id=assoc.id,patient_id=patient.patient_id)}}' method='post'></form>
+                                <button class='btn-link' onclick="ConfirmDelete('del_dr{{assoc.id}}')">{{utils.icon('trash')}}</button>
                             </td>
                         </tr>
                         {% endfor %}
                         <tr>
-                            <td> <a href="{{url_for('assign_drug', patient_id=patient.patient_id )}}" class="btn btn-primary"> {{utils.icon('plus')}} Assign drug</a> </th>
+                            <td> <a href="{{url_for('assign_drug', patient_id=patient.patient_id )}}" class="btn btn-primary"> {{utils.icon('plus')}} Assign drug</a> </td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -153,8 +145,10 @@
             <div class="panel-body">
                 <div class="container">
                     <div class="col-sm-12" style="float: right; margin: auto auto 0 auto">
-                        {{ utils.form_button(url_for('change_package', patient_id=patient.patient_id, delete="True" ), 'Unassign Drug Package', class="btn btn-warning") }}
-                        {{ utils.form_button(url_for('delete_patient', patient_id=patient.patient_id ), utils.icon('trash') + 'Remove Patient', class="btn btn-danger") }}
+                        <form style="display:inline;" id='del_cp{{patient.patient_id}}' action='{{url_for('change_package',patient_id=patient.patient_id,delete="True")}}' method='post'></form>
+                        <button style="display:inline;" class='btn btn-warning' onclick="ConfirmDelete('del_cp{{patient.patient_id}}')">Unassign Drug Package</button>
+                        <form style="display:inline;" id='del_pt{{patient.patient_id}}' action='{{url_for('delete_patient',patient_id=patient.patient_id)}}' method='post'></form>
+                        <button style="display:inline;" class='btn btn-danger' onclick="ConfirmDelete('del_pt{{patient.patient_id}}')">{{utils.icon('trash')}}Remove Patient</button>
                     </div>
                 </div>
             </div>
@@ -163,6 +157,22 @@
 </div>
 <!-- end of #accordion -->
 
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" style="color:red;" id="deleteModalLabel">Delete Item</h4>
+      </div>
+      <div class="modal-body">
+        <p>This action cannot be undone. Would you like to proceed?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="Delete()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
@@ -191,5 +201,13 @@
              $(a.target).prev('.panel-heading').removeClass('active');
          });
  });
+ function ConfirmDelete(id) {
+    localStorage.setItem('id', id);
+    $('#deleteModal').modal();
+    return false;
+}
+function Delete() {
+    document.forms[localStorage.getItem('id')].submit();
+}
 </script>
 {% endblock%}
