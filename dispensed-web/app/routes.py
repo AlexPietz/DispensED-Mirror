@@ -76,7 +76,7 @@ def assign_drug():
         if (dp is not None):
             pd = d
         else:
-            pd = PatientDrug(qty=int(form.qty.data), time=form.time.data)
+            pd = PatientDrug(qty=int(form.qty.data), time=form.time.data, dispensed=0)
             pd.drug = d
         field.drugs.append(pd)
         db.session.add(patient)
@@ -235,7 +235,10 @@ def delete_patient():
 def documentation():
     return auto.html(groups=['public','private'])
 
-@app.route('/dbread')
+# RESTful API
+
+# Reading the list of assigned drugs
+@app.route('/dbread', methods = ['GET'])
 @auto.doc('public')
 def dbread():
     """Read the database and return the patients data in json format"""
@@ -250,6 +253,8 @@ def dbread():
             time2 = datetime.datetime.now() + datetime.timedelta(minutes=15)
             if (time1.time() < drug_time and drug_time < time2.time()): 
                 drugs.append({'drug_id': assoc.drug.drug_id, 'qty': assoc.qty, 'time': assoc.time.strftime('%H:%M')})
+                assoc.dispensed = 0
+                db.session.commit()
         if(dp is not None):
             dp_insert = dp.package_id
         else:
@@ -258,3 +263,21 @@ def dbread():
             patients_list.append({'patient_id': patient.patient_id, 'qr_code': patient.qr_code, 'drug_package': dp_insert, 'drugs': drugs})
     e = {'dispensing': patients_list}
     return jsonify(e)
+
+# Mark drugs as dispensed
+@app.route('/dispensed', methods = ['PUT'])
+@auto.doc('public')
+def dispensed():
+    """Update drug status as dispensed"""
+    patient_id = request.json.get('patient_id')
+    drug_id = request.json.get('drug_id')
+    time = request.json.get('time')
+    if (patient_id is None or drug_id is None or time is None):
+        return jsonify({'result': False})
+    patient = Patient.query.filter_by(patient_id=patient_id).first()
+    for assoc in patient.drugs:
+        if (assoc.time.strftime('%H:%M') == time and str(assoc.drug.drug_id) == drug_id):
+            assoc.dispensed = 1
+            db.session.commit()
+            return jsonify({'result': True})
+    return jsonify({'result': False})

@@ -72,11 +72,8 @@
                 {% endif %}
             </td>
             <td>
-                {{
-                utils.form_button(url_for('delete_drug',
-                drug_id=drug.drug_id),
-                utils.icon('trash'))
-                }}
+                <form id='del_dr{{drug.drug_id}}' action='{{url_for('delete_drug',drug_id=drug.drug_id)}}' method='post'></form>
+                <button class='btn-link' onclick="ConfirmDelete('del_dr{{drug.drug_id}}')">{{utils.icon('trash')}}</button>
             </td>
         </tr>
         {% endfor %}
@@ -90,4 +87,35 @@
     </tbody>
 </table>
 
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" style="color:red;" id="deleteModalLabel">Delete Drug</h4>
+      </div>
+      <div class="modal-body">
+        <p>This action cannot be undone. Would you like to proceed?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="Delete()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
+
+{% block scripts %}
+{{super()}}
+<!-- Delete functions -->
+<script type="text/javascript">
+function ConfirmDelete(id) {
+    localStorage.setItem('id', id);
+    $('#deleteModal').modal();
+    return false;
+}
+function Delete() {
+    document.forms[localStorage.getItem('id')].submit();
+}
+</script>
+{% endblock%}

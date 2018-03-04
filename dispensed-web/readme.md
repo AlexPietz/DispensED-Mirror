@@ -61,3 +61,29 @@ As a result of the request, a JSON file is returned containing a list of patient
 For example, if a drug is to be dispensed at 10:00, it will be included in the list returned by a request made in the period from 09:45 until 10:15. 
 
 This way the robot will have this information in the case that it finished earlier or later than supposed to with the current distribution.
+
+### Confirmation for dispensed drugs
+In the database in the patient_drug table a new field is added - a flag for dispensed drug.
+
+The procedure for dispensing drugs is as follows:
+
+1) The robot acquires the list of drugs to be distributed by a request to:
+
+```
+http://localhost:5000/dbread
+```
+
+2) At that point the flags for the drugs that appear in the JSON file are set to false.
+This shows that these drugs are still to be dispensed.
+
+3) After the robot dispenses a particular drug, it returns a confirmation through a PUT request to  /dispensed page, including the patient, the drug and the time in JSON format. An example request executed from the Python shell is:
+
+```
+from requests import put
+```
+```
+put('http://localhost:5000/dispensed', json={'patient_id': '2', 'drug_id': '3', 'time': '15:35'})
+```
+
+At that point the corresponding flag for the dispensed drug becomes true.
+

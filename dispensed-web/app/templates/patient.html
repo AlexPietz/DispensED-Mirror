@@ -102,6 +102,7 @@
                             <th>name</th>
                             <th>qty</th>
                             <th>time</th>
+                            <th>dispensed</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -112,6 +113,13 @@
                             <td>{{ assoc.drug.name }}</td>
                             <td>{{ assoc.qty }}</td>
                             <td>{{ assoc.time.strftime('%H:%M') }}</td>
+                            <td>
+                                {% if assoc.dispensed %}
+                                {{ utils.icon('ok') }}
+                                {% else %}
+                                {{ utils.icon('remove') }}
+                                {% endif %}
+                            </td>
                             <td>
                                 <form id='del_dr{{assoc.id}}' action='{{url_for('unassign_drug',dp_id=assoc.id,patient_id=patient.patient_id)}}' method='post'></form>
                                 <button class='btn-link' onclick="ConfirmDelete('del_dr{{assoc.id}}')">{{utils.icon('trash')}}</button>

@@ -34,6 +34,7 @@ class PatientDrug(db.Model):
     drug = db.relationship("Drug")
     qty = db.Column(db.Integer, index=True)
     time = db.Column(db.DateTime, index=True)
+    dispensed = db.Column(db.Integer, index=True)
     
 class Nurse(UserMixin, db.Model):
     __tablename__ = 'nurse'
