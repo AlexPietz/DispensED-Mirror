@@ -87,3 +87,4 @@ put('http://localhost:5000/dispensed', json={'patient_id': '2', 'drug_id': '3', 
 
 At that point the corresponding flag for the dispensed drug becomes true.
 
+All the dispensed drug flags are reset to false at midnight.

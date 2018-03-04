@@ -5,6 +5,7 @@ from app.forms import LoginForm, RegistrationForm, NewPatientForm, NewDrugForm, 
 from app.models import Nurse, Patient, DrugPackage, Drug, PatientDrug, drug_identifier
 from werkzeug.urls import url_parse
 import datetime
+from threading import Timer
 
 # Redirect to login if not logged in
 @login.unauthorized_handler
@@ -53,8 +54,6 @@ def delete_drug():
     db.session.commit()
     flash("Successfully deleted " + drug.name)
     return redirect(url_for('drugs'))
-
-
 
 @app.route('/patient/assigndrug', methods=['GET', 'POST'])
 @login_required
@@ -234,6 +233,24 @@ def delete_patient():
 @app.route('/doc')
 def documentation():
     return auto.html(groups=['public','private'])
+
+# Reset all dispensed drug flags to false
+# This function is executed at start and scheduled at 00:00 every night
+def clear_dispensed_flags():
+    """Clear all drugs dispensed flags"""
+    patients = Patient.query.all()
+    for patient in patients:
+        for assoc in patient.drugs:
+            assoc.dispensed = 0
+            db.session.commit()
+    # Schedule next run at midnight
+    time1 = datetime.datetime.now()
+    time2 = time1.replace(day=time1.day+1, hour=0, minute=0, second=0, microsecond=0)
+    delta = time2 - time1
+    timer = Timer(delta.seconds+1, clear_dispensed_flags)
+    timer.start()
+
+clear_dispensed_flags()
 
 # RESTful API
 
