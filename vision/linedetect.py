@@ -43,12 +43,16 @@ def detect_line(img, hue):
     return contour
 
 
-def extract_direction(contour, center):
+def extract_direction(contour, size):
     # Get the highest point (CV images count y top to bottom, so we want the min y value)
     def get_y(pair): return pair[0][1]
     highest_point = min(contour, key=get_y)
+    filtered = list(filter(lambda x: x[0][1] == highest_point[0][1], contour))
+    highest_point = np.mean(filtered, 0)
 
-    dx = highest_point[0][0] - center[0]
-    dy = center[1] - highest_point[0][1]
+    dx = highest_point[0][0] - size[1] / 2
+    dy = size[0] - highest_point[0][1]
 
-    return np.sin(dx/dy)
+    print((dx,dy))
+
+    return np.arctan(dx/dy)

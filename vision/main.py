@@ -2,6 +2,7 @@ import cv2
 import linedetect
 import qrscanner
 import argparse
+import numpy as np
 
 ap = argparse.ArgumentParser()
 ap.add_argument('filename', metavar='F', type=str, help='Filename for the video')
@@ -20,6 +21,7 @@ if __name__ == "__main__":
         qr_contours = qrscanner.detect_qr(frame)
         frame = cv2.drawContours(frame, qr_contours, -1, (0, 255, 0), 3)
         line_contour = linedetect.detect_line(frame, args["hue"])
+        print(linedetect.extract_direction(line_contour, np.shape(frame)))
         # if not (line_contour == None):
         frame = cv2.drawContours(frame, [line_contour], -1, (0, 0, 255), 3)
 
