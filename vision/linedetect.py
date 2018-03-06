@@ -35,7 +35,7 @@ def detect_line(img, hue):
     contours = cv2.findContours(clean, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     contours = contours[1]
     if len(contours) == 0:
-        return None
+        return []
 
     # Find the largest contour, which we assume is the line
     contour = max(contours, key=cv2.contourArea)
