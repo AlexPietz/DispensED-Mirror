@@ -1,0 +1,26 @@
+<p>Hello,</p>
+<br>
+<p>This is to notify you that the following drugs have not been dispensed:</p>
+<table style="border-collapse: collapse;">
+    <tr>
+        <th style="text-align: left;padding: 4px;">Patient id</th>
+        <th style="text-align: left;padding: 4px;">Patient name</th>
+        <th style="text-align: left;padding: 4px;">Drug id</th>
+        <th style="text-align: left;padding: 4px;">Drug name</th>
+        <th style="text-align: left;padding: 4px;">Quantity</th>
+        <th style="text-align: left;padding: 4px;">Time</th>
+    </tr>        
+    {% for drug in undispensed_drugs %}
+    <tr>    
+        <td>{{ drug.patient_id }}</td>
+        <td>{{ drug.patient_name }}</td>
+        <td>{{ drug.drug_id }}</td>
+        <td>{{ drug.drug_name }}</td>
+        <td>{{ drug.qty }}</td>
+        <td>{{ drug.time }}</td>    
+    </tr>    
+    {% endfor %}
+</table>
+<br>
+<p>Regards,</p>
+<p>The <code>DispensED</code> team</p>

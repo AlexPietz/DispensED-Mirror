@@ -1,0 +1,11 @@
+Hello,
+
+This is to notify you that the following drugs have not been dispensed:
+
+{% for drug in undispensed_drugs %}
+Patient id: {{ drug.patient_id }}, Patient name: {{ drug.patient_name }}, Drug id: {{ drug.drug_id }}, Drug name: {{ drug.drug_name }}, Quantity: {{ drug.qty }}, Time: {{ drug.time }} 
+{% endfor %}
+
+Regards,
+
+The DispensED team

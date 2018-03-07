@@ -88,3 +88,32 @@ put('http://localhost:5000/dispensed', json={'patient_id': '2', 'drug_id': '3', 
 At that point the corresponding flag for the dispensed drug becomes true.
 
 All the dispensed drug flags are reset to false at midnight.
+
+### Notifications
+
+If the confirmation for a particular drug has not been received by 15 minutes after the supposed time, a notification (e-mail) is sent to the nurse.
+This e-mail contains information about the patient, time and the drug that has not been dispensed.
+
+The email server that will be used to send the emails, along with any required authentication and recipient, is defined in module config.py:
+
+    # Mail server settings
+    MAIL_SERVER = 'localhost'
+    MAIL_PORT = 25
+    MAIL_USE_TLS = False
+    MAIL_USE_SSL = False
+    MAIL_USERNAME = None
+    MAIL_PASSWORD = None
+    # Default mail sender
+    MAIL_DEFAULT_SENDER = 'team@dispensed.ed'
+    # Default mail recipient
+    MAIL_DEFAULT_RECIPIENT = 'yourmail@example.com'
+
+The above configuration is only for testing and uses Python's local SMTP debugging server.
+The SMTP debugging server can be started from the console window:
+
+    python -m smtpd -n -c DebuggingServer localhost:25
+
+When the SMTP debugging server is running, the emails sent by the application will be received and displayed in the console window.
+
+Note that for the demo we should use an actial mail server and an actual email account.
+

@@ -8,3 +8,16 @@ class Config_Disp(object):
         'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     BOOTSTRAP_CDN_FORCE_SSL = True
+
+# Mail server settings
+    MAIL_SERVER = 'localhost'
+    MAIL_PORT = 25
+    MAIL_USE_TLS = False
+    MAIL_USE_SSL = False
+    MAIL_USERNAME = None
+    MAIL_PASSWORD = None
+# Default mail sender
+    MAIL_DEFAULT_SENDER = 'team@dispensed.ed'
+# Default mail recipient
+    MAIL_DEFAULT_RECIPIENT = 'stefi.genkova@gmail.com'
+

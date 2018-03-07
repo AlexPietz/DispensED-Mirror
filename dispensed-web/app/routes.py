@@ -265,7 +265,7 @@ def dbread():
         dp = DrugPackage.query.filter_by(patient_id=patient.patient_id).first()
         drugs = []
         for assoc in patient.drugs:
-            drug_time = assoc.time.time();
+            drug_time = assoc.time.time()
             time1 = datetime.datetime.now() - datetime.timedelta(minutes=15)
             time2 = datetime.datetime.now() + datetime.timedelta(minutes=15)
             if (time1.time() < drug_time and drug_time < time2.time()): 

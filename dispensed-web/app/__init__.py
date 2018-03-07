@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
+from flask_mail import Mail
 
 app = Flask(__name__)
 app.config.from_object(Config_Disp)
@@ -13,6 +14,7 @@ migrate = Migrate(app, db)
 login = LoginManager(app)
 bootstrap = Bootstrap(app)
 auto = Autodoc(app)
+mail = Mail(app)
 
-from app import routes, models
+from app import routes, models, emails
 
