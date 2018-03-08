@@ -17,4 +17,3 @@ auto = Autodoc(app)
 mail = Mail(app)
 
 from app import routes, models, emails
-

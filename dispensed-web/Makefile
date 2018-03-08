@@ -13,7 +13,8 @@ check:
 		source venv/bin/activate; \
 		pip install --upgrade --requirement=requirements-check.txt; \
 		echo "Running Code check!"; \
-		flake8 --exclude .git,__pycache__,venv,migrations,docs; \
+		flake8 --ignore D100,D101,D102,D103,D104,D105 \
+					--exclude .git,__pycache__,venv,migrations,docs,app/__init__.py; \
 	)
 
 clean:

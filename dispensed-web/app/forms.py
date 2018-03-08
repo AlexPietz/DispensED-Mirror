@@ -1,9 +1,13 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, PasswordField, BooleanField, SubmitField, SelectField, DateTimeField
+from wtforms import (StringField, IntegerField, PasswordField, BooleanField,
+                     SubmitField, SelectField, DateTimeField)
 from wtforms.validators import DataRequired
-from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, NumberRange
+from wtforms.validators import (ValidationError, Email, EqualTo,
+                                NumberRange)
 from app.models import Nurse
-import random, string
+import random
+import string
+
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -30,25 +34,32 @@ class RegistrationForm(FlaskForm):
         if user is not None:
             raise ValidationError('Please use a different email address.')
 
+
 class NewPatientForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     age = IntegerField('Age', validators=[DataRequired(), NumberRange(min=0)])
     qr_code = StringField('QR Code', validators=[DataRequired()])
     submit = SubmitField('Add Patient')
 
+
 class NewDrugForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     side_effects = StringField('Side Effects')
     restricted = BooleanField('Restricted Drug?')
-    barcode = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(64))
+    barcode = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                      for _ in range(64))
     # barcode is currently randomly generated!!!!
     submit = SubmitField('Add Drug')
 
+
 class AssignDrugForm(FlaskForm):
     drug = SelectField('Drug', choices=["Select Drug"], coerce=int)
-    qty = IntegerField('Quantity', validators=[DataRequired(), NumberRange(min=1)])
-    time = DateTimeField('Time (HH:MM)', format='%H:%M', validators=[DataRequired()])
+    qty = IntegerField('Quantity', validators=[DataRequired(),
+                                               NumberRange(min=1)])
+    time = DateTimeField('Time (HH:MM)', format='%H:%M',
+                         validators=[DataRequired()])
     submit = SubmitField('Add')
+
 
 class AssignDrugPackageForm(FlaskForm):
     drug = SelectField('Drug', choices=["Select Drug"], coerce=int)
