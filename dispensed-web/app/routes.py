@@ -3,7 +3,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app import app, login, db, auto
 from app.forms import (LoginForm, RegistrationForm, NewPatientForm,
                        NewDrugForm, AssignDrugForm, AssignDrugPackageForm,
-                       EditPatientForm)
+                       EditPatientForm, EditDrugForm)
 from app.models import Nurse, Patient, DrugPackage, Drug, PatientDrug
 from werkzeug.urls import url_parse
 import datetime
@@ -261,7 +261,7 @@ def edit_patient():
     """Edit paitient data."""
     pid = request.args['patient_id']
     if (pid is None):  # Sanity check
-        return "Error Invalid POST data."
+        return "Error Invalid GET/POST data."
     patient = Patient.query.filter_by(patient_id=pid).first()
     form = EditPatientForm()
     if request.method == 'GET':
@@ -276,6 +276,32 @@ def edit_patient():
         flash('Patient Data Updated :' + form.name.data)
         return redirect(url_for('index'))
     return render_template('editpatient.html', title='Edit Patient', form=form)
+
+
+@app.route('/drug/edit', methods=['GET', 'POST'])
+@auto.doc('private')
+@login_required
+def edit_drug():
+    """Edit drug data."""
+    d = request.args['drug_id']
+    if (d is None):  # Sanity check
+        return "Error Invalid GET/POST data."
+    drug = Drug.query.filter_by(drug_id=d).first()
+    form = EditDrugForm()
+    if request.method == 'GET':
+        form.name.data = drug.name
+        form.side_effects.data = drug.side_effects
+        form.restricted.data = drug.restricted
+        form.barcode.data = drug.barcode
+    if form.validate_on_submit():
+        drug.name = form.name.data
+        drug.side_effects = form.side_effects.data
+        drug.restricted = int(form.restricted.data)
+        drug.barcode = form.barcode.data
+        db.session.commit()
+        flash('Drug Data Updated :' + form.name.data)
+        return redirect(url_for('drugs'))
+    return render_template('editdrug.html', title='Edit Drug', form=form)
 
 
 @app.route('/doc')

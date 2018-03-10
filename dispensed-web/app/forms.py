@@ -59,6 +59,14 @@ class NewDrugForm(FlaskForm):
     submit = SubmitField('Add Drug')
 
 
+class EditDrugForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    side_effects = StringField('Side Effects')
+    restricted = BooleanField('Restricted Drug?')
+    barcode = StringField('Barcode', validators=[DataRequired()])
+    submit = SubmitField('Save Changes')
+
+
 class AssignDrugForm(FlaskForm):
     drug = SelectField('Drug', choices=["Select Drug"], coerce=int)
     qty = IntegerField('Quantity', validators=[DataRequired(),
