@@ -2,7 +2,8 @@ from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import current_user, login_user, logout_user, login_required
 from app import app, login, db, auto
 from app.forms import (LoginForm, RegistrationForm, NewPatientForm,
-                       NewDrugForm, AssignDrugForm, AssignDrugPackageForm)
+                       NewDrugForm, AssignDrugForm, AssignDrugPackageForm,
+                       EditPatientForm)
 from app.models import Nurse, Patient, DrugPackage, Drug, PatientDrug
 from werkzeug.urls import url_parse
 import datetime
@@ -251,6 +252,30 @@ def delete_patient():
     db.session.commit()
     flash("Successfully deleted " + patient.name)
     return redirect(url_for('index'))
+
+
+@app.route('/patient/edit', methods=['GET', 'POST'])
+@auto.doc('private')
+@login_required
+def edit_patient():
+    """Edit paitient data."""
+    pid = request.args['patient_id']
+    if (pid is None):  # Sanity check
+        return "Error Invalid POST data."
+    patient = Patient.query.filter_by(patient_id=pid).first()
+    form = EditPatientForm()
+    if request.method == 'GET':
+        form.name.data = patient.name
+        form.age.data = str(patient.age)
+        form.qr_code.data = patient.qr_code
+    if form.validate_on_submit():
+        patient.name = form.name.data
+        patient.age = int(form.age.data)
+        patient.qr_code = form.qr_code.data
+        db.session.commit()
+        flash('Patient Data Updated :' + form.name.data)
+        return redirect(url_for('index'))
+    return render_template('editpatient.html', title='Edit Patient', form=form)
 
 
 @app.route('/doc')

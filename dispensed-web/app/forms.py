@@ -42,6 +42,13 @@ class NewPatientForm(FlaskForm):
     submit = SubmitField('Add Patient')
 
 
+class EditPatientForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    age = IntegerField('Age', validators=[DataRequired(), NumberRange(min=0)])
+    qr_code = StringField('QR Code', validators=[DataRequired()])
+    submit = SubmitField('Save Changes')
+
+
 class NewDrugForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     side_effects = StringField('Side Effects')
