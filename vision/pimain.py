@@ -5,6 +5,7 @@ import cv2
 import linedetect
 import qrscanner
 import time
+import datetime
 import numpy as np
 
 
@@ -43,8 +44,8 @@ while True:
             right = max_speed
             left = max_speed + (max_speed * direction)
         client.publish("topic/test", "start," + str(left) + "," + str(right))
-        # data.append((direction, left, right))
-        # npdata.append(line_contours)
+        data.append((datetime.time() ,direction, left, right))
+        npdata.append(line_contours)
     qr_contours = qrscanner.detect_qr(frame)
     if qr_contours != None:
         client.publish("topic/test", "stop")
@@ -63,12 +64,12 @@ print("[INFO] elasped time: {:.2f}".format(fps.elapsed()))
 print("[INFO] approx. FPS: {:.2f}".format(fps.fps()))
 print("[INFO] Found lines in {:.2f}".format(found/float(total)))
 
-# f = open("data.txt", "w")
-# for d in data:
-#     f.write(str(d) + "\n")
-# f.close()
-#
-# np.save("data.npy", np.array(npdata))
+f = open("data.txt", "w")
+for d in data:
+    f.write(str(d) + "\n")
+f.close()
+
+np.save("data.npy", np.array(npdata))
 
 # do a bit of cleanup
 vs.stop()
