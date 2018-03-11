@@ -35,15 +35,17 @@ def detect_line(img, hue):
     contours = cv2.findContours(clean, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     contours = contours[1]
     if len(contours) == 0:
-        return []
+        return [], None
 
     # Find the largest contour, which we assume is the line
+    contours = sorted(contours, key=cv2.contourArea, reverse=True)
     contour = max(contours, key=cv2.contourArea)
 
-    return contour
+    return contours, clean
 
 
-def extract_direction(contour, size):
+def extract_direction_max(contours, size):
+    contour = contours[0]
     # Get the highest point (CV images count y top to bottom, so we want the min y value)
     def get_y(pair): return pair[0][1]
     highest_point = min(contour, key=get_y)
@@ -52,6 +54,16 @@ def extract_direction(contour, size):
 
     dx = highest_point[0][0] - size[1] / 2
     dy = size[0] - highest_point[0][1]
+
+    print((dx,dy))
+
+    return np.arctan(dx/dy)
+
+def extract_direction_average(clean, size):
+    moments = cv2.moments(clean, binaryImage=True)
+    (x, y) = (int(moments['m10']/moments['m00']), int(moments['m01']/moments['m00']))
+    dx = x - size[1] / 2
+    dy = size[0] - y
 
     print((dx,dy))
 
