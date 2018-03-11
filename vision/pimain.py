@@ -5,7 +5,7 @@ import cv2
 import linedetect
 import qrscanner
 import time
-import datetime
+import timeit
 import numpy as np
 
 
@@ -21,6 +21,7 @@ vs.camera.shutter_speed = 10000
 
 data = []
 npdata = []
+timer = None
 found = 0
 total = 0
 
@@ -30,6 +31,8 @@ while True:
     frame = vs.read()
     line_frame = cv2.resize(frame, (0, 0), fx=0.3, fy=0.3)
     line_contours, clean = linedetect.detect_line(line_frame, 15)
+    if not timer:
+        timer = timeit.default_timer()
     total += 1
     if (len(line_contours) > 0):
         found += 1
@@ -44,7 +47,7 @@ while True:
             right = max_speed
             left = max_speed + (max_speed * direction)
         client.publish("topic/test", "start," + str(left) + "," + str(right))
-        data.append((datetime.time() ,direction, left, right))
+        data.append((timeit.default_timer - timer, direction, left, right))
         npdata.append(line_contours)
     qr_contours = qrscanner.detect_qr(frame)
     if qr_contours != None:
