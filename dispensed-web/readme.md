@@ -6,14 +6,17 @@
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
 ### Installing
+
+First, clone the git repository (`git clone https://github.com/xMythycle/DispensED.git`) and change into the newly created directory. From here you can simply run 
 ```
-$ python3 -m venv venv
-$ source venv/bin/activate
-$ pip install -r requirements.txt
+$ make
 ```
+to create the virtual environment and install all needed dependencies.
 
 ## Deployment
-Run `./avenv.sh` in a console. Then visit `http://127.0.0.1:5000/`
+Run `./run.sh` in a console. Then visit `http://127.0.0.1:5000/`
+
+## Development
 
 ### Project Structure
 ```
@@ -22,6 +25,7 @@ app
 |-- __init__.py   # Init module vars
 |-- models.py     # Database interface
 |-- routes.py     # What URL triggers what function
+|-- emails.py     # Manages sending of emails
 |-- static
 |   `-- <images and other static content>
 `-- templates
@@ -37,13 +41,14 @@ $ pip freeze > requirements.txt
 $ git add requirements.txt
 ```
 
-## DB Migration
+### DB Migration
 First, Update app/models.py
 Then:
 ```
 $ flask db migrate -m "<quick explaination>"
 $ flask db upgrade
 ```
+If this fails due to limitations in SQLite (you will get an error message), run `./cleandb.sh` instead, which will re-initiate the database instead (you will have to repopulate data.)
 
 ## API
 ### Assigning a drug to patient
