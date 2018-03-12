@@ -1,0 +1,26 @@
+name	age	qrcode	gender	condition
+Duane Brettoner	89	c14bfd1222968a1151948dc291c508b35eb14361	M	Maternal care for fetal problem, unspecified, first trimester, other fetus
+Steven Yeudall	80	b3ad94288a2164e46fad9a2ef5d4b377b6fa53cf	M	Fracture of right shoulder girdle, part unspecified, initial encounter for closed fracture
+Blake Legrice	82	6dc0785cd512101c3761c1f022f0acf8066455a1	F	Nondisplaced fracture of medial cuneiform of right foot, subsequent encounter for fracture with delayed healing
+Tomlin Yurshev	58	e88e626c12b9be2386d431294ba88d111c8210d1	M	Nondisplaced transverse fracture of shaft of unspecified radius, subsequent encounter for open fracture type IIIA, IIIB, or IIIC with routine healing
+Osbourn Mackleden	76	f13b76223eae398be9c8d0deb4fcbaa53bbb38cf	M	Open bite of oral cavity, subsequent encounter
+Shanon Hellwich	71	e4e4d76768ad6d0bc556a466000b1df62fea2ed7	F	Burn of first degree of left thigh, subsequent encounter
+Pat Dignam	66	29f178dc60c837fb44d58767be4f5a6a34ca500e	M	Corrosion of first degree of forehead and cheek
+Percy Oertzen	86	5464ab24bc09b0811c8899600c3beb57d9f2eaf2	M	Adverse effect of other general anesthetics, sequela
+Candra Hindmore	97	ba020e45980472a9db60700c35abb04d05c8957e	F	Unspecified injury of other specified muscles, fascia and tendons at wrist and hand level, unspecified hand, subsequent encounter
+Morna Cajkler	79	2e7609592d6dbb1be2be9bff6ee2394f0d523c9c	F	Exposure to excessive natural cold, sequela
+Pren Abrahamsohn	67	da05350b4a7a8e8ed78f396c9d448056a1ef8271	M	
+Giles Labden	80	6d5dd8e1113e5b7f5e59d7f8982007e1368ef54a	M	Burn of first degree of multiple sites of unspecified shoulder and upper limb, except wrist and hand, initial encounter
+Gabriella Hincks	80	18ea70ceec8d4e38c1758ff5c777a62f4159ca6a	F	Alcohol abuse counseling and surveillance
+Tommy Gavrielly	70	841fc30d3a5ce7acc77d7ce73d6587315570fb40	F	
+Rowena Mazin	68	0454986082ed9679d486c85ba54bea02bb235184	F	Subacute osteomyelitis, unspecified radius and ulna
+Earle Climer	59	18b3267f373d8a5e37ae78c6d8b7fc537ae65c86	M	Nondisplaced fracture of neck of right radius, subsequent encounter for closed fracture with malunion
+Waverly Sutherley	91	1138820968983666fd02761d70044cf94c7d8364	M	Encounter for prophylactic removal of unspecified organ
+Elton Hearley	58	6959bdbf54406d125136cb809fe3bfbfc3788e79	M	Other forms of acute pericarditis
+Janeczka Jeavons	64	f1047c13ada19d966043ef33579d010a73e39551	F	Other physeal fracture of lower end of humerus, unspecified arm, subsequent encounter for fracture with malunion
+Ursa Couvet	61	2f00c6831a4f334e5a0454849849ff74ae6e2954	F	Age-related osteoporosis with current pathological fracture, left ankle and foot, subsequent encounter for fracture with malunion
+Huntley Maddock	92	35ae4dd958d750e276147d992a586a5eac874d35	M	Duodenitis without bleeding
+Collete Strapp	74	6878a6873f8788e91e522464aae03db4ac20430c	F	Unspecified injury of left forearm, initial encounter
+Karlene Fountaine	80	8ca2243284d9b9cc9b517c87cbb11f9858a3159c	F	Unspecified soft tissue disorder related to use, overuse and pressure, unspecified upper arm
+Welsh Yakovl	76	d64fbaaf00dde7bf1655cddf32aa57129ed6e513	M	Type 2 diabetes mellitus with stable proliferative diabetic retinopathy, left eye
+Lemar Bellson	76	d9de26b7a52b33c37b6b1557778faa94b4c717af	M	Monocular esotropia with A pattern, right eye

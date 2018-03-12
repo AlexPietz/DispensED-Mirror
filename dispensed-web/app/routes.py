@@ -8,6 +8,7 @@ from app.models import Nurse, Patient, DrugPackage, Drug, PatientDrug
 from werkzeug.urls import url_parse
 import datetime
 from threading import Timer
+import csv
 
 
 # Redirect to login if not logged in
@@ -385,3 +386,60 @@ def dispensed():
             db.session.commit()
             return jsonify({'result': True})
     return jsonify({'result': False})
+
+
+#######################################
+# Populate Database with sample data: #
+def Load_Data(file_name):
+    with open(file_name, 'r') as f:
+        reader = csv.reader(f)
+        csvlist = list(reader)
+    return csvlist
+
+
+@app.route('/populate')
+def populate_sample():
+    #try:
+    # Patients
+    file_name = "./samples/sample_patients.csv"
+    data = Load_Data(file_name)
+    print(data)
+    for i in data:
+        print ("Adding " + i[0])
+        p = Patient(
+            name=i[0],
+            age=i[1],
+            qr_code=i[2],
+            sex=i[3],
+            details=i[4]
+        )
+        db.session.add(p) #Add all the records
+
+    # Drugs
+    file_name = "./samples/sample_drugs.csv"
+    data = Load_Data(file_name) 
+    for i in data:
+        d = Drug(
+            name=i[0],
+            restricted=i[1],
+            barcode=i[2]
+        )
+        db.session.add(d)
+
+    # Drug assignments
+    file_name = "./samples/sample_times.csv"
+    data = Load_Data(file_name) 
+    for i in data:
+        patient = Patient.query.filter_by(patient_id=i[0]).first()
+        drug = Drug.query.filter_by(drug_id=i[1]).first()
+        pd = PatientDrug(qty=int(i[2]),
+                         time=datetime.datetime.strptime(i[3], '%H:%M'),
+                         dispensed=0)
+        pd.drug = drug
+        patient.drugs.append(pd)
+        db.session.add(patient)
+
+    db.session.commit() #Attempt to commit all the records
+    #except:
+    #    db.session.rollback() #Rollback the changes on error
+    return("Success!")
