@@ -186,7 +186,8 @@ def newpatient():
     form = NewPatientForm()
     if form.validate_on_submit():
         p = Patient(name=form.name.data, age=int(form.age.data),
-                    qr_code=form.qr_code.data)
+                    qr_code=form.qr_code.data, sex=form.sex.data,
+                    details=form.details.data)
         db.session.add(p)
         db.session.commit()
         flash('New Patient Registered :' + form.name.data)
@@ -327,7 +328,10 @@ def clear_dispensed_flags():
     timer.start()
 
 
-clear_dispensed_flags()
+try:
+    clear_dispensed_flags()
+except:
+    pass
 
 
 # RESTful API

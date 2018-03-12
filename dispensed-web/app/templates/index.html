@@ -51,21 +51,19 @@
 <table class="table">
     <thead>
         <tr>
-            <th>id</th>
-            <th>name</th>
-            <th>age</th>
-            <th>qr code</th>
-            <th>option</th>
-            <th>edit</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Sex</th>
+            <th>Option</th>
+            <th>Edit</th>
             <tr>
     </thead>
     <tbody>
         {% for patient in patients %}
         <tr>
-            <th>{{ patient.patient_id }}</th>
             <td>{{ patient.name }}</td>
             <td>{{ patient.age }}</td>
-            <td>{{ patient.qr_code }}</td>
+            <td>{{ patient.sex }}</td>
             <td>{{ utils.form_button(url_for('patient', patient_id=patient.patient_id), utils.icon('hand-right') + ' Info', class="btn btn-success btn-outline") }}</td>
             <td> <a href="{{url_for('edit_patient', patient_id=patient.patient_id )}}" class="btn btn-success btn-outline"> {{utils.icon('pencil')}} Edit</a> </td>
         </tr>

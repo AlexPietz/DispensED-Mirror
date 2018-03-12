@@ -72,6 +72,8 @@ class Patient(db.Model):
     age = db.Column(db.Integer, index=True)
     qr_code = db.Column(db.String(64), index=True)
     drugs = db.relationship('PatientDrug')
+    sex = db.Column(db.String(1))
+    details = db.Column(db.String(256))
 
     def __repr__(self):
         return '<Patient {}>'.format(self.name)

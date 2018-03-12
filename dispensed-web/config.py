@@ -22,3 +22,16 @@ class Config_Disp(object):
     MAIL_DEFAULT_SENDER = 'team@dispensed.ed'
 # Default mail recipient
     MAIL_DEFAULT_RECIPIENT = 'stefi.genkova@gmail.com'
+
+    if (os.environ.get('DEMO')):
+        # Mail server settings
+        MAIL_SERVER = 'localhost'
+        MAIL_PORT = 2525
+        MAIL_USE_TLS = False
+        MAIL_USE_SSL = False
+        MAIL_USERNAME = None
+        MAIL_PASSWORD = None
+        # Default mail sender
+        MAIL_DEFAULT_SENDER = 'team@dispens.ed'
+        # Default mail recipient
+        MAIL_DEFAULT_RECIPIENT = 'pietz@tardis.ed.ac.uk'

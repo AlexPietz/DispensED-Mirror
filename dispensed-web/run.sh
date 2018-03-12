@@ -4,7 +4,7 @@ export FLASK_APP=dispensed.py
 
 dir=$(pwd)
 
-export SQLALCHEMY_DATABASE_URI="$dir/app.db"
+export DATABASE_URL="sqlite:///$dir/app.db"
 export SQLALCHEMY_TRACK_MODIFICATIONS=False 
 
 while [ "$1" != "" ]; do
@@ -13,6 +13,26 @@ while [ "$1" != "" ]; do
         -d)
             export FLASK_DEBUG=1
             ;;
+        --demo)
+            export FLASK_DEBUG=1
+            export DEMO="True"
+            export DATABASE_URL="sqlite:///$dir/demo.db"
+            echo "Starting SMTP server on port 2525"
+            python -m smtpd -n -c DebuggingServer localhost:2525 &
+            ;;
+        --demo-init)
+            export DEMO="True"
+            export  DATABASE_URL="sqlite:///$dir/demo.db"
+            echo "Setting up database.."
+            mv migrations migrations_temp
+            echo "DB INIT:"
+            flask db init
+            echo "DB MIGRATE:"
+            flask db migrate
+            echo "DB UPGRADE:"
+            flask db upgrade
+            exit 1
+            ;;
         *)
             echo "Unknown Parameter $PARAM"
             ;;
@@ -20,8 +40,12 @@ while [ "$1" != "" ]; do
     shift
 done
 
+
 flask run
 
+echo "Shut down web server!"
+echo "Shutting down SMTP server.."
+kill $!
 echo "Finished."
 
 

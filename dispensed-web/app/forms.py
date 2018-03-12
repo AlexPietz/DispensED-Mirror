@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import (StringField, IntegerField, PasswordField, BooleanField,
-                     SubmitField, SelectField, DateTimeField)
+                     SubmitField, SelectField, DateTimeField, RadioField,
+                     TextAreaField)
 from wtforms.validators import DataRequired
 from wtforms.validators import (ValidationError, Email, EqualTo,
                                 NumberRange)
@@ -39,6 +40,8 @@ class NewPatientForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     age = IntegerField('Age', validators=[DataRequired(), NumberRange(min=0)])
     qr_code = StringField('QR Code', validators=[DataRequired()])
+    sex = RadioField("Sex", choices=[("M", "Male"), ("F", "Female"), ("O", "Other")], validators=[DataRequired()])
+    details = TextAreaField("Patient Details")
     submit = SubmitField('Add Patient')
 
 
@@ -46,6 +49,7 @@ class EditPatientForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     age = IntegerField('Age', validators=[DataRequired(), NumberRange(min=0)])
     qr_code = StringField('QR Code', validators=[DataRequired()])
+    details = TextAreaField("Patient Details")
     submit = SubmitField('Save Changes')
 
 

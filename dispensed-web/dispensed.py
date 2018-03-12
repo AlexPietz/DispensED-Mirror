@@ -1,6 +1,6 @@
 """The basic wrapper for the Flask application.
 
-To be called with flsak run
+To be called with flask run
 """
 from app import app, db
 from app.models import Nurse
