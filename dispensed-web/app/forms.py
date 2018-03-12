@@ -8,6 +8,7 @@ from wtforms.validators import (ValidationError, Email, EqualTo,
 from app.models import Nurse
 import random
 import string
+import datetime
 
 
 class LoginForm(FlaskForm):
@@ -76,7 +77,8 @@ class AssignDrugForm(FlaskForm):
     qty = IntegerField('Quantity', validators=[DataRequired(),
                                                NumberRange(min=1)])
     time = DateTimeField('Time (HH:MM)', format='%H:%M',
-                         validators=[DataRequired()])
+                         validators=[DataRequired()],
+                         default=datetime.datetime.strptime('13:30', '%H:%M'))
     submit = SubmitField('Add')
 
 

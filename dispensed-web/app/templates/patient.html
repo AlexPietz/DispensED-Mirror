@@ -45,64 +45,16 @@
 <h2>Medication</h2>
 
 <div class="panel-group wrap" id="accordion" role="tablist" aria-multiselectable="true">
-    <div class="panel">
-        <div class="panel-heading" role="tab" id="headingOne">
-            <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    Drug Package
-                </a>
-            </h4>
-        </div>
-        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-            <div class="panel-body">
-                <div class="alert alert-info">
-                    {% if drug_package is none %}
-                    This patient does not have a prepackaged drug package assigned. {{ utils.form_button(url_for('change_package', patient_id=patient.patient_id ), 'Assign now', class="btn") }}
-                    {% else %}
-                    <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Name</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for drug in drug_package.drugs %}
-                        <tr>
-                            <td>{{ drug.drug_id }}</td>
-                            <td>{{ drug.name }}</td>
-                            <td>
-                                <form id='del_dp{{drug.drug_id}}' action='{{url_for('unassign_drug',package_drug_id=drug.drug_id,patient_id=patient.patient_id)}}' method='post'></form>
-                                <button class='btn-link' onclick="ConfirmDelete('del_dp{{drug.drug_id}}')">{{utils.icon('trash')}}</button>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                        <tr>
-                            <th> <a href="{{url_for('assign_drug', patient_id=patient.patient_id, dp_id=drug_package.package_id )}}" class="btn btn-primary"> {{utils.icon('plus')}} Add drug</a> </th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </tbody>
-                </table>
-                    {% endif %}
-                </div>
-
-            </div>
-        </div>
-    </div>
-    <!-- end of panel -->
 
     <div class="panel">
         <div class="panel-heading" role="tab" id="headingTwo">
             <h4 class="panel-title">
-                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                     Unpackaged Drugs
                 </a>
             </h4>
         </div>
-        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+        <div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
             <div class="panel-body">
                 <table class="table">
                     <thead>
@@ -141,6 +93,7 @@
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>
@@ -149,6 +102,56 @@
         </div>
     </div>
     <!-- end of panel -->
+
+
+    <div class="panel">
+        <div class="panel-heading" role="tab" id="headingOne">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                    Drug Package
+                </a>
+            </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body">
+                <div class="alert alert-info">
+                    {% if drug_package is none %}
+                    This patient does not have a prepackaged drug package assigned. {{ utils.form_button(url_for('change_package', patient_id=patient.patient_id ), 'Assign now', class="btn") }}
+                    {% else %}
+                    <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for drug in drug_package.drugs %}
+                        <tr>
+                            <td>{{ drug.drug_id }}</td>
+                            <td>{{ drug.name }}</td>
+                            <td>
+                                <form id='del_dp{{drug.drug_id}}' action='{{url_for('unassign_drug',package_drug_id=drug.drug_id,patient_id=patient.patient_id)}}' method='post'></form>
+                                <button class='btn-link' onclick="ConfirmDelete('del_dp{{drug.drug_id}}')">{{utils.icon('trash')}}</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <th> <a href="{{url_for('assign_drug', patient_id=patient.patient_id, dp_id=drug_package.package_id )}}" class="btn btn-primary"> {{utils.icon('plus')}} Add drug</a> </th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </tbody>
+                </table>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- end of panel -->
+
     <div class="panel">
         <div class="panel-heading" role="tab" id="headingThree">
             <h4 class="panel-title">
