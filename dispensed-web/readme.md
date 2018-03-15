@@ -122,3 +122,7 @@ When the SMTP debugging server is running, the emails sent by the application wi
 
 Note that for the demo we should use an actial mail server and an actual email account.
 
+### Drugs stock
+
+A list has been added showing all drugs and their corresponding quantities in the robot. The drug quatities can be updated in the Stock page.
+On confirmation for a dispensed drug (PUT request to  /dispensed page) the respective stock quantity is reduced.

@@ -85,3 +85,9 @@ class AssignDrugForm(FlaskForm):
 class AssignDrugPackageForm(FlaskForm):
     drug = SelectField('Drug', choices=["Select Drug"], coerce=int)
     submit = SubmitField('Add')
+
+
+class AddStockForm(FlaskForm):
+    stock_qty = IntegerField('Quantity', validators=[DataRequired(),
+                                               NumberRange(min=1)])
+    submit = SubmitField('Add')

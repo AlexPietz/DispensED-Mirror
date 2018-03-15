@@ -24,6 +24,7 @@
                     {% if not current_user.is_anonymous %}
                     <li><a href="{{ url_for('index') }}">Patients</a></li>
                     <li><a href="{{ url_for('drugs') }}">Drugs</a></li>
+                    <li><a href="{{ url_for('stock') }}">Stock</a></li>
                     <li><a href="{{ url_for('newpatient') }}">Add new Patient</a></li>
                     {% endif %}
                 </ul>

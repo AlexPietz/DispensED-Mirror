@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% import "bootstrap/utils.html" as utils %}
+
+{% block styles %}
+{{super()}}
+<style>
+ /*Bootstrap button outline override*/
+ .btn-outline {
+     background-color: transparent;
+     color: inherit;
+     transition: all .5s;
+ }
+
+ .btn-primary.btn-outline {
+     color: #428bca;
+ }
+
+ .btn-success.btn-outline {
+     color: #5cb85c;
+ }
+
+ .btn-info.btn-outline {
+     color: #5bc0de;
+ }
+
+ .btn-warning.btn-outline {
+     color: #f0ad4e;
+ }
+
+ .btn-danger.btn-outline {
+     color: #d9534f;
+ }
+
+ .btn-primary.btn-outline:hover,
+ .btn-success.btn-outline:hover,
+ .btn-info.btn-outline:hover,
+ .btn-warning.btn-outline:hover,
+ .btn-danger.btn-outline:hover {
+     color: #fff;
+ }
+
+
+</style>
+{% endblock %}
+
+{% block app_content %}
+{{super()}}
+
+<h1>Stock</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Drug Id</th>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Alert</th>
+            <th>Add</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for drug in drugs %}
+        <tr>
+            <th>{{ drug.drug_id }}</th>
+            <td>{{ drug.name }}</td>
+            <td>{{ drug.stock_qty }}</td>
+            <td style="color:red">
+                {% if (drug.stock_qty < 10) %}
+                {{ utils.icon('exclamation-sign') }}
+                {% endif %}                
+            </td>
+            <td> <a href="{{url_for('add_stock', drug_id=drug.drug_id )}}" class="btn btn-success btn-outline"> {{utils.icon('plus')}} Add</a> </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

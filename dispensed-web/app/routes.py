@@ -3,7 +3,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app import app, login, db, auto
 from app.forms import (LoginForm, RegistrationForm, NewPatientForm,
                        NewDrugForm, AssignDrugForm, AssignDrugPackageForm,
-                       EditPatientForm, EditDrugForm)
+                       EditPatientForm, EditDrugForm, AddStockForm)
 from app.models import Nurse, Patient, DrugPackage, Drug, PatientDrug
 from werkzeug.urls import url_parse
 import datetime
@@ -308,6 +308,36 @@ def edit_drug():
     return render_template('editdrug.html', title='Edit Drug', form=form)
 
 
+@app.route('/stock')
+@auto.doc('private')
+@login_required
+def stock():
+    """Show drugs stock."""
+    drugs = Drug.query.all()
+    return render_template('stock.html', title='Stock', drugs=drugs)
+
+
+@app.route('/stock/add', methods=['GET', 'POST'])
+@auto.doc('private')
+@login_required
+def add_stock():
+    """Add drugs stock."""
+    d = request.args['drug_id']
+    if (d is None):  # Sanity check
+        return "Error Invalid GET/POST data."
+    drug = Drug.query.filter_by(drug_id=d).first()
+    form = AddStockForm()
+    if request.method == 'GET':
+        form.stock_qty.data = 1
+    if form.validate_on_submit():
+        drug.stock_qty += form.stock_qty.data
+        db.session.commit()
+        flash('Stock Updated :' + drug.name)
+        return redirect(url_for('stock'))
+    return render_template('addstock.html', title='Add stock',
+                           drug=drug, form=form)
+
+
 @app.route('/doc')
 def documentation():
     return auto.html(groups=['public', 'private'])
@@ -381,10 +411,14 @@ def dispensed():
     if (patient_id is None or drug_id is None or time is None):
         return jsonify({'result': False})
     patient = Patient.query.filter_by(patient_id=patient_id).first()
+    drug = Drug.query.filter_by(drug_id=drug_id).first()
     for assoc in patient.drugs:
         if (assoc.time.strftime('%H:%M') == time and
                 str(assoc.drug.drug_id) == drug_id):
             assoc.dispensed = 1
+            drug.stock_qty -= assoc.qty
+            if (drug.stock_qty < 0):
+                drug.stock_qty = 0
             db.session.commit()
             return jsonify({'result': True})
     return jsonify({'result': False})

@@ -86,6 +86,7 @@ class Drug(db.Model):
     side_effects = db.Column(db.String(256))
     restricted = db.Column(db.Integer, index=True)
     barcode = db.Column(db.String(64))
+    stock_qty = db.Column(db.Integer, index=True, default=0)
 
 
 class DrugPackage(db.Model):
