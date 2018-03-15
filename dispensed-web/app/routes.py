@@ -270,10 +270,12 @@ def edit_patient():
         form.name.data = patient.name
         form.age.data = str(patient.age)
         form.qr_code.data = patient.qr_code
+        form.details.data = patient.details
     if form.validate_on_submit():
         patient.name = form.name.data
         patient.age = int(form.age.data)
         patient.qr_code = form.qr_code.data
+        patient.details = form.details.data
         db.session.commit()
         flash('Patient Data Updated :' + form.name.data)
         return redirect(url_for('index'))
