@@ -23,26 +23,7 @@ start_time = time.time()
 for n in range(0, int(num_packages_to_load)):
     print ('Package to load: ' + str(n+1))
 
-    if (cl.value() == colour_code):
-        skip = True
-
-    if not skip:
-        motor.run_forever(speed_sp=150)
-
-        while ((cl.value() != colour_code) and (not timed_out)):
-            if ((time.time() - start_time) > (10.0 * int(num_packages_to_load))):
-                timed_out = True
-                motor.stop()
-            pass
-
-        time.sleep(stop_times[colour_code])
-        motor.stop()
-
-    if (timed_out):
-        print('Timed out. No free slots found.')
-        sys.exit(0)
-    else:
-        print('found free slot')
+    find_slot
 
     cl.mode='COL-REFLECT'
 
@@ -64,4 +45,30 @@ for n in range(0, int(num_packages_to_load)):
             print('Package placed in')
             time.sleep(2)
             break
+exit()
+
+def find_slot:
+    if (cl.value() == colour_code):
+        skip = True
+        
+        if not skip:
+            motor.run_forever(speed_sp=150)
+            
+            while ((cl.value() != colour_code) and (not timed_out)):
+                if ((time.time() - start_time) > (10.0 * int(num_packages_to_load))):
+                    timed_out = True
+                    motor.stop()
+                pass
+            
+            time.sleep(stop_times[colour_code])
+            motor.stop()
+        
+        if (timed_out):
+            print('Timed out. No free slots found.')
+            sys.exit(0)
+        else:
+            print('found free slot')
+
+    if cl.value() != colour_code:
+        find_slot
 
