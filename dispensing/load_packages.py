@@ -23,7 +23,7 @@ start_time = time.time()
 for n in range(0, int(num_packages_to_load)):
     print ('Package to load: ' + str(n+1))
 
-    find_slot
+    find_slot()
 
     cl.mode='COL-REFLECT'
 
@@ -70,5 +70,5 @@ def find_slot:
             print('found free slot')
 
     if cl.value() != colour_code:
-        find_slot
+        find_slot()
 
