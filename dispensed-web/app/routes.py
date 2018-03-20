@@ -399,6 +399,47 @@ def dbread():
     e = {'dispensing': patients_list}
     return jsonify(e)
 
+# Reading the list of assigned drugs
+@app.route('/dispensestatus', methods=['GET'])
+@auto.doc('public')
+def dispense_status():
+    """Read the database and return data about how many pills have been dispense."""
+    patients = Patient.query.all()
+    patients_list = []
+    for patient in patients:
+        inactive_drugs = []
+        dispensed_drugs = []
+        overdue_drugs = []
+        active_drugs = []
+        for assoc in patient.drugs:
+            drug_time = assoc.time.time()
+            if(assoc.dispensed == 1):
+                # Drug has been dispensed - Great!
+                dispensed_drugs.append(assoc.drug.name)
+            else:
+                time1 = datetime.datetime.now() - datetime.timedelta(minutes=15)
+                time2 = datetime.datetime.now() + datetime.timedelta(minutes=15)
+
+                if (time1.time() < drug_time and drug_time < time2.time()):
+                    # Drug Is currently active
+                    active_drugs.append(assoc.drug.name)
+                elif (drug_time < time1.time()):
+                    # Drug is overdue!
+                    overdue_drugs.append(assoc.drug.name)
+                elif (drug_time > time2.time()):
+                    # Drug is not due to be delivered yet
+                    inactive_drugs.append(assoc.drug.name)
+        
+        patients_list.append({'userId': patient.patient_id,
+                              'active': len(active_drugs),
+                              'urgent': len(overdue_drugs),
+                              'newCount': len(dispensed_drugs),
+                              'newFromBatch': len(inactive_drugs)
+                              })
+    #e = {'dataSet': patients_list}
+    return jsonify(patients_list)
+
+
 
 # Mark drugs as dispensed
 @app.route('/dispensed', methods=['PUT'])

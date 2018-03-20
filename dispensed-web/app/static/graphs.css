@@ -1,0 +1,166 @@
+.graph-titles {
+  display: inline-block;
+  width: 200px;
+  vertical-align: top;
+  margin: 20px 0 20px;
+  padding:0;
+}
+  .graph-title {
+    margin-bottom:1em;
+    width: 100%;
+    line-height: 30px;
+    overflow: hidden;
+  }
+    .graph-title-name {
+      float:left;
+      
+    }
+    .graph-title-count {
+      float:right;
+      padding: 0 10px;
+      height:30px;
+      border-radius: 20px;
+      color:#fff;
+    }
+ 
+.graph {
+  display: inline-block;
+  position:relative;
+  /*margin: 20px 20px 20px 10px;*/
+  padding:0;
+  width: 50vw;
+}
+ 
+.graph-bar {
+  display: block;
+  overflow:hidden;
+  margin-bottom:1em;
+}
+ 
+.graph-bar-fragment {
+  width: 0;
+  height:30px;
+  float:left;
+  background-color: #ccc;
+  -webkit-transition: width .4s ease-in;
+}
+ 
+.graph-bar-single {
+  height: 30px;
+  background-color: #ccc;
+  -webkit-transition: width .4s ease-in;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+ 
+.graph-bar-fragment:last-child {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.graph-bar-fragment:first-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+
+ 
+.urgent {
+background: #c9575e;
+background: -moz-linear-gradient(top,  #c9575e 0%, #c12e41 100%);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#c9575e), color-stop(100%,#c12e41));
+background: -webkit-linear-gradient(top,  #c9575e 0%,#c12e41 100%);
+background: -o-linear-gradient(top,  #c9575e 0%,#c12e41 100%);
+background: -ms-linear-gradient(top,  #c9575e 0%,#c12e41 100%);
+background: linear-gradient(to bottom,  #c9575e 0%,#c12e41 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c9575e', endColorstr='#c12e41',GradientType=0 );
+}
+ 
+.active {
+background: #d6ac6e;
+background: -moz-linear-gradient(top,  #d6ac6e 0%, #cc9e52 100%);
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#d6ac6e), color-stop(100%,#cc9e52));
+background: -webkit-linear-gradient(top,  #d6ac6e 0%,#cc9e52 100%);
+background: -o-linear-gradient(top,  #d6ac6e 0%,#cc9e52 100%);
+background: -ms-linear-gradient(top,  #d6ac6e 0%,#cc9e52 100%);
+background: linear-gradient(to bottom,  #d6ac6e 0%,#cc9e52 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d6ac6e', endColorstr='#cc9e52',GradientType=0 );
+}
+ 
+.newCount {
+  background: #6db683;
+  background: -moz-linear-gradient(top,  #6db683 0%, #569b6d 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#6db683), color-stop(100%,#569b6d));
+  background: -webkit-linear-gradient(top,  #6db683 0%,#569b6d 100%);
+  background: -o-linear-gradient(top,  #6db683 0%,#569b6d 100%);
+  background: -ms-linear-gradient(top,  #6db683 0%,#569b6d 100%);
+  background: linear-gradient(to bottom,  #6db683 0%,#569b6d 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6db683', endColorstr='#569b6d',GradientType=0 );
+}
+ 
+.newFromBatch {
+  background: #7f8cc4;
+  background: -moz-linear-gradient(top,  #7f8cc4 0%, #6477ac 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7f8cc4), color-stop(100%,#6477ac));
+  background: -webkit-linear-gradient(top,  #7f8cc4 0%,#6477ac 100%);
+  background: -o-linear-gradient(top,  #7f8cc4 0%,#6477ac 100%);
+  background: -ms-linear-gradient(top,  #7f8cc4 0%,#6477ac 100%);
+  background: linear-gradient(to bottom,  #7f8cc4 0%,#6477ac 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7f8cc4', endColorstr='#6477ac',GradientType=0 );
+}
+ 
+.markers {
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: opacity .4s ease-in;
+}
+.markers.loaded {
+  visibility: visible;
+  opacity: 1;
+}
+ 
+.marker {
+  -webkit-box-sizing:border-box;
+  position: absolute;
+  bottom:-2em;
+  top:0;
+  border-left: 2px solid #e6e6e6;
+}
+ 
+.marker-number{
+  position:absolute;
+  padding-left: .5em;
+  bottom:0;
+  text-align:right;
+}
+ 
+.marker:last-child .marker-number {
+  right:0;
+  padding-left:0;
+  padding-right: .5em;
+}
+ 
+.graph-key {
+    margin:0px 10px 0 auto;
+    float: right;
+    display:inline-block;
+    position: relative;
+}
+ 
+.graph-key-item {
+  display: inline-block;
+  margin-right: 1.5em;
+}
+.graph-key-dot {
+  display:inline-block;
+  width:1em;
+  height:1em;
+  border-radius:50%;
+  margin-right:.5em;
+}
+ 

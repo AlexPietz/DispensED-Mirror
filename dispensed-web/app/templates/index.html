@@ -40,32 +40,67 @@
      color: #fff;
  }
 
-
+ .profile-img {
+    height: 85px;
+ }
 </style>
+<link href="{{url_for('static', filename='graphs.css')}}" rel="stylesheet">
 {% endblock %}
 
 {% block app_content %}
 {{super()}}
 
 <h1>Patients </h1>
+<div class="graph-key">
+    <div class="graph-key-item">
+    <span class="graph-key-dot urgent"></span><span>Overdue</span>
+    </div>
+    <div class="graph-key-item">
+    <span class="graph-key-dot active"></span><span>Currently being dispensed</span>
+    </div>
+    <div class="graph-key-item">
+    <span class="graph-key-dot newFromBatch"></span><span>Not yet due</span>
+    </div>
+    <div class="graph-key-item">
+    <span class="graph-key-dot newCount"></span><span>Dispensed</span>
+    </div>
+    </div>
 <table class="table">
     <thead>
         <tr>
+            <th></th>
             <th>Name</th>
             <th>Age</th>
             <th>Sex</th>
+            <th>Dispension Status</th>
             <th>Option</th>
-            <th>Edit</th>
+           <!--<th>Edit</th> -->
             <tr>
     </thead>
     <tbody>
         {% for patient in patients %}
         <tr>
+            <td>
+                {% if patient.sex == "M" %}
+                <img class="media-object img-circle profile-img" src="{{ url_for('static', filename='avatar-m.png') }}">
+                {% else %}
+                <img class="media-object img-circle profile-img" src="{{ url_for('static', filename='avatar-f.png') }}">
+                {% endif %}
+            </td>
             <td>{{ patient.name }}</td>
             <td>{{ patient.age }}</td>
             <td>{{ patient.sex }}</td>
+            <td>
+                <div class="graph-container">
+	                  <div class="graph">
+                        <div class="graph-bars" id="{{patient.patient_id}}">
+                        <!-- Populated -->
+                        </div>
+                    </div>
+                </div>
+            </td>
             <td>{{ utils.form_button(url_for('patient', patient_id=patient.patient_id), utils.icon('hand-right') + ' Info', class="btn btn-success btn-outline") }}</td>
-            <td> <a href="{{url_for('edit_patient', patient_id=patient.patient_id )}}" class="btn btn-success btn-outline"> {{utils.icon('pencil')}} Edit</a> </td>
+            <!-- <td> <a href="{{url_for('edit_patient', patient_id=patient.patient_id )}}" class="btn btn-success btn-outline"> {{utils.icon('pencil')}} Edit</a> </td> -->
         </tr>
         {% endfor %}
         <tr>
@@ -78,4 +113,14 @@
     </tbody>
 </table>
 
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+<script src="{{url_for('static', filename='graphs.js')}}"></script>
+<script>
+    $(document).ready(function() {
+    $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+    });
+</script>
 {% endblock %}
