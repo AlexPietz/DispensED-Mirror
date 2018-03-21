@@ -5,7 +5,7 @@ import time
 
 cl = ev3.ColorSensor(ev3.INPUT_2)
 cl.mode = 'COL-COLOR'
-motor = ev3.Motor('outD')
+motor = ev3.Motor('outC')
 colour = sys.argv[1]
 colour_codes = {"black": 1, "blue": 2, "green": 3, "yellow": 4, "red": 5, "white": 6, "brown": 7}
 stop_times = {1: 0.1, 2: 0.1, 3: 0.04, 4: 0.1, 5: 0.1, 6: 0.1, 7: 0.2}

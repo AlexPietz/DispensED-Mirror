@@ -7,8 +7,8 @@ cl_A = ev3.ColorSensor(ev3.INPUT_1)
 cl_A.mode = 'COL-REFLECT'
 cl_B = ev3.ColorSensor(ev3.INPUT_2)
 cl_B.mode = 'COL-REFLECT'
-motor_A = ev3.MediumMotor('outC')
-motor_B = ev3.MediumMotor('outB')
+motor_A = ev3.MediumMotor('outB')
+motor_B = ev3.MediumMotor('outD')
 
 number_pills = (int(sys.argv[1]), int(sys.argv[2]))
 
