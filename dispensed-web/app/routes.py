@@ -1,4 +1,5 @@
-from flask import render_template, flash, redirect, url_for, request, jsonify
+from flask import (render_template, flash, redirect, url_for, request, jsonify,
+                   g)
 from flask_login import current_user, login_user, logout_user, login_required
 from app import app, login, db, auto
 from app.forms import (LoginForm, RegistrationForm, NewPatientForm,
@@ -10,6 +11,7 @@ import datetime
 from threading import Timer
 import csv
 
+r_status = {'current': "refill"}
 
 # Redirect to login if not logged in
 @login.unauthorized_handler
@@ -24,7 +26,9 @@ def unauthorized_callback():
 def index():
     """Homepage - Shows patient list to logged in users."""
     patients = Patient.query.all()
-    return render_template('index.html', title='Home', patients=patients)
+    s = r_status['current']
+    return render_template('index.html', title='Home', patients=patients,
+                           status=s)
 
 
 @app.route('/drugs')
@@ -439,6 +443,16 @@ def dispense_status():
     #e = {'dataSet': patients_list}
     return jsonify(patients_list)
 
+
+@app.route('/updatestatus', methods=['PUT'])
+@auto.doc('public')
+def update_status():
+    status = request.json.get('status')
+    valid = ["idle", "dispensing", "error", "refill"]
+    if (status not in valid):  # Sanity check
+        return "Error Invalid POST data."
+    r_status['current'] = status
+    return ("Successfully set robot_status to " + status)
 
 
 # Mark drugs as dispensed

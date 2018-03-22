@@ -45,11 +45,51 @@
  }
 </style>
 <link href="{{url_for('static', filename='graphs.css')}}" rel="stylesheet">
+<link href="{{url_for('static', filename='dots.css')}}" rel="stylesheet">
 {% endblock %}
 
 {% block app_content %}
 {{super()}}
-
+<div class="row">
+<div style="float:left">
+<h1>Robot Status</h1>
+</div>
+<div style="position:relative; float:left; display: inline-block; margin: 25px auto 0px 25px;">
+    
+    <div class="dcontainer">
+        {% if status == "idle" or status is none %}
+        <div class="dot blue"><span><span></span></span></div>
+        {% elif status == "dispensing" %}
+        <div class="dot green"><span><span></span></span></div>
+        {% elif status == "error" %}
+        <div class="dot red"><span><span></span></span></div>
+        {% elif status == "refill" %}
+        <div class="dot orange"><span><span></span></span></div>
+        {% endif %}
+    </div>
+</div>
+</div>
+<div class="row">
+    {% if status == "idle" or status is none %}
+    <div class="alert alert-info" role="alert">
+        The robot is currently standing by and is ready to start dispensing drugs.
+    </div>
+    {% elif status == "dispensing" %}
+    <div class="alert alert-success" role="alert">
+        The robot is currently out for dispension of drugs.
+    </div>
+    {% elif status == "error" %}
+    <div class="alert alert-danger" role="alert">
+        An error has occured! The robot is stuck after patient: {{ patients[2].name }}
+    </div>
+    {% elif status == "refill" %}
+    <div class="alert alert-warning" role="alert">
+        The robot is in refilling mode. {{ utils.form_button(url_for('newpatient'), utils.icon('download-alt') + ' Refilling Instructions', class="btn btn-danger", method='get') }}
+    </div>
+    {% endif %}
+</div>
+<hr>
+<div class="row">
 <h1>Patients </h1>
 <div class="graph-key">
     <div class="graph-key-item">
@@ -112,6 +152,7 @@
         </tr>
     </tbody>
 </table>
+</div>
 
 {% endblock %}
 

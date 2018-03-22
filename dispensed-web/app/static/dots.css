@@ -1,0 +1,92 @@
+@keyframes pulse-2-5 {
+  0% {
+    opacity: .75;
+    transform: scale(1);
+  }
+  25% {
+    opacity: 0.75;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.5);
+  }
+}
+
+.dotlabel {
+    position:relative;
+}
+.rs {
+    border-bottom: 1px solid #999;
+    padding-bottom: 10px;
+    background-color: pink;
+    overflow: hidden;
+}
+.dcontainer {
+    display: flex;
+    justify-content: space-around;
+}
+
+.dot {
+  border-radius: 50%;
+  height: 25px;
+  width: 25px;
+}
+.dot > span {
+  animation: pulse-2-5 1s linear infinite;
+  border-radius: 50%;
+  display: block;
+  height: 25px;
+  width: 25px;
+}
+.dot > span > span {
+  animation: pulse-2-5 1s linear infinite;
+  border-radius: 50%;
+  display: block;
+  height: 25px;
+  width: 25px;
+}
+.dot > span > span:after {
+  animation: pulse-2-5 1s linear infinite;
+  border-radius: 50%;
+  content: '';
+  display: block;
+  height: 25px;
+  width: 25px;
+}
+.dot.blue {
+  background-color: #26B3FF;
+}
+.dot.blue span {
+  background-color: rgba(85, 216, 232, 0.4);
+}
+.dot.blue span:after {
+  background-color: rgba(85, 216, 232, 0.4);
+}
+.dot.green {
+  background-color: #35E861;
+}
+.dot.green span {
+  background-color: rgba(110, 255, 122, 0.4);
+}
+.dot.green span:after {
+  background-color: rgba(110, 255, 122, 0.4);
+}
+.dot.red {
+  background-color: #FF4B44;
+}
+.dot.red span {
+  background-color: rgba(232, 111, 112, 0.4);
+}
+.dot.red span:after {
+  background-color: rgba(232, 111, 112, 0.4);
+}
+.dot.orange {
+  background-color: #E87337;
+}
+.dot.orange span {
+  background-color: rgba(255, 183, 90, 0.4);
+}
+.dot.orange span:after {
+  background-color: rgba(255, 183, 90, 0.4);
+}
