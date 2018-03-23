@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+<h1>First time setup.</h1>
+<div class="row">
+    <div class="col-md-6">
+        Thank you for choosing DispensED. To get your robot up and running, a few additional setup steps are required. First you will need to print out the control QR codes and lay down the path the robot will follow. After that, you need to fill the robot with drugs so that it can start dispensing.
+        <h2>Control QR codes</h2>
+        {{ wtf.quick_form(form) }}
+        </div>
+        </div>
+{% endblock %}

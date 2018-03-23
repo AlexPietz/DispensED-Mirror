@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import (StringField, IntegerField, PasswordField, BooleanField,
                      SubmitField, SelectField, DateTimeField, RadioField,
-                     TextAreaField)
+                     TextAreaField, Form, widgets, SelectMultipleField)
 from wtforms.validators import DataRequired
 from wtforms.validators import (ValidationError, Email, EqualTo,
                                 NumberRange)
@@ -35,6 +35,32 @@ class RegistrationForm(FlaskForm):
         user = Nurse.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('Please use a different email address.')
+
+
+class SetupForm(FlaskForm):
+    colours = [('orange', 'Orange'),
+                                  ('blue', 'Blue'),
+                                  ('green', 'Green'),
+                                  ('yellow', 'Yellow')]
+    colour_start = SelectField('Select line colour',
+                               choices=colours)
+    colour_back = SelectField('Select line colour',
+                              choices=[("turn",
+                                        "N/A (follow same line after 180° turn)")]
+                              +colours)
+    submit = SubmitField('Print out QR codes and instructions')
+
+
+
+class RefillForm(FlaskForm):
+    drug1 = SelectField('Drug to be filled into Dispenser 1', choices=[("0","Select Drug")], coerce=int)
+    drug2 = SelectField('Drug to be filled into Dispenser 2', choices=[("0","Select Drug")], coerce=int)
+    dps = SelectMultipleField('Packaged drugs for the following patients:'
+                                  ,choices=[(None, "<no patients have packages assigned>")]
+                              ,coerce=int)
+    #qty = IntegerField('Quantity', validators=[DataRequired(),
+    #                                           NumberRange(min=1)])
+    submit = SubmitField('Add')
 
 
 class NewPatientForm(FlaskForm):

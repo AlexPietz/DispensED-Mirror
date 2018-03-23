@@ -32,6 +32,6 @@ class Config_Disp(object):
         MAIL_USERNAME = None
         MAIL_PASSWORD = None
         # Default mail sender
-        MAIL_DEFAULT_SENDER = 'team@dispens.ed'
+        MAIL_DEFAULT_SENDER = 'team@dispens.ed.ac.uk'
         # Default mail recipient
         MAIL_DEFAULT_RECIPIENT = 'pietz@tardis.ed.ac.uk'

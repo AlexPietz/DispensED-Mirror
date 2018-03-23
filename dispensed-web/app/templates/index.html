@@ -84,7 +84,7 @@
     </div>
     {% elif status == "refill" %}
     <div class="alert alert-warning" role="alert">
-        The robot is in refilling mode. {{ utils.form_button(url_for('newpatient'), utils.icon('download-alt') + ' Refilling Instructions', class="btn btn-danger", method='get') }}
+        The robot is in refilling mode. {{ utils.form_button(url_for('refill'), utils.icon('download-alt') + ' Refilling Instructions', class="btn btn-danger", method='get') }}
     </div>
     {% endif %}
 </div>

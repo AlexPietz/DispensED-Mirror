@@ -1,0 +1,102 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block styles %}
+<style>
+ body {
+     background: rgb(204,204,204); 
+ }
+ page[size="A4"] {
+     background: white;
+     width: 21cm;
+     height: 29.7cm;
+     display: block;
+     margin: 0 auto;
+     margin-bottom: 0.5cm;
+     box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+
+     padding: 10px;
+ }
+ @media print {
+     body, page[size="A4"] {
+         margin: 0;
+         box-shadow: 0;
+     }
+ }
+ @page {
+     size: A4;
+     margin: 0;
+ }
+ .stitched {
+     padding: 20px;
+     margin: 10px;
+     font-size: 21px;
+     font-weight: bold;
+     line-height: 1.3em;
+     border: 2px dashed #000;
+     border-radius: 10px;
+     font-weight: normal;
+ }
+
+
+ h1 {
+     width:30px;
+     margin-top:-40px;
+     margin-left:5px;
+     background:white;
+     position: fixed;
+ }
+ #main{
+     display:flex;
+     justify-content:space-around;  
+ }
+ #sub1,#sub2{
+     margin-top: -20px;
+     width:260px;
+     height:275px;
+ }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<page size="A4">
+<div>
+    <img src="{{ url_for('static', filename='logo.png', _external=True) }}" style="width:150px" /> <div style="width:20px; float: left">&nbsp;</div> <h2>Control QR Code instructions</h2> </div>
+<hr style="margin: 0 0 4em;"/>
+
+<div id="main">
+    <div class="stitched" id="sub1">
+        <h1>✁</h1>
+        <b> Start QR Code </b>
+        <div id="qr1"></div>
+    </div>
+    <div class="stitched" id="sub2">
+        <h1>✁</h1>
+        <b> End QR Code </b>
+        <div id="qr2"></div>
+    </div>
+</div>
+Please cut out the QR codes above and affix them next to the start and end of the line. Please note that the QR codes should be at least 5cm away from the nearest corner in the line.
+</page>
+{% endblock %}
+
+
+
+{% block scripts %}
+{{super()}}
+<script type="text/javascript" src="{{url_for('static', filename='jquery.qrcode.min.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='qrcode.js')}}"></script>
+<!-- Render QR -->
+<script type="text/javascript"> 
+ jQuery('#qr1').qrcode({
+     width:256,
+     height:256,
+     text:"{{ qr1 }}"
+ });
+ jQuery('#qr2').qrcode({
+     width:256,
+     height:256,
+     text:"{{ qr2 }}"
+ });
+</script>
+{% endblock %}

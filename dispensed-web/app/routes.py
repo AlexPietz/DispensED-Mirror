@@ -2,14 +2,13 @@ from flask import (render_template, flash, redirect, url_for, request, jsonify,
                    g)
 from flask_login import current_user, login_user, logout_user, login_required
 from app import app, login, db, auto
-from app.forms import (LoginForm, RegistrationForm, NewPatientForm,
-                       NewDrugForm, AssignDrugForm, AssignDrugPackageForm,
-                       EditPatientForm, EditDrugForm, AddStockForm)
+from app.forms import *
 from app.models import Nurse, Patient, DrugPackage, Drug, PatientDrug
 from werkzeug.urls import url_parse
 import datetime
 from threading import Timer
 import csv
+from flask_weasyprint import HTML, render_pdf
 
 r_status = {'current': "refill"}
 
@@ -29,6 +28,47 @@ def index():
     s = r_status['current']
     return render_template('index.html', title='Home', patients=patients,
                            status=s)
+
+@app.route('/setup', methods=['GET', 'POST']) 
+@auto.doc('private')
+@login_required
+def setup_page():
+    """Page to facilitate first-time setup."""
+
+    form = SetupForm()
+    if form.validate_on_submit():
+        return render_template('setup_print.html',
+                               qr1=form.colour_start.data,
+                               qr2=form.colour_back.data)
+    return render_template('setup.html', form=form)
+
+
+@app.route('/refill', methods=['GET', 'POST'])
+@login_required
+def refill():
+    """Refill robot's drug compartments."""
+    drugs = Drug.query.all()
+    dps = DrugPackage.query.all()
+    fp_form = [(dp.package_id,
+                Patient.query.filter_by(patient_id=dp.patient_id).first().name)
+                for dp in dps]
+    form = RefillForm()
+    form.drug1.choices = [("0","<None> (Do not refill)")] + \
+                         [(d.drug_id, d.name) for d in drugs]
+    form.drug2.choices = form.drug1.choices
+    form.dps.choices = fp_form
+    if form.validate_on_submit():
+        return redirect(url_for('refill'))
+    return render_template('refill.html', title='Refill Robot', form=form)
+
+
+@app.route('/setup_print')
+@auto.doc('private')
+@login_required
+def setup_print():
+    """Renders QR code to print"""
+    return render_template('setup_print.html')
+
 
 
 @app.route('/drugs')
