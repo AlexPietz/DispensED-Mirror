@@ -32,7 +32,7 @@ def dispense_number(number_pills):
 
 def dispense(motor, no_to_dispense):
     if no_to_dispense == 0:
-        return
+        return True
 
     forward = True  # direction of motor
     direction_count = 0  # number of iterations since direction change

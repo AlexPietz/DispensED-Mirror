@@ -47,12 +47,10 @@ def dispense(client, userdata, msg):
 
 btn.on_enter = enter
 
-# This loop checks buttons state continuously,
-# calls appropriate event handlers
+# checks buttons state continuously, calls appropriate event handler
 btn.process() # Check for currently pressed buttons.
 # If the new state differs from the old state,
-# call the appropriate button event handlers.
-time.sleep(0.01)  # buttons state will be checked every 0.01 second
+# call the appropriate button event handler
 
 client = mqtt.Client()
 client.connect("192.168.17.130", 1883, 60)

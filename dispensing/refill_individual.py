@@ -5,7 +5,6 @@ import time
 
 def refill_indi:
 
-
     motor_A = ev3.MediumMotor('outB')
     motor_B = ev3.MediumMotor('outD')
 
