@@ -48,8 +48,6 @@ def refill_pack(times):
                 print(attempts_count)
                 attempt()
                 attempts_count += 1
-               # if (cl.value == colour_code):
-        	#    break
             else:
                 break
 

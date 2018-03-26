@@ -9,9 +9,6 @@ import refill_indi
 import refill_pack
 import check_identification
 
-btn = ev3.Button()
-
-start_time = 0
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with code: " + str(rc))
@@ -30,8 +27,8 @@ def enter(state):
 
 def dispense(client, userdata, msg):
     msg = msg.payload.decode()
-    id_colour = msg[0]
-    if not (check_identification(id_colour)):
+    
+    if not check_identification(msg[0]):
         client.publish("dispensing", "0")
         return
 
@@ -42,19 +39,17 @@ def dispense(client, userdata, msg):
     if not dispense_package_colour(msg[2]): #Colour of package to dispense
         client.publish("dispensing", "0")
         return
-    #client.publish("dispensing", dispense_number([msg[1], msg[2]]))
+
     client.publish("dispensing", "1")
 
-btn.on_enter = enter
 
-# checks buttons state continuously, calls appropriate event handler
-btn.process() # Check for currently pressed buttons.
-# If the new state differs from the old state,
-# call the appropriate button event handler
+start_time = 0
+btn = ev3.Button()
+btn.on_enter = enter # on enter button pressed
+btn.process() # Check for currently pressed buttons
 
 client = mqtt.Client()
 client.connect("192.168.17.130", 1883, 60)
-
 client.on_connect = on_connect
 client.on_message = dispense
 
