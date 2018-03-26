@@ -3,48 +3,55 @@ import sys
 import ev3dev.ev3 as ev3
 import time
 
-cl = ev3.ColorSensor(ev3.INPUT_2)
-cl.mode = 'COL-COLOR'
-motor = ev3.Motor('outC')
-colour = sys.argv[1]
-colour_codes = {"black": 1, "blue": 2, "green": 3, "yellow": 4, "red": 5, "white": 6, "brown": 7}
-stop_times = {1: 0.1, 2: 0.1, 3: 0.04, 4: 0.1, 5: 0.1, 6: 0.1, 7: 0.2}
-skip = False
-timed_out = False
-try:
-    colour_code = colour_codes[sys.argv[1]]
-except:
-    raise Exception('Invalid colour')
+def dispense_package_colour(colour):
 
-start_time = time.time()
-print(start_time)
+    cl = ev3.ColorSensor(ev3.INPUT_2)
+    cl.mode = 'COL-COLOR'
+    motor = ev3.Motor('outC')
+    colour_codes = {"black": 1, "blue": 2, "green": 3, "yellow": 4, "red": 5, "white": 6, "brown": 7}
+    stop_times = {1: 0.1, 2: 0.1, 3: 0.04, 4: 0.1, 5: 0.1, 6: 0.1, 7: 0.2}
+    skip = False
+    timed_out = False
+    try:
+        colour_code = colour_codes[colour]
+    except:
+        print('Invalid colour')
+        return "0"
 
-if cl.value() == colour_code:
-    skip = True
+    start_time = time.time()
+    print(start_time)
 
-if not skip:
-    motor.run_forever(speed_sp=150)
+    if cl.value() == colour_code:
+        skip = True
 
-    while (cl.value() != colour_code) and (not timed_out):
-        if (time.time() - start_time) > 6.0:
-            timed_out = True
-            motor.stop()
-        pass
+    if not skip:
+        motor.run_forever(speed_sp=150)
 
-    time.sleep(stop_times[colour_code])
-    motor.stop()
+        while (cl.value() != colour_code) and (not timed_out):
+            if (time.time() - start_time) > 6.0:
+                timed_out = True
+                motor.stop()
 
-if timed_out:
-    print('Timed out')
-else:
-    print('found ' + colour)
+        time.sleep(stop_times[colour_code])
+        motor.stop()
 
-cl.mode = 'COL-REFLECT'
+    if timed_out:
+        print('Timed out')
+        return "0"
+    else:
+        print('found ' + colour)
 
-time.sleep(1)
+    cl.mode = 'COL-REFLECT'
 
-initial = cl.value()
+    time.sleep(1)
 
-while True:
-    if cl.value() <= (initial - 2) or cl.value() >= (initial + 2):
-        print('Package taken')
+    initial = cl.value()
+
+    start_time = time.time()
+
+    while True:
+        if cl.value() <= (initial - 2) or cl.value() >= (initial + 2):
+            print('Package taken')
+            return "1"
+        if time.time() > start_time + 30:
+            return "0"

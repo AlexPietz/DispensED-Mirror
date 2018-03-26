@@ -3,14 +3,31 @@ import sys
 import ev3dev.ev3 as ev3
 import time
 
-cl_A = ev3.ColorSensor(ev3.INPUT_1)
-cl_A.mode = 'COL-REFLECT'
-cl_B = ev3.ColorSensor(ev3.INPUT_2)
-cl_B.mode = 'COL-REFLECT'
-motor_A = ev3.MediumMotor('outB')
-motor_B = ev3.MediumMotor('outD')
+def dispense_number(number_pills):
 
-number_pills = (int(sys.argv[1]), int(sys.argv[2]))
+    cl_A = ev3.ColorSensor(ev3.INPUT_1)
+    cl_A.mode = 'COL-REFLECT'
+    cl_B = ev3.ColorSensor(ev3.INPUT_2)
+    cl_B.mode = 'COL-REFLECT'
+    motor_A = ev3.MediumMotor('outB')
+    motor_B = ev3.MediumMotor('outD')
+
+    if not dispense(motor_A, number_pills[0]):
+        return "0"
+    if not dispense(motor_B, number_pills[1]):
+        return "0"
+
+    time.sleep(0.5)
+    initial = cl_B.value()
+    start_time = time.time()
+
+    while True:
+        value = cl_B.value()
+        if value <= (initial - 4) or value >= (initial + 4):
+            print('Pills taken')
+            return "1"
+        if time.time() > start_time + 30:
+            return "0"
 
 
 def dispense(motor, no_to_dispense):
@@ -31,7 +48,7 @@ def dispense(motor, no_to_dispense):
         if dispense_attempts >= 10:
             print('Error: dispenser time-out! - pill not dispensed')
             motor.stop()
-            break
+            return False
 
         # reverse direction every 200 iterations
         if direction_count > 200:
@@ -78,16 +95,4 @@ def dispense(motor, no_to_dispense):
         time.sleep(0.0005)  # increase length of iteration
     motor.stop()
     time.sleep(1)
-
-
-dispense(motor_A, number_pills[0])
-dispense(motor_B, number_pills[1])
-
-time.sleep(0.5)
-initial = cl_B.value()
-
-while True:
-    value = cl_B.value()
-    if value <= (initial - 4) or value >= (initial + 4):
-        print('Pills taken')
-        break
+    return True

@@ -35,63 +35,69 @@ def attempt():
     time.sleep(0.2)
     motor.stop()
 
-while True:
-    if attempts_count > 10:
-        motor.stop()
-        raise Exception('Cannot find empty slot!')
-    if (cl.value() != colour_code):
-        print(attempts_count)
-        attempt()
-        attempts_count += 1
-       # if (cl.value == colour_code):
-	#    break
-    else:
-        break
+def refill_pack(times):
+    for i in range(0, times):
+        while True:
+            if attempts_count > 10:
+                motor.stop()
+                print('Cannot find empty slot!')
+                return "0"
+            if (cl.value() != colour_code):
+                print(attempts_count)
+                attempt()
+                attempts_count += 1
+               # if (cl.value == colour_code):
+        	#    break
+            else:
+                break
 
-ev3.Sound.speak('Please place package into dispenser now').wait()
+        ev3.Sound.speak('Please place package into dispenser now').wait()
 
-cl.mode = 'COL-REFLECT'
+        cl.mode = 'COL-REFLECT'
 
-time.sleep(1)
+        time.sleep(1)
 
-initial = cl.value()
+        initial = cl.value()
 
-start_time = time.time()
+        start_time = time.time()
 
-while time.time() - start_time < 5:
-    if cl.value() <= (initial - 2) or cl.value() >= (initial + 2):
-        print('Hand detected')
-        break
+        while time.time() - start_time < 5:
+            if cl.value() <= (initial - 2) or cl.value() >= (initial + 2):
+                print('Hand detected')
+                break
 
-cl.mode = 'COL-COLOR'
+        cl.mode = 'COL-COLOR'
 
-time.sleep(2)
-# check package has been placed in
+        time.sleep(2)
+        # check package has been placed in
 
-start_time = time.time()
-placed = False
+        start_time = time.time()
+        placed = False
 
-while time.time() - start_time < 5:
-    if (cl.value() in colour_codes.values()):
-        if cl.value() != colour_code:
-            placed = True
-            break
+        while time.time() - start_time < 5:
+            if (cl.value() in colour_codes.values()):
+                if cl.value() != colour_code:
+                    placed = True
+                    break
 
-if placed:
-    colour = list(colour_codes.keys())[list(colour_codes.values()).index(cl.value())]
-    print(colour)
-else:
-    raise Exception('Nothing placed!')
+        if placed:
+            colour = list(colour_codes.keys())[list(colour_codes.values()).index(cl.value())]
+            print(colour)
+        else:
+            print('Nothing placed!')
+            return "0"
 
-while True:
-    if attempts_count > 10:
-        motor.stop()
-        raise Exception('Cannot find empty slot!')
-    if (cl.value() != colour_code):
-        print(attempts_count)
-        attempt()
-        attempts_count += 1
-    else:
-        break
-ev3.Sound.volume =100
-ev3.Sound.speak('Hello, refilling was sucessful, you added a ' + colour + ' package, good job').wait()
+        while True:
+            if attempts_count > 10:
+                motor.stop()
+                print('Cannot find empty slot!')
+                return "0"
+            if (cl.value() != colour_code):
+                print(attempts_count)
+                attempt()
+                attempts_count += 1
+            else:
+                break
+        ev3.Sound.volume =100
+        ev3.Sound.speak('Hello, refilling was sucessful, you added a ' + colour + ' package, good job').wait()
+    return "1"
