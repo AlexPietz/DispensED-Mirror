@@ -7,6 +7,7 @@ import dispense_package_colour
 import dispense_number
 import refill_indi
 import refill_pack
+import check_identification
 
 btn = ev3.Button()
 
@@ -29,11 +30,20 @@ def enter(state):
 
 def dispense(client, userdata, msg):
     msg = msg.payload.decode()
+    id_colour = msg[0]
+    if not (check_identification(id_colour)):
+        client.publish("dispensing", "0")
+        return
 
-    if msg[0] == 0:
-        client.publish("dispensing", dispense_package_colour(msg[1]))
-    else:
-        client.publish("dispensing", dispense_number([msg[1], msg[2]]))
+    if not dispense_number(msg[1]): #List of pills to dispense for each dispenser
+        client.publish("dispensing", "0")
+        return
+
+    if not dispense_package_colour(msg[2]): #Colour of package to dispense
+        client.publish("dispensing", "0")
+        return
+    #client.publish("dispensing", dispense_number([msg[1], msg[2]]))
+    client.publish("dispensing", "1")
 
 btn.on_enter = enter
 

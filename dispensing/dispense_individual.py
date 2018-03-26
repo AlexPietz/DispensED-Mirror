@@ -13,9 +13,9 @@ def dispense_number(number_pills):
     motor_B = ev3.MediumMotor('outD')
 
     if not dispense(motor_A, number_pills[0]):
-        return "0"
+        return False
     if not dispense(motor_B, number_pills[1]):
-        return "0"
+        return False
 
     time.sleep(0.5)
     initial = cl_B.value()
@@ -25,9 +25,9 @@ def dispense_number(number_pills):
         value = cl_B.value()
         if value <= (initial - 4) or value >= (initial + 4):
             print('Pills taken')
-            return "1"
+            return True
         if time.time() > start_time + 30:
-            return "0"
+            return False
 
 
 def dispense(motor, no_to_dispense):

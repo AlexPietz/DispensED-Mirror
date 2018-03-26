@@ -16,7 +16,7 @@ def dispense_package_colour(colour):
         colour_code = colour_codes[colour]
     except:
         print('Invalid colour')
-        return "0"
+        return False
 
     start_time = time.time()
     print(start_time)
@@ -37,7 +37,7 @@ def dispense_package_colour(colour):
 
     if timed_out:
         print('Timed out')
-        return "0"
+        return False
     else:
         print('found ' + colour)
 
@@ -52,6 +52,6 @@ def dispense_package_colour(colour):
     while True:
         if cl.value() <= (initial - 2) or cl.value() >= (initial + 2):
             print('Package taken')
-            return "1"
+            return True
         if time.time() > start_time + 30:
-            return "0"
+            return False

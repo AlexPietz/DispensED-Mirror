@@ -10,11 +10,6 @@ colour_codes = {"black": 1, "blue": 2, "green": 3, "yellow": 4, "red": 5, "white
 colour_code = 1
 attempts_count = 0  # no. of attempts at finding empty slot
 
-start_time = time.time()
-
-ev3.Sound.speak('Entering package refill mode, please wait').wait()
-
-time.sleep(2)
 
 def attempt():
     skip = False
@@ -36,7 +31,14 @@ def attempt():
     motor.stop()
 
 def refill_pack(times):
+
+
+    ev3.Sound.speak('Entering package dispenser refill mode, please wait').wait()
+
+    time.sleep(2)
+
     for i in range(0, times):
+        start_time = time.time()
         while True:
             if attempts_count > 10:
                 motor.stop()
