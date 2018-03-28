@@ -7,6 +7,7 @@ import time
 import numpy as np
 
 dispensing_return = 0
+line_colour = 0
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with code: " + str(rc))
@@ -25,8 +26,17 @@ def on_message(client, userdata, msg):
 
 
 def handle_qr(data):
-    string = data.data #TODO: check
-    # run different functions
+    global line_colour
+    string = data.data
+    if string.startswith("start"):
+        # TODO: check if anything needs delivering
+        line_colour = int(string.split(',')[1])
+    if string.startswith("end"):
+        # TODO: notify server we're on our way back
+        line_colour = int(string.split(',')[1])
+    if string.startswith("patient"):
+        dispense(string)
+
 
 
 def dispense(string):
@@ -58,7 +68,7 @@ print('SCANNING')
 while True:
     frame = vs.read()
     line_frame = cv2.resize(frame, (0, 0), fx=0.3, fy=0.3)
-    line_contours, clean = linedetect.detect_line(line_frame, 95)
+    line_contours, clean = linedetect.detect_line(line_frame, line_colour)
     if (len(line_contours) > 0):
         direction = linedetect.extract_direction_max(line_contours, np.shape(line_frame))
         #direction = linedetect.extract_direction_average(clean, np.shape(line_frame))
