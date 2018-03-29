@@ -63,10 +63,28 @@ vs = PiVideoStream(resolution=(640, 480)).start()
 time.sleep(1)
 vs.camera.shutter_speed = 5000
 
+qr_delay = 11
+line_panic = 0
+
 # Loop until we find a QR
 print('SCANNING')
 while True:
     frame = vs.read()
+
+    if qr_delay >= 10:
+        qr_contours = qrscanner.detect_qr(frame)
+        if qr_contours != None:
+            client.publish("movement", "stop")
+            print('QR FOUND')
+            qr_data = qrscanner.read_qr(frame, qr_contours)
+            if len(qr_data) > 0:
+                print(qr_data)
+                handle_qr(qr_data)
+                qr_delay = 0
+            time.sleep(0.2)
+
+    qr_delay += 1
+
     line_frame = cv2.resize(frame, (0, 0), fx=0.3, fy=0.3)
     line_contours, clean = linedetect.detect_line(line_frame, line_colour)
     if (len(line_contours) > 0):
@@ -82,16 +100,14 @@ while True:
             right = max_speed
             left = max_speed + (max_speed * direction)
         client.publish("movement", "start," + str(left) + "," + str(right))
-    qr_contours = qrscanner.detect_qr(frame)
-    if qr_contours != None:
-        client.publish("movement", "stop")
-        print('QR FOUND')
-        qr_data = qrscanner.read_qr(frame, qr_contours)
-        if len(qr_data) > 0:
-            print(qr_data)
-            client.publish("dispensing", "go")
-            break
-        time.sleep(0.2)
+
+        line_panic = 0
+    else:
+        if line_panic > 3:
+            client.publish("movement", "stop")
+            # TODO: send panic to server
+        line_panic += 1
+
 
 # do a bit of cleanup
 vs.stop()
