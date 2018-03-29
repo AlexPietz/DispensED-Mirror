@@ -27,16 +27,17 @@ def enter(state):
 
 def dispense(client, userdata, msg):
     msg = msg.payload.decode()
+    input = msg.split(',')
     
-    if not check_identification(msg[0]):
+    if not check_identification(input[0]):
         client.publish("dispensing", "0")
         return
 
-    if not dispense_number(msg[1]): #List of pills to dispense for each dispenser
+if not dispense_number(input[1:2]): # List of pills to dispense for each dispenser
         client.publish("dispensing", "0")
         return
 
-    if not dispense_package_colour(msg[2]): #Colour of package to dispense
+    if not dispense_package_colour(input[3]): # Colour of package to dispense
         client.publish("dispensing", "0")
         return
 
@@ -46,11 +47,13 @@ def dispense(client, userdata, msg):
 start_time = 0
 btn = ev3.Button()
 btn.on_enter = enter # on enter button pressed
-btn.process() # Check for currently pressed buttons
 
 client = mqtt.Client()
 client.connect("192.168.17.130", 1883, 60)
 client.on_connect = on_connect
 client.on_message = dispense
 
-client.loop_forever()
+client.loop_start()
+
+while True:
+    btn.process() # Check for currently pressed buttons
