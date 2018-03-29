@@ -3,7 +3,7 @@ import sys
 import ev3dev.ev3 as ev3
 import time
 
-def refill_indi:
+def refill_indi():
 
     motor_A = ev3.MediumMotor('outB')
     motor_B = ev3.MediumMotor('outD')

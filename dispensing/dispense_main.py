@@ -3,11 +3,11 @@ import sys
 import ev3dev.ev3 as ev3
 import time
 import paho.mqtt.client as mqtt
-import dispense_package_colour
-import dispense_number
-import refill_indi
-import refill_pack
-import check_identification
+from dispense_package import *
+from dispense_individual import *
+from refill_individual import *
+from refill_package import *
+from check_id import *
 
 
 def on_connect(client, userdata, flags, rc):
