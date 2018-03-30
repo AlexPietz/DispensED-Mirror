@@ -12,6 +12,9 @@ def dispense_number(number_pills):
     motor_A = ev3.MediumMotor('outB')
     motor_B = ev3.MediumMotor('outD')
 
+    if number_pills[0:2] == [0,0]:
+        return True
+
     if not dispense(motor_A, number_pills[0]):
         return False
     if not dispense(motor_B, number_pills[1]):

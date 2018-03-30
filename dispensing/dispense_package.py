@@ -5,6 +5,9 @@ import time
 
 def dispense_package_colour(colour):
 
+    if colour == None:
+        return True
+
     cl = ev3.ColorSensor(ev3.INPUT_2)
     cl.mode = 'COL-COLOR'
     motor = ev3.Motor('outC')
