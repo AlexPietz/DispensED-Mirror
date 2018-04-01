@@ -5,9 +5,11 @@ import linedetect
 import qrscanner
 import time
 import numpy as np
+import requests
 
 dispensing_return = 0
 line_colour = 0
+server_hostname = ""
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with code: " + str(rc))
@@ -27,11 +29,13 @@ def on_message(client, userdata, msg):
 
 def handle_qr(data):
     global line_colour
+    global server_hostname
     string = data.data
     if string.startswith("start"):
         # TODO: check if anything needs delivering
         line_colour = int(string.split(',')[1])
     if string.startswith("end"):
+        # r = requests.put(server_hostname, data={'status': 'returning'})
         # TODO: notify server we're on our way back
         line_colour = int(string.split(',')[1])
     if string.startswith("patient"):
@@ -50,6 +54,7 @@ def dispense(string):
             break
         if dispensing_return == 2:
             dispensing_return = 0
+            # r = requests.put(server_hostname, data={'status': 'FAILED TO DISPENSE'})
             # TODO: notify server of failure
             break
 
@@ -71,20 +76,6 @@ print('SCANNING')
 while True:
     frame = vs.read()
 
-    if qr_delay >= 10:
-        qr_contours = qrscanner.detect_qr(frame)
-        if qr_contours != None:
-            client.publish("movement", "stop")
-            print('QR FOUND')
-            qr_data = qrscanner.read_qr(frame, qr_contours)
-            if len(qr_data) > 0:
-                print(qr_data)
-                handle_qr(qr_data)
-                qr_delay = 0
-            time.sleep(0.2)
-
-    qr_delay += 1
-
     line_frame = cv2.resize(frame, (0, 0), fx=0.3, fy=0.3)
     line_contours, clean = linedetect.detect_line(line_frame, line_colour)
     if (len(line_contours) > 0):
@@ -105,8 +96,23 @@ while True:
     else:
         if line_panic > 3:
             client.publish("movement", "stop")
-            # TODO: send panic to server
+            # r = requests.put(server_hostname, data={'status': 'STUCK'})
         line_panic += 1
+
+    if qr_delay >= 20:
+        qr_contours = qrscanner.detect_qr(frame)
+        if qr_contours != None:
+            client.publish("movement", "stop")
+            print('QR FOUND')
+            qr_data = qrscanner.read_qr(frame, qr_contours)
+            if len(qr_data) > 0:
+                print(qr_data)
+                #handle_qr(qr_data)
+                dispense("red,2,1,red")
+                qr_delay = 0
+            time.sleep(0.2)
+
+    qr_delay += 1
 
 
 # do a bit of cleanup
