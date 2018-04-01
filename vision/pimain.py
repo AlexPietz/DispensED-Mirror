@@ -47,7 +47,7 @@ def dispense(string):
     client.publish("dispensing", string)
     global dispensing_return
     while(True):
-        client.loop()
+        #client.loop()
         if dispensing_return == 1:
             dispensing_return = 0
             # TODO: notify server of success
@@ -62,6 +62,10 @@ def dispense(string):
 # Set up MQTT
 client = mqtt.Client()
 client.connect("localhost", 1883, 60)
+client.on_connect = on_connect
+client.on_message = on_message
+
+client.loop_start()
 
 # Prepare camera and performance statistics
 vs = PiVideoStream(resolution=(640, 480)).start()
@@ -83,32 +87,37 @@ while True:
         #direction = linedetect.extract_direction_average(clean, np.shape(line_frame))
         direction = (0.7 * direction + 0.3 * linedetect.extract_direction_average(clean, np.shape(line_frame)))
         print(direction)
-        max_speed = 300
+        direction = direction*1.3
+        max_speed = 400
         if direction > 0:
             left = max_speed
             right = max_speed - (max_speed * direction)
         else:
             right = max_speed
-            left = max_speed + (max_speed * direction)
-        client.publish("movement", "start," + str(left) + "," + str(right))
+            left = max_speed + (max_speed * (direction))
+        client.publish("movement", "start," + str(-left) + "," + str(-right))
 
         line_panic = 0
     else:
-        if line_panic > 3:
+        if line_panic > 30:
             client.publish("movement", "stop")
+            #break
             # r = requests.put(server_hostname, data={'status': 'STUCK'})
         line_panic += 1
 
-    if qr_delay >= 20:
-        qr_contours = qrscanner.detect_qr(frame)
-        if qr_contours != None:
+    if qr_delay >= 40:
+#        qr_contours = qrscanner.detect_qr(frame)
+        qr_data = qrscanner.read_qr_whole(frame)
+        #if qr_contours != None:
+        if len(qr_data) > 0:
             client.publish("movement", "stop")
             print('QR FOUND')
-            qr_data = qrscanner.read_qr(frame, qr_contours)
+#            qr_data = qrscanner.read_qr(frame, qr_contours)
+            #qr_data=qrscanner.read_qr_whole(frame)
             if len(qr_data) > 0:
                 print(qr_data)
                 #handle_qr(qr_data)
-                dispense("red,2,1,red")
+                #dispense("red,0,0,red")
                 qr_delay = 0
             time.sleep(0.2)
 
