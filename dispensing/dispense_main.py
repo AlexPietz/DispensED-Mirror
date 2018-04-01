@@ -20,28 +20,36 @@ def enter(state):
         start_time = time.time()
     else:
         if (time.time() - start_time > 3):
-            client.publish("dispensing", refill_indi)
-        else:
-            #Tell pi to find out how many need to be refilled
-            client.publish("dispensing", refill_pack(2))
+            client.publish("dispensing/out", "refill_start")
+            return
 
 def dispense(client, userdata, msg):
     msg = msg.payload.decode()
-    input = msg.split(',')
-    
-    if not check_identification(input[0]):
-        client.publish("dispensing", "0")
-        return
+    m_list = msg.split(',')
 
-if not dispense_number(input[1:2]): # List of pills to dispense for each dispenser
-        client.publish("dispensing", "0")
-        return
+    # refilling
+    if m_list[0] == "refill_counts":
+        if m_list[1] == "1":
+            refill_indi()
+        if m_list[2:] != []:
+            # publishes "0" if package refill failure, otherwise list of added colours
+            client.publish("dispensing/out", refill_pack(m_list[2:]))
 
-    if not dispense_package_colour(input[3]): # Colour of package to dispense
-        client.publish("dispensing", "0")
-        return
+    # dispensing
+    if m_list[0] == "dispense":
+        if not check_identification(m_list[1]):
+            client.publish("dispensing/out", "0")
+            return
 
-    client.publish("dispensing", "1")
+        if not dispense_number(m_list[2:4]): # List of pills to dispense for each dispenser
+            client.publish("dispensing/out", "0")
+            return
+
+        if not dispense_package_colour(m_list[4]): # Colour of package to dispense
+            client.publish("dispensing/out", "0")
+            return
+
+        client.publish("dispensing/out", "1")
 
 
 start_time = 0

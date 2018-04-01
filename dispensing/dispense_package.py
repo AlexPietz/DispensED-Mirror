@@ -22,7 +22,6 @@ def dispense_package_colour(colour):
         return False
 
     start_time = time.time()
-    print(start_time)
 
     if cl.value() == colour_code:
         skip = True
@@ -45,6 +44,8 @@ def dispense_package_colour(colour):
         print('found ' + colour)
 
     cl.mode = 'COL-REFLECT'
+
+    ev3.Sound.speak("Package now ready for collection").wait()
 
     time.sleep(1)
 
