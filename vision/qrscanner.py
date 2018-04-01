@@ -112,3 +112,9 @@ def read_qr(img, contours):
     scanner = zbar.Scanner()
     results = scanner.scan(qr_img)
     return results
+
+
+def read_qr_whole(img):
+    scanner = zbar.Scanner()
+    results = scanner.scan(img)
+    return results
