@@ -505,6 +505,7 @@ def dbread():
                 dpt_insert = dp.time.strftime('%H:%M')
         if (len(drugs) > 0 or dp_insert != 0):
             patients_list.append({'patient_id': patient.patient_id,
+                                  'patient_auth_colour': patient.id_colour,
                                   'qr_code': patient.qr_code,
                                   'drug_package': dp_insert,
                                   'drug_package_time': dpt_insert,
