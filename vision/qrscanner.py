@@ -115,6 +115,7 @@ def read_qr(img, contours):
 
 
 def read_qr_whole(img):
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     scanner = zbar.Scanner()
     results = scanner.scan(img)
     return results

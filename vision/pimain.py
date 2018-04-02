@@ -34,7 +34,7 @@ def handle_qr(data):
     if string.startswith("start"):
         # TODO: check if anything needs delivering
         line_colour = int(string.split(',')[1])
-    if string.startswith("end"):
+    if string.startswith("return"):
         # r = requests.put(server_hostname, data={'status': 'returning'})
         # TODO: notify server we're on our way back
         line_colour = int(string.split(',')[1])
@@ -72,7 +72,7 @@ vs = PiVideoStream(resolution=(640, 480)).start()
 time.sleep(1)
 vs.camera.shutter_speed = 5000
 
-qr_delay = 11
+qr_delay = 41
 line_panic = 0
 
 # Loop until we find a QR
@@ -80,14 +80,32 @@ print('SCANNING')
 while True:
     frame = vs.read()
 
+    if qr_delay >= 40:
+        #        qr_contours = qrscanner.detect_qr(frame)
+        qr_data = qrscanner.read_qr_whole(frame)
+        # if qr_contours != None:
+        if len(qr_data) > 0:
+            client.publish("movement", "stop")
+            print('QR FOUND')
+            #            qr_data = qrscanner.read_qr(frame, qr_contours)
+            # qr_data=qrscanner.read_qr_whole(frame)
+            if len(qr_data) > 0:
+                print(qr_data)
+                handle_qr(qr_data)
+                # dispense("red,0,0,red")
+                qr_delay = 0
+            time.sleep(0.2)
+
+    qr_delay += 1
+
     line_frame = cv2.resize(frame, (0, 0), fx=0.3, fy=0.3)
     line_contours, clean = linedetect.detect_line(line_frame, line_colour)
     if (len(line_contours) > 0):
         direction = linedetect.extract_direction_max(line_contours, np.shape(line_frame))
         #direction = linedetect.extract_direction_average(clean, np.shape(line_frame))
-        direction = (0.7 * direction + 0.3 * linedetect.extract_direction_average(clean, np.shape(line_frame)))
+        direction = (0.5 * direction + 0.5 * linedetect.extract_direction_average(clean, np.shape(line_frame)))
         print(direction)
-        direction = direction*1.3
+        direction = direction
         max_speed = 400
         if direction > 0:
             left = max_speed
@@ -101,27 +119,9 @@ while True:
     else:
         if line_panic > 30:
             client.publish("movement", "stop")
-            #break
+            break
             # r = requests.put(server_hostname, data={'status': 'STUCK'})
         line_panic += 1
-
-    if qr_delay >= 40:
-#        qr_contours = qrscanner.detect_qr(frame)
-        qr_data = qrscanner.read_qr_whole(frame)
-        #if qr_contours != None:
-        if len(qr_data) > 0:
-            client.publish("movement", "stop")
-            print('QR FOUND')
-#            qr_data = qrscanner.read_qr(frame, qr_contours)
-            #qr_data=qrscanner.read_qr_whole(frame)
-            if len(qr_data) > 0:
-                print(qr_data)
-                #handle_qr(qr_data)
-                #dispense("red,0,0,red")
-                qr_delay = 0
-            time.sleep(0.2)
-
-    qr_delay += 1
 
 
 # do a bit of cleanup
