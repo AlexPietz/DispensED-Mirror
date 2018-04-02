@@ -51,18 +51,38 @@ def handle_qr(data):
 
     # Send necessary details to dispenser
     if string.startswith("patient"):
-        dispense(string)
+        drug_a = 0
+        time_a = ""
+        drug_b = 0
+        time_b = ""
+        drug_package = "None"
+        for patient in patients:
+            if patient['qr_code'] == string.split(',')[1]:
+                for drug in patient['drugs']:
+                    if drug['drug_id'] == 1:
+                        drug_a = drug['qty']
+                        time_a = drug['time']
+                    if drug['drug_id'] == 2:
+                        drug_b = drug['qty']
+                        time_b = drug['time']
+                if not patient['drug_package'] == '0':
+                    drug_package = patient['drug_package']
+                identification = patient['patient_auth_colour']
+                id = patient['patient_id']
+                dispense(identification + ',' + str(drug_a) + ',' + str(drug_b) + ',' + drug_package, id, time_a, time_b)
 
 
 
-def dispense(string):
+def dispense(string, id, time_a, time_b):
     client.publish("dispensing", string)
     global dispensing_return
     while(True):
         if dispensing_return == 1:
             dispensing_return = 0
-            # TODO: notify server of success
-            r = requests.put(server_hostname + "/dispensed", data={'status': 'error', 'details': 'patient has not picked up medication'})
+            if len(time_a > 0):
+                requests.put(server_hostname + "/dispensed", data={'patient_id': id, 'drug_id': 1, 'time': time_a})
+            if len(time_b > 0):
+                requests.put(server_hostname + "/dispensed", data={'patient_id': id, 'drug_id': 2, 'time': time_b})
             break
         if dispensing_return == 2:
             dispensing_return = 0
