@@ -82,6 +82,7 @@ while True:
     qr_data = qrscanner.read_qr_whole(frame)
     if len(qr_data) > 0:
         handle_qr(qr_data)
+        break
     else:
         client.publish("movement", "start,-200,-200")
         time.sleep(0.2)
