@@ -501,7 +501,7 @@ def dbread():
             dp_time = dp.time.time()
             if (time1.time() < dp_time and dp_time < time2.time()):
                 dp_insert = patient.id_colour
-        if (len(drugs) > 0 or dp_insert != 0):
+        if (len(drugs) > 0 or dp_insert != "0"):
             patients_list.append({'patient_id': patient.patient_id,
                                   'patient_auth_colour': patient.id_colour,
                                   'qr_code': patient.qr_code,
