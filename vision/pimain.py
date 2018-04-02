@@ -9,7 +9,7 @@ import requests
 
 dispensing_return = 0
 line_colour = 0
-server_hostname = ""
+server_hostname = "http://34.245.208.59:5000"
 patients = []
 
 def on_connect(client, userdata, flags, rc):
@@ -40,13 +40,13 @@ def handle_qr(data):
         while True:
             r = requests.get(server_hostname + "/dbread").json()
             if len(r) > 0:
-                # r = requests.put(server_hostname + "/updatestatus", data={'status': 'dispensing', 'details': ''})
+                requests.put(server_hostname + "/updatestatus", data={'status': 'dispensing', 'details': ''})
                 line_colour = int(string.split(',')[1])
                 patients = r
 
     # Return to base
     if string.startswith("return"):
-        # r = requests.put(server_hostname + "/updatestatus", data={'status': 'dispensing', 'details': 'Returning to base'})
+        r = requests.put(server_hostname + "/updatestatus", data={'status': 'dispensing', 'details': 'Returning to base'})
         line_colour = int(string.split(',')[1])
 
     # Send necessary details to dispenser
@@ -62,11 +62,11 @@ def dispense(string):
         if dispensing_return == 1:
             dispensing_return = 0
             # TODO: notify server of success
-            # r = requests.put(server_hostname + "/dispensed", data={'status': 'error', 'details': 'patient has not picked up medication'})
+            r = requests.put(server_hostname + "/dispensed", data={'status': 'error', 'details': 'patient has not picked up medication'})
             break
         if dispensing_return == 2:
             dispensing_return = 0
-            # r = requests.put(server_hostname + "/updatestatus", data={'status': 'error', 'details': 'patient has not picked up medication'})
+            r = requests.put(server_hostname + "/updatestatus", data={'status': 'error', 'details': 'patient has not picked up medication'})
             break
 
 
@@ -101,7 +101,7 @@ while True:
         if line_panic > 10:
             # Failed to find the initial QR - stop
 
-            # r = requests.put(server_hostname + "/updatestatus", data={'status': 'error', 'details': 'cannot find first QR'})
+            r = requests.put(server_hostname + "/updatestatus", data={'status': 'error', 'details': 'cannot find first QR'})
             break
 
 
@@ -151,7 +151,7 @@ while True:
             time.sleep(0.2)
             client.publish("movement", "stop")
             break
-            # r = requests.put(server_hostname + "/updatestatus", data={'status': 'error', 'details': 'lost line'})
+            r = requests.put(server_hostname + "/updatestatus", data={'status': 'error', 'details': 'lost line'})
         line_panic += 1
 
 
