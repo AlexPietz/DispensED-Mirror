@@ -25,8 +25,10 @@ def enter(state):
             return
 
 def dispense(client, userdata, msg):
-    msg = msg.payload.decode()
-    m_list = msg.split(',')
+    msg_string = msg.payload.decode()
+    m_list = msg_string.split(',')
+
+    print('dispensing ' + msg_string)
 
     # refilling
     if msg.topic == "refilling":
@@ -34,10 +36,10 @@ def dispense(client, userdata, msg):
             refill_indi()
         if m_list[1:] != []:
             # publishes "0" if package refill failure, "1" if success
-            client.publish("refilling/out", refill_pack(m_list[2:]))
+            client.publish("refilling/out", refill_pack(m_list[1:]))
 
     # dispensing
-    if msg.topic == "dispensing":
+    elif msg.topic == "dispensing":
         if not check_identification(m_list[0]):
             client.publish("dispensing/out", "0")
             return
@@ -51,7 +53,6 @@ def dispense(client, userdata, msg):
             return
 
         client.publish("dispensing/out", "1")
-
 
 start_time = 0
 btn = ev3.Button()

@@ -12,7 +12,7 @@ def dispense_package_colour(colour):
     cl.mode = 'COL-COLOR'
     motor = ev3.Motor('outC')
     colour_codes = {"black": 1, "blue": 2, "green": 3, "yellow": 4, "red": 5, "white": 6, "brown": 7}
-    stop_times = {1: 0.1, 2: 0.1, 3: 0.04, 4: 0.1, 5: 0.1, 6: 0.1, 7: 0.2}
+    stop_times = {1: 0.1, 2: 0.12, 3: 0.1, 4: 0.1, 5: 0.1, 6: 0.1, 7: 0.2}
     skip = False
     timed_out = False
     try:
@@ -31,17 +31,19 @@ def dispense_package_colour(colour):
 
         while (cl.value() != colour_code) and (not timed_out):
             if (time.time() - start_time) > 6.0:
-                timed_out = True
+                # if timed out go to brown segment
+                while (cl.value() != 7):
+                    pass
+                print('Timed out')
+                time.sleep(stop_times[7])
                 motor.stop()
+                return False
 
         time.sleep(stop_times[colour_code])
         motor.stop()
 
-    if timed_out:
-        print('Timed out')
-        return False
-    else:
-        print('found ' + colour)
+
+    print('found ' + colour)
 
     cl.mode = 'COL-REFLECT'
 

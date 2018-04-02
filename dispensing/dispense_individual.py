@@ -63,7 +63,7 @@ def dispense(motor, no_to_dispense):
             return False
 
         # reverse direction every 200 iterations
-        if direction_count > 200:
+        if direction_count > 100:
             if forward:
                 motor.run_timed(speed_sp=250, time_sp=190)
             else:
@@ -75,8 +75,7 @@ def dispense(motor, no_to_dispense):
         if not dispensing and stopfor == 0:
             # if sensor value changes by +-2 then we have started pill dispensing
             # sensor behaviour after initial change is dependent on pill position
-            # so cases of value increase and
-    print(start_time)decrease must be seperated
+            # so cases of value increase and decrease must be seperated
             if cl_A.value() <= (initial - 2):
                 dispensing = True
                 less = True
