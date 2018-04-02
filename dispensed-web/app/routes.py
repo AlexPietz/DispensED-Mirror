@@ -322,6 +322,7 @@ def newdrug():
 def change_package():
     """Add or delete the package assigned to a patient."""
     form = ChangeDrugPackageForm()
+    pid = request.args['patient_id']
     if request.method == 'GET':
         return render_template('changedp.html', title='Assign Drug Package', form=form)
     if request.method == 'PST':
@@ -332,7 +333,6 @@ def change_package():
             return redirect(url_for('patient', patient_id=pid))
     else:
         if form.validate_on_submit():
-            pid = request.args['patient_id']
             dp = DrugPackage.query.filter_by(patient_id=pid).first()
             if (dp is None):  # Sanity check
                 dp = DrugPackage(
