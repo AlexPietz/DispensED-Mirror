@@ -44,13 +44,15 @@ def dispense(client, userdata, msg):
             client.publish("dispensing/out", "0")
             return
 
-        if not dispense_number(m_list[1:3]): # List of pills to dispense for each dispenser
-            client.publish("dispensing/out", "0")
-            return
+        if m_list[1:3] != ['0','0']:
+            if not dispense_number(m_list[1:3]): # List of pills to dispense for each dispenser
+                client.publish("dispensing/out", "0")
+                return
 
-        if not dispense_package_colour(m_list[3]): # Colour of package to dispense
-            client.publish("dispensing/out", "0")
-            return
+        if m_list[3] != "none":
+            if not dispense_package_colour(m_list[3]): # Colour of package to dispense
+                client.publish("dispensing/out", "0")
+                return
 
         client.publish("dispensing/out", "1")
 
