@@ -14,6 +14,7 @@ from sqlalchemy import desc
 
 r_status = {'current': "refill"}
 go_status = {'current': False}
+first_time = {'setup': True}
 
 # Redirect to login if not logged in
 @login.unauthorized_handler
@@ -30,7 +31,7 @@ def index():
     patients = Patient.query.all()
     s = r_status['current']
     return render_template('index.html', title='Home', patients=patients,
-                           status=s)
+                           status=s, first=first_time["setup"])
 
 @app.route('/setup', methods=['GET', 'POST']) 
 @auto.doc('private')
@@ -39,6 +40,7 @@ def setup_page():
     """Page to facilitate first-time setup."""
 
     form = SetupForm()
+    first_time["setup"] = False
     if form.validate_on_submit():
         qr1="start," + form.colour_start.data + ","
         qr2="return," + form.colour_back.data + ","
@@ -46,6 +48,7 @@ def setup_page():
             qr1 += "Z"
         while (len(qr2) < 33):
             qr2 += "Z"
+          
         return render_template('setup_print.html',qr1=qr1, qr2=qr2)
     return render_template('setup.html', form=form)
 
@@ -569,7 +572,7 @@ def go():
 @auto.doc('public')
 def go_true():
     go_status["current"] = True
-    return ("Success!")
+    return redirect(url_for('index'))
 
 
 @app.route('/updatestatus', methods=['PUT'])

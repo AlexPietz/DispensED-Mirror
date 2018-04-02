@@ -5,16 +5,17 @@
 {% block styles %}
 {{super()}}
 <style>
- /*Bootstrap button outline override*/
- .btn-outline {
-     background-color: transparent;
-     color: inherit;
-     transition: all .5s;
- }
+    /*Bootstrap button outline override*/
+    .btn-outline {
+    background-color: transparent;
+    color: inherit;
+    transition: all .5s;
+    }
 
- .btn-primary.btn-outline {
-     color: #428bca;
- }
+    .btn-primary.btn-outline {
+   color: #428bca;
+    }
+
 
  .btn-success.btn-outline {
      color: #5cb85c;
@@ -33,6 +34,7 @@
  }
 
  .btn-primary.btn-outline:hover,
+ .btn-secondary.btn-outline:hover,
  .btn-success.btn-outline:hover,
  .btn-info.btn-outline:hover,
  .btn-warning.btn-outline:hover,
@@ -40,8 +42,12 @@
      color: #fff;
  }
 
+ .alert{
+    line-height: 34px;
+ }
+
  .profile-img {
-    height: 85px;
+     height: 85px;
  }
 </style>
 <link href="{{url_for('static', filename='graphs.css')}}" rel="stylesheet">
@@ -51,28 +57,37 @@
 {% block app_content %}
 {{super()}}
 <div class="row">
-<div style="float:left">
-<h1>Robot Status</h1>
-</div>
-<div style="position:relative; float:left; display: inline-block; margin: 25px auto 0px 25px;">
-    
-    <div class="dcontainer">
-        {% if status == "idle" or status is none %}
-        <div class="dot blue"><span><span></span></span></div>
-        {% elif status == "dispensing" %}
-        <div class="dot green"><span><span></span></span></div>
-        {% elif status == "error" %}
-        <div class="dot red"><span><span></span></span></div>
-        {% elif status == "refill" %}
-        <div class="dot orange"><span><span></span></span></div>
-        {% endif %}
+
+    {% if first %}
+    <div class="alert alert-success alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <strong>It seems like the server has just been installed!</strong> Would you like to {{ utils.form_button(url_for('setup_page'), "set up the robot?" ,class="btn btn-success", method='get') }}
     </div>
-</div>
+    {% endif %}
+
+    <div style="float:left">
+        <h1>Robot Status</h1>
+    </div>
+    <div style="position:relative; float:left; display: inline-block; margin: 25px auto 0px 25px;">
+        
+        <div class="dcontainer">
+            {% if status == "idle" or status is none %}
+            <div class="dot blue"><span><span></span></span></div>
+            {% elif status == "dispensing" %}
+            <div class="dot green"><span><span></span></span></div>
+            {% elif status == "error" %}
+            <div class="dot red"><span><span></span></span></div>
+            {% elif status == "refill" %}
+            <div class="dot orange"><span><span></span></span></div>
+            {% endif %}
+        </div>
+    </div>
 </div>
 <div class="row">
     {% if status == "idle" or status is none %}
     <div class="alert alert-info" role="alert">
         The robot is currently standing by and is ready to start dispensing drugs.
+        {{ utils.form_button(url_for('go_true'), "Start dispensing!" ,class="btn btn-info pull-right", method='get') }}
     </div>
     {% elif status == "dispensing" %}
     <div class="alert alert-success" role="alert">
@@ -81,6 +96,7 @@
     {% elif status == "error" %}
     <div class="alert alert-danger" role="alert">
         An error has occured! The robot is stuck after patient: {{ patients[2].name }}
+       {{ utils.form_button(url_for('go_true'), "The error has been fixed." ,class="btn btn-info pull-right", method='get') }}
     </div>
     {% elif status == "refill" %}
     <div class="alert alert-warning" role="alert">
@@ -90,68 +106,68 @@
 </div>
 <hr>
 <div class="row">
-<h1>Patients </h1>
-<div class="graph-key">
-    <div class="graph-key-item">
-    <span class="graph-key-dot urgent"></span><span>Overdue</span>
+    <h1>Patients </h1>
+    <div class="graph-key">
+        <div class="graph-key-item">
+            <span class="graph-key-dot urgent"></span><span>Overdue</span>
+        </div>
+        <div class="graph-key-item">
+            <span class="graph-key-dot active"></span><span>Currently being dispensed</span>
+        </div>
+        <div class="graph-key-item">
+            <span class="graph-key-dot newFromBatch"></span><span>Not yet due</span>
+        </div>
+        <div class="graph-key-item">
+            <span class="graph-key-dot newCount"></span><span>Dispensed</span>
+        </div>
     </div>
-    <div class="graph-key-item">
-    <span class="graph-key-dot active"></span><span>Currently being dispensed</span>
-    </div>
-    <div class="graph-key-item">
-    <span class="graph-key-dot newFromBatch"></span><span>Not yet due</span>
-    </div>
-    <div class="graph-key-item">
-    <span class="graph-key-dot newCount"></span><span>Dispensed</span>
-    </div>
-    </div>
-<table class="table">
-    <thead>
-        <tr>
-            <th></th>
-            <th>Name</th>
-            <th>Age</th>
-            <th>Sex</th>
-            <th>Dispension Status</th>
-            <th>Option</th>
-           <!--<th>Edit</th> -->
+    <table class="table">
+        <thead>
             <tr>
-    </thead>
-    <tbody>
-        {% for patient in patients %}
-        <tr>
-            <td>
-                {% if patient.sex == "M" %}
-                <img class="media-object img-circle profile-img" src="{{ url_for('static', filename='avatar-m.png') }}">
-                {% else %}
-                <img class="media-object img-circle profile-img" src="{{ url_for('static', filename='avatar-f.png') }}">
-                {% endif %}
-            </td>
-            <td>{{ patient.name }}</td>
-            <td>{{ patient.age }}</td>
-            <td>{{ patient.sex }}</td>
-            <td>
-                <div class="graph-container">
-	                  <div class="graph">
-                        <div class="graph-bars" id="{{patient.patient_id}}">
-                        <!-- Populated -->
+                <th></th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Sex</th>
+                <th>Dispension Status</th>
+                <th>Option</th>
+                <!--<th>Edit</th> -->
+                <tr>
+        </thead>
+        <tbody>
+            {% for patient in patients %}
+            <tr>
+                <td>
+                    {% if patient.sex == "M" %}
+                    <img class="media-object img-circle profile-img" src="{{ url_for('static', filename='avatar-m.png') }}">
+                    {% else %}
+                    <img class="media-object img-circle profile-img" src="{{ url_for('static', filename='avatar-f.png') }}">
+                    {% endif %}
+                </td>
+                <td>{{ patient.name }}</td>
+                <td>{{ patient.age }}</td>
+                <td>{{ patient.sex }}</td>
+                <td>
+                    <div class="graph-container">
+	                      <div class="graph">
+                            <div class="graph-bars" id="{{patient.patient_id}}">
+                                <!-- Populated -->
+                            </div>
                         </div>
                     </div>
-                </div>
-            </td>
-            <td>{{ utils.form_button(url_for('patient', patient_id=patient.patient_id), utils.icon('hand-right') + ' Info', class="btn btn-success btn-outline") }}</td>
-            <!-- <td> <a href="{{url_for('edit_patient', patient_id=patient.patient_id )}}" class="btn btn-success btn-outline"> {{utils.icon('pencil')}} Edit</a> </td> -->
-        </tr>
-        {% endfor %}
-        <tr>
-            <th>{{ utils.form_button(url_for('newpatient'), utils.icon('plus') + ' Add Patient', class="btn btn-primary", method='get') }}</th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-        </tr>
-    </tbody>
-</table>
+                </td>
+                <td>{{ utils.form_button(url_for('patient', patient_id=patient.patient_id), utils.icon('hand-right') + ' Info', class="btn btn-success btn-outline") }}</td>
+                <!-- <td> <a href="{{url_for('edit_patient', patient_id=patient.patient_id )}}" class="btn btn-success btn-outline"> {{utils.icon('pencil')}} Edit</a> </td> -->
+            </tr>
+            {% endfor %}
+            <tr>
+                <th>{{ utils.form_button(url_for('newpatient'), utils.icon('plus') + ' Add Patient', class="btn btn-primary", method='get') }}</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
 {% endblock %}
@@ -160,8 +176,8 @@
 {{super()}}
 <script src="{{url_for('static', filename='graphs.js')}}"></script>
 <script>
-    $(document).ready(function() {
-    $("body").tooltip({ selector: '[data-toggle=tooltip]' });
-    });
+ $(document).ready(function() {
+     $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+ });
 </script>
 {% endblock %}
