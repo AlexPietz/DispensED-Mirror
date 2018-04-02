@@ -165,7 +165,7 @@ $(function(){
 // ];
 
     var dataSet;
-    $.getJSON("http://127.0.0.1:5000/dispensestatus", graph.init);
+    $.getJSON("/dispensestatus", graph.init);
     
     
     // Initialize Graph
