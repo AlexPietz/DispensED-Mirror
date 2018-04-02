@@ -13,6 +13,7 @@ from check_id import *
 def on_connect(client, userdata, flags, rc):
     print("Connected with code: " + str(rc))
     client.subscribe("dispensing")
+    client.subscribe("refilling")
 
 def enter(state):
     global start_time
@@ -20,7 +21,7 @@ def enter(state):
         start_time = time.time()
     else:
         if (time.time() - start_time > 3):
-            client.publish("dispensing/out", "refill_start")
+            client.publish("refilling/out", "refill_start")
             return
 
 def dispense(client, userdata, msg):
@@ -28,24 +29,24 @@ def dispense(client, userdata, msg):
     m_list = msg.split(',')
 
     # refilling
-    if m_list[0] == "refill_counts":
-        if m_list[1] == "1":
+    if msg.topic == "refilling":
+        if m_list[0] == "1":
             refill_indi()
-        if m_list[2:] != []:
-            # publishes "0" if package refill failure, otherwise list of added colours
-            client.publish("dispensing/out", refill_pack(m_list[2:]))
+        if m_list[1:] != []:
+            # publishes "0" if package refill failure, "1" if success
+            client.publish("refilling/out", refill_pack(m_list[2:]))
 
     # dispensing
-    if m_list[0] == "dispense":
-        if not check_identification(m_list[1]):
+    if msg.topic == "dispensing":
+        if not check_identification(m_list[0]):
             client.publish("dispensing/out", "0")
             return
 
-        if not dispense_number(m_list[2:4]): # List of pills to dispense for each dispenser
+        if not dispense_number(m_list[1:3]): # List of pills to dispense for each dispenser
             client.publish("dispensing/out", "0")
             return
 
-        if not dispense_package_colour(m_list[4]): # Colour of package to dispense
+        if not dispense_package_colour(m_list[3]): # Colour of package to dispense
             client.publish("dispensing/out", "0")
             return
 
