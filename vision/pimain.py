@@ -10,6 +10,7 @@ import requests
 dispensing_return = 0
 line_colour = 0
 server_hostname = ""
+patients = []
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with code: " + str(rc))
@@ -31,18 +32,24 @@ def on_message(client, userdata, msg):
 def handle_qr(data):
     global line_colour
     global server_hostname
+    global patients
     string = data[0].data.decode('ascii')
+
+    # We wait at the start until we get a list of patients
     if string.startswith("start"):
         while True:
-            r = requests.get(server_hostname + "/dbread")
+            r = requests.get(server_hostname + "/dbread").json()
+            if len(r) > 0:
+                # r = requests.put(server_hostname + "/updatestatus", data={'status': 'dispensing', 'details': ''})
+                line_colour = int(string.split(',')[1])
+                patients = r
 
-        # r = requests.put(server_hostname + "/updatestatus", data={'status': 'dispensing', 'details': ''})
-        # TODO: check if anything needs delivering
-        line_colour = int(string.split(',')[1])
+    # Return to base
     if string.startswith("return"):
         # r = requests.put(server_hostname + "/updatestatus", data={'status': 'dispensing', 'details': 'Returning to base'})
-        # TODO: notify server we're on our way back
         line_colour = int(string.split(',')[1])
+
+    # Send necessary details to dispenser
     if string.startswith("patient"):
         dispense(string)
 
@@ -52,7 +59,6 @@ def dispense(string):
     client.publish("dispensing", string)
     global dispensing_return
     while(True):
-        #client.loop()
         if dispensing_return == 1:
             dispensing_return = 0
             # TODO: notify server of success
@@ -93,6 +99,8 @@ while True:
         client.publish("movement", "stop")
         line_panic += 1
         if line_panic > 10:
+            # Failed to find the initial QR - stop
+
             # r = requests.put(server_hostname + "/updatestatus", data={'status': 'error', 'details': 'cannot find first QR'})
             break
 
@@ -105,6 +113,7 @@ print('SCANNING')
 while True:
     frame = vs.read()
 
+    # We only want to read a QR code if we've not just seen one
     if qr_delay >= 40:
         qr_data = qrscanner.read_qr_whole(frame)
         if len(qr_data) > 0:
@@ -135,7 +144,9 @@ while True:
 
         line_panic = 0
     else:
+        # No line found
         if line_panic > 30:
+            # if we don't find a line for a long time - stop and notify server
             client.publish("movement", "stop")
             time.sleep(0.2)
             client.publish("movement", "stop")
