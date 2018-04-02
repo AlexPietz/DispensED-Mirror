@@ -15,6 +15,7 @@ def on_connect(client, userdata, flags, rc):
     print("Connected with code: " + str(rc))
     client.subscribe("dispensing/out")
     client.subscribe("movement/out")
+    client.subscribe("refilling/out")
 
 
 def on_message(client, userdata, msg):
@@ -30,7 +31,7 @@ def on_message(client, userdata, msg):
 def handle_qr(data):
     global line_colour
     global server_hostname
-    string = data.data
+    string = data[0].data.decode('ascii')
     if string.startswith("start"):
         # TODO: check if anything needs delivering
         line_colour = int(string.split(',')[1])
@@ -72,7 +73,26 @@ vs = PiVideoStream(resolution=(640, 480)).start()
 time.sleep(1)
 vs.camera.shutter_speed = 5000
 
-qr_delay = 41
+# Find the first QR
+while True:
+    frame = vs.read()
+
+    line_panic = 0
+
+    qr_data = qrscanner.read_qr_whole(frame)
+    if len(qr_data) > 0:
+        handle_qr(qr_data)
+    else:
+        client.publish("movement", "start,-200,-200")
+        time.sleep(0.2)
+        client.publish("movement", "stop")
+        line_panic += 1
+        if line_panic > 10:
+            # r = requests.put(server_hostname, data={'status': 'STUCK'})
+            break
+
+
+qr_delay = 0
 line_panic = 0
 
 # Loop until we find a QR
