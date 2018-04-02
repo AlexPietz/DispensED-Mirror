@@ -38,15 +38,14 @@ class RegistrationForm(FlaskForm):
 
 
 class SetupForm(FlaskForm):
-    colours = [('orange', 'Orange'),
-                                  ('blue', 'Blue'),
-                                  ('green', 'Green'),
-                                  ('yellow', 'Yellow')]
+    colours = [('0', 'red'),
+               ('90', 'Blue'),
+               ('30', 'Green')]
     colour_start = SelectField('Select line colour',
                                choices=colours)
     colour_back = SelectField('Select line colour',
-                              choices=[("turn",
-                                        "N/A (follow same line after 180° turn)")]
+                              choices=[("stop",
+                                        "N/A (stop)")]
                               +colours)
     submit = SubmitField('Print out QR codes and instructions')
 

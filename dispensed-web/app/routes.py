@@ -40,9 +40,13 @@ def setup_page():
 
     form = SetupForm()
     if form.validate_on_submit():
-        return render_template('setup_print.html',
-                               qr1=form.colour_start.data,
-                               qr2=form.colour_back.data)
+        qr1="start," + form.colour_start.data + ","
+        qr2="return," + form.colour_back.data + ","
+        while (len(qr1) < 33):
+            qr1 += "Z"
+        while (len(qr2) < 33):
+            qr2 += "Z"
+        return render_template('setup_print.html',qr1=qr1, qr2=qr2)
     return render_template('setup.html', form=form)
 
 
