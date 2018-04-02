@@ -33,10 +33,14 @@ def handle_qr(data):
     global server_hostname
     string = data[0].data.decode('ascii')
     if string.startswith("start"):
+        while True:
+            r = requests.get(server_hostname + "/dbread")
+
+        # r = requests.put(server_hostname + "/updatestatus", data={'status': 'dispensing', 'details': ''})
         # TODO: check if anything needs delivering
         line_colour = int(string.split(',')[1])
     if string.startswith("return"):
-        # r = requests.put(server_hostname, data={'status': 'returning'})
+        # r = requests.put(server_hostname + "/updatestatus", data={'status': 'dispensing', 'details': 'Returning to base'})
         # TODO: notify server we're on our way back
         line_colour = int(string.split(',')[1])
     if string.startswith("patient"):
@@ -52,11 +56,11 @@ def dispense(string):
         if dispensing_return == 1:
             dispensing_return = 0
             # TODO: notify server of success
+            # r = requests.put(server_hostname + "/dispensed", data={'status': 'error', 'details': 'patient has not picked up medication'})
             break
         if dispensing_return == 2:
             dispensing_return = 0
-            # r = requests.put(server_hostname, data={'status': 'FAILED TO DISPENSE'})
-            # TODO: notify server of failure
+            # r = requests.put(server_hostname + "/updatestatus", data={'status': 'error', 'details': 'patient has not picked up medication'})
             break
 
 
@@ -89,7 +93,7 @@ while True:
         client.publish("movement", "stop")
         line_panic += 1
         if line_panic > 10:
-            # r = requests.put(server_hostname, data={'status': 'STUCK'})
+            # r = requests.put(server_hostname + "/updatestatus", data={'status': 'error', 'details': 'cannot find first QR'})
             break
 
 
@@ -102,19 +106,13 @@ while True:
     frame = vs.read()
 
     if qr_delay >= 40:
-        #        qr_contours = qrscanner.detect_qr(frame)
         qr_data = qrscanner.read_qr_whole(frame)
-        # if qr_contours != None:
         if len(qr_data) > 0:
             client.publish("movement", "stop")
             print('QR FOUND')
-            #            qr_data = qrscanner.read_qr(frame, qr_contours)
-            # qr_data=qrscanner.read_qr_whole(frame)
-            if len(qr_data) > 0:
-                print(qr_data)
-                handle_qr(qr_data)
-                # dispense("red,0,0,red")
-                qr_delay = 0
+            print(qr_data)
+            handle_qr(qr_data)
+            qr_delay = 0
             time.sleep(0.2)
 
     qr_delay += 1
@@ -123,7 +121,6 @@ while True:
     line_contours, clean = linedetect.detect_line(line_frame, line_colour)
     if (len(line_contours) > 0):
         direction = linedetect.extract_direction_max(line_contours, np.shape(line_frame))
-        #direction = linedetect.extract_direction_average(clean, np.shape(line_frame))
         direction = (0.5 * direction + 0.5 * linedetect.extract_direction_average(clean, np.shape(line_frame)))
         print(direction)
         direction = direction
@@ -140,8 +137,10 @@ while True:
     else:
         if line_panic > 30:
             client.publish("movement", "stop")
+            time.sleep(0.2)
+            client.publish("movement", "stop")
             break
-            # r = requests.put(server_hostname, data={'status': 'STUCK'})
+            # r = requests.put(server_hostname + "/updatestatus", data={'status': 'error', 'details': 'lost line'})
         line_panic += 1
 
 
