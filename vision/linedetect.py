@@ -18,16 +18,16 @@ def detect_line(img, hue):
     # (which can then be OR'd)
     if hue_lower < 0:
         hue_lower_1 = 179 + hue_lower
-        thresholded_1 = cv2.inRange(hsv_img, np.array([hue_lower_1, 100, 100]), np.array([179, 255, 255]))
-        thresholded_2 = cv2.inRange(hsv_img, np.array([0, 100, 100]), np.array([hue_upper, 255, 255]))
+        thresholded_1 = cv2.inRange(hsv_img, np.array([hue_lower_1, 100, 80]), np.array([179, 255, 255]))
+        thresholded_2 = cv2.inRange(hsv_img, np.array([0, 100, 80]), np.array([hue_upper, 255, 255]))
         thresholded = cv2.bitwise_or(thresholded_1, thresholded_2)
     elif hue_upper > 179:
         hue_upper_1 = hue_upper - 179
-        thresholded_1 = cv2.inRange(hsv_img, np.array([hue_lower, 100, 100]), np.array([179, 255, 255]))
-        thresholded_2 = cv2.inRange(hsv_img, np.array([0, 100, 100]), np.array([hue_upper_1, 255, 255]))
+        thresholded_1 = cv2.inRange(hsv_img, np.array([hue_lower, 100, 80]), np.array([179, 255, 255]))
+        thresholded_2 = cv2.inRange(hsv_img, np.array([0, 100, 80]), np.array([hue_upper_1, 255, 255]))
         thresholded = cv2.bitwise_or(thresholded_1, thresholded_2)
     else:
-        thresholded = cv2.inRange(hsv_img, np.array([hue_lower, 100, 100]), np.array([hue_upper, 255, 255]))
+        thresholded = cv2.inRange(hsv_img, np.array([hue_lower, 100, 80]), np.array([hue_upper, 255, 255]))
 
     # Remove noise, we can be fairly aggressive with the kernel as the line should be thick
     clean = cv2.morphologyEx(thresholded, cv2.MORPH_OPEN, np.ones((8, 8), np.uint8))
