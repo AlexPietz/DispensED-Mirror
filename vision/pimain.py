@@ -73,11 +73,11 @@ vs = PiVideoStream(resolution=(640, 480)).start()
 time.sleep(1)
 vs.camera.shutter_speed = 5000
 
+line_panic = 0
+
 # Find the first QR
 while True:
     frame = vs.read()
-
-    line_panic = 0
 
     qr_data = qrscanner.read_qr_whole(frame)
     if len(qr_data) > 0:
