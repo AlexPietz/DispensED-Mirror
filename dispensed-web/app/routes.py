@@ -288,7 +288,7 @@ def newpatient():
     if form.validate_on_submit():
         p = Patient(name=form.name.data, age=int(form.age.data),
                     qr_code=form.qr_code.data, sex=form.sex.data,
-                    details=form.details.data)
+                    details=form.details.data, colour=form.id_colour.data)
         db.session.add(p)
         db.session.commit()
         flash('New Patient Registered :' + form.name.data)
@@ -316,27 +316,33 @@ def newdrug():
     return render_template('adddrug.html', title='Add Drug', form=form)
 
 
-@app.route('/patient/changepackage', methods=['POST'])
+@app.route('/patient/changepackage', methods=['POST','GET'])
 @auto.doc('private')
 @login_required
 def change_package():
     """Add or delete the package assigned to a patient."""
-    pid = request.args['patient_id']
-    dp = DrugPackage.query.filter_by(patient_id=pid).first()
-    if (dp is None):  # Sanity check
-        dp = DrugPackage(
-            patient_id=pid
-        )
-        db.session.add(dp)
-        db.session.commit()
-        flash("Successfully assigned new drug package")
-    elif (request.args['delete']):
-        db.session.delete(dp)
-        db.session.commit()
-        flash("Successfully deleted patient's drug package")
+    form = ChangeDrugPackageForm()
+    if request.method == 'GET':
+        return render_template('changedp.html', title='Assign Drug Package', form=form)
+    if request.method == 'PST':
+        if (request.args['delete']):
+            db.session.delete(dp)
+            db.session.commit()
+            flash("Successfully deleted patient's drug package")
+            return redirect(url_for('patient', patient_id=pid))
     else:
-        flash("Error: Invalid POST Data")
-    return redirect(url_for('patient', patient_id=pid))
+        if form.validate_on_submit():
+            pid = request.args['patient_id']
+            dp = DrugPackage.query.filter_by(patient_id=pid).first()
+            if (dp is None):  # Sanity check
+                dp = DrugPackage(
+                    patient_id=pid,
+                    time=form.time.data
+                )
+                db.session.add(dp)
+                db.session.commit()
+                flash("Successfully assigned new drug package")
+        return redirect(url_for('patient', patient_id=pid))
 
 
 @app.route('/patient/delete', methods=['POST'])
@@ -371,11 +377,13 @@ def edit_patient():
         form.age.data = str(patient.age)
         form.qr_code.data = patient.qr_code
         form.details.data = patient.details
+        form.colour.data = patient.id_colour
     if form.validate_on_submit():
         patient.name = form.name.data
         patient.age = int(form.age.data)
         patient.qr_code = form.qr_code.data
         patient.details = form.details.data
+        patient.id_colour = form.colour.data
         db.session.commit()
         flash('Patient Data Updated :' + form.name.data)
         return redirect(url_for('index'))
@@ -475,26 +483,31 @@ def dbread():
     """Read the database and return the patients data in json format."""
     patients = Patient.query.all()
     patients_list = []
+    time1 = datetime.datetime.now() - datetime.timedelta(minutes=15)
+    time2 = datetime.datetime.now() + datetime.timedelta(minutes=15)
     for patient in patients:
         dp = DrugPackage.query.filter_by(patient_id=patient.patient_id).first()
         drugs = []
         for assoc in patient.drugs:
             drug_time = assoc.time.time()
-            time1 = datetime.datetime.now() - datetime.timedelta(minutes=15)
-            time2 = datetime.datetime.now() + datetime.timedelta(minutes=15)
             if (time1.time() < drug_time and drug_time < time2.time()):
                 drugs.append({'drug_id': assoc.drug.drug_id, 'qty': assoc.qty,
                               'time': assoc.time.strftime('%H:%M')})
                 assoc.dispensed = 0
                 db.session.commit()
+        dp_insert = 0
+        dpt_insert = 0
         if(dp is not None):
-            dp_insert = dp.package_id
-        else:
-            dp_insert = 0
+            #dp_insert = dp.package_id
+            dp_time = dp.time.time()
+            if (time1.time() < dp_time and dp_time < time2.time()):
+                dp_insert = patient.id_colour
+                dpt_insert = dp.time.strftime('%H:%M')
         if (len(drugs) > 0 or dp_insert != 0):
             patients_list.append({'patient_id': patient.patient_id,
                                   'qr_code': patient.qr_code,
                                   'drug_package': dp_insert,
+                                  'drug_package_time': dpt_insert,
                                   'drugs': drugs})
     e = patients_list
     return jsonify(e)
@@ -615,7 +628,8 @@ def populate_sample():
             age=i[1],
             qr_code=i[2],
             sex=i[3],
-            details=i[4]
+            details=i[4],
+            id_colour="blue"
         )
         db.session.add(p) #Add all the records
 

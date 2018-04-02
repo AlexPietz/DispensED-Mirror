@@ -71,6 +71,7 @@ class Patient(db.Model):
     name = db.Column(db.String(64), index=True)
     age = db.Column(db.Integer, index=True)
     qr_code = db.Column(db.String(64), index=True)
+    id_colour = db.Column(db.String(64))
     drugs = db.relationship('PatientDrug')
     sex = db.Column(db.String(1))
     details = db.Column(db.String(256))
@@ -94,6 +95,8 @@ class DrugPackage(db.Model):
     package_id = db.Column(db.Integer, primary_key=True)
     drugs = db.relationship('Drug', secondary=drug_identifier)
     patient_id = db.Column(db.Integer, db.ForeignKey('patient.patient_id'))
+    time = db.Column(db.DateTime, index=True)
+
 
 class Refill(db.Model):
     refill_id = db.Column(db.Integer, primary_key=True)

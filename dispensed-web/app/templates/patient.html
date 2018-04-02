@@ -116,7 +116,8 @@
             <div class="panel-body">
                 <div class="alert alert-info">
                     {% if drug_package is none %}
-                    This patient does not have a prepackaged drug package assigned. {{ utils.form_button(url_for('change_package', patient_id=patient.patient_id ), 'Assign now', class="btn") }}
+                    This patient does not have a prepackaged drug package assigned.
+                    <a href="{{url_for('change_package', patient_id=patient.patient_id )}}" class="btn btn-primary">Assign now</a> 
                     {% else %}
                     <table class="table">
                     <thead>
@@ -204,10 +205,9 @@
 <!-- Render QR -->
 <script type="text/javascript"> 
  jQuery('#qr').qrcode({
-    render	: "table",
-     width:128,
-     height:128,
-     text:"{{ patient.qr_code }}"
+     width:164,
+     height:164,
+     text:"patient," + "{{ patient.qr_code }}"
  });
 </script>
 <!-- Accordeon -->

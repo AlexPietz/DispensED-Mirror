@@ -75,6 +75,8 @@ class NewPatientForm(FlaskForm):
     qr_code = StringField('QR Code', validators=[DataRequired()])
     sex = RadioField("Sex", choices=[("M", "Male"), ("F", "Female"), ("O", "Other")], validators=[DataRequired()])
     details = TextAreaField("Patient Details")
+    colours = ["green", "blue", "red", "yellow", "orange", "grey"]
+    colour = SelectField("ID Colour", choices=[(c,c) for c in colours])
     submit = SubmitField('Add Patient')
 
 
@@ -82,6 +84,8 @@ class EditPatientForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     age = IntegerField('Age', validators=[DataRequired(), NumberRange(min=0)])
     qr_code = StringField('QR Code', validators=[DataRequired()])
+    colours = ["green", "blue", "red", "yellow", "orange", "grey"]
+    colour = SelectField("ID Colour", choices=[(c,c) for c in colours])
     details = TextAreaField("Patient Details")
     submit = SubmitField('Save Changes')
 
@@ -109,6 +113,13 @@ class AssignDrugForm(FlaskForm):
     qty = IntegerField('Quantity', validators=[DataRequired(),
                                                NumberRange(min=1)])
     time = DateTimeField('Time (HH:MM)', format='%H:%M',
+                         validators=[DataRequired()],
+                         default=datetime.datetime.strptime('13:30', '%H:%M'))
+    submit = SubmitField('Add')
+
+
+class ChangeDrugPackageForm(FlaskForm):
+    time = DateTimeField('Deadline for dispensing of package (HH:MM)', format='%H:%M',
                          validators=[DataRequired()],
                          default=datetime.datetime.strptime('13:30', '%H:%M'))
     submit = SubmitField('Add')
