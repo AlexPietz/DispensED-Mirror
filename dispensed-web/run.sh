@@ -41,7 +41,7 @@ while [ "$1" != "" ]; do
 done
 
 
-flask run
+flask run --host=0.0.0.0
 
 echo "Shut down web server!"
 echo "Shutting down SMTP server.."

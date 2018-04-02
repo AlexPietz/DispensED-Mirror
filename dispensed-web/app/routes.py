@@ -13,6 +13,7 @@ import pprint
 from sqlalchemy import desc
 
 r_status = {'current': "refill"}
+go_status = {'current': False}
 
 # Redirect to login if not logged in
 @login.unauthorized_handler
@@ -542,7 +543,18 @@ def dispense_status():
 @app.route('/go', methods=['GET'])
 @auto.doc('public')
 def go():
-    return ("True")
+    if (go_status["current"]):
+        go_status["current"] = False
+        return ("True")
+    else:
+        return ("False")
+
+
+@app.route('/go/settrue', methods=['GET'])
+@auto.doc('public')
+def go_true():
+    go_status["current"] = True
+    return ("Success!")
 
 
 @app.route('/updatestatus', methods=['PUT'])
