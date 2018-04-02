@@ -94,3 +94,11 @@ class DrugPackage(db.Model):
     package_id = db.Column(db.Integer, primary_key=True)
     drugs = db.relationship('Drug', secondary=drug_identifier)
     patient_id = db.Column(db.Integer, db.ForeignKey('patient.patient_id'))
+
+class Refill(db.Model):
+    refill_id = db.Column(db.Integer, primary_key=True)
+    d1_id = db.Column(db.Integer)
+    d2_id = db.Column(db.Integer)
+    d1_qty = db.Column(db.Integer) 
+    d2_qty = db.Column(db.Integer) 
+    refill_time = db.Column(db.DateTime)

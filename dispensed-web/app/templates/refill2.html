@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block styles %}
+{{super()}}
+<style>
+ body {
+     background: rgb(204,204,204); 
+ }
+ page[size="A4"] {
+     background: white;
+     width: 21cm;
+     height: 29.7cm;
+     display: block;
+     margin: 0 auto;
+     margin-bottom: 0.5cm;
+     box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+
+     padding: 10px;
+ }
+ @media print {
+     body, page[size="A4"] {
+         margin: 0;
+         box-shadow: 0;
+     }
+ }
+ @page {
+     size: A4;
+     margin: 0;
+ }
+</style>
+{% endblock %}
+
+
+
+{% block app_content %}
+
+<page size="A4">
+    <h1>Refilling the Robot - Physical Part</h1>
+    
+    <div class="alert alert-warning" role="alert">
+        Print this page, take the print-out to the robot and follow the instructions!
+    </div>
+
+    --------- Detailed instructions on how to refill here -------
+    <div class="container-fluid">
+        <div class="row">
+		        <div class="col-md-4">
+                {{ wtf.quick_form(form) }}
+            </div>
+		        <div class="col-md-4">
+		        </div>
+	      </div>
+    </div>
+    </div>
+</page>
+{% endblock %}

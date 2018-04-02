@@ -63,6 +63,12 @@ class RefillForm(FlaskForm):
     submit = SubmitField('Add')
 
 
+class RefillForm2(FlaskForm):
+    qty1 = IntegerField('Drug 1 Quantity', validators=[NumberRange(min=0)])
+    qty2 = IntegerField('Drug 2 Quantity', validators=[NumberRange(min=0)])
+    submit = SubmitField('Add')
+
+
 class NewPatientForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     age = IntegerField('Age', validators=[DataRequired(), NumberRange(min=0)])

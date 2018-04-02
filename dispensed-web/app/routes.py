@@ -3,12 +3,14 @@ from flask import (render_template, flash, redirect, url_for, request, jsonify,
 from flask_login import current_user, login_user, logout_user, login_required
 from app import app, login, db, auto
 from app.forms import *
-from app.models import Nurse, Patient, DrugPackage, Drug, PatientDrug
+from app.models import Nurse, Patient, DrugPackage, Drug, PatientDrug, Refill
 from werkzeug.urls import url_parse
 import datetime
 from threading import Timer
 import csv
 from flask_weasyprint import HTML, render_pdf
+import pprint
+from sqlalchemy import desc
 
 r_status = {'current': "refill"}
 
@@ -53,13 +55,66 @@ def refill():
                 Patient.query.filter_by(patient_id=dp.patient_id).first().name)
                 for dp in dps]
     form = RefillForm()
-    form.drug1.choices = [("0","<None> (Do not refill)")] + \
+    dlist = [(-1,"<None> (Do not refill)")] + \
                          [(d.drug_id, d.name) for d in drugs]
+    dlistdict = dict(dlist)
+    form.drug1.choices = dlist
     form.drug2.choices = form.drug1.choices
     form.dps.choices = fp_form
     if form.validate_on_submit():
-        return redirect(url_for('refill'))
+        return redirect(url_for('refill2', d1=form.drug1.data,
+                                d2=form.drug2.data, dps=form.dps.data,
+                                d1_name=dlistdict.get(form.drug1.data),
+                                d2_name=dlistdict.get(form.drug2.data)))
     return render_template('refill.html', title='Refill Robot', form=form)
+
+
+@app.route('/refill/step2', methods=['GET', 'POST'])
+@login_required
+def refill2():
+    """Refill robot's drug compartments. (Part 2)"""
+    d1 = request.args.get("d1")
+    d1_name = request.args.get("d1_name")
+    d2 = request.args.get("d2")
+    d2_name = request.args.get("d2_name")
+    form = RefillForm2()
+    form.qty1.label.text = d1_name + " Refill Quantity"
+    form.qty2.label.text = d2_name + " Refill Quantity"
+    if form.validate_on_submit():
+        d1_qty = form.qty1.data
+        d2_qty = form.qty2.data
+
+        # Add the refill entry
+        r = Refill(d1_id=d1, d1_qty=d1_qty, d2_id=d2, d2_qty=d2_qty,
+                   refill_time=datetime.datetime.now())
+        db.session.add(r)
+
+        # Update stock levels
+        drug1 = Drug.query.filter_by(drug_id=d1).first()
+        if (drug1 is not None):
+            drug1.stock_qty += d1_qty
+        drug2 = Drug.query.filter_by(drug_id=d2).first()
+        if (drug2 is not None):
+            drug2.stock_qty += d2_qty
+        db.session.commit()
+        flash('Successfully refilled the robot.')
+        return redirect(url_for('stock'))
+    return render_template('refill2.html', title='Refill Robot', form=form)
+
+
+@app.route('/refill/latest', methods=['GET'])
+def refill_latest():
+    """Return latest refill details"""
+    refill = Refill.query.order_by(desc(Refill.refill_time)).first()
+    if (refill is None):
+        return jsonify([])
+    r= [{'refill_time': refill.refill_time,
+         'dispenser1_drugid': refill.d1_id,
+         'dispenser2_drugid': refill.d2_id,
+         'dispenser1_drugqty': refill.d1_qty,
+         'dispenser2_drugqty': refill.d2_qty}]
+    #e = {'': patients_list}
+    return jsonify(r)
 
 
 @app.route('/setup_print')
@@ -440,7 +495,7 @@ def dbread():
                                   'qr_code': patient.qr_code,
                                   'drug_package': dp_insert,
                                   'drugs': drugs})
-    e = {'dispensing': patients_list}
+    e = patients_list
     return jsonify(e)
 
 # Reading the list of assigned drugs
@@ -482,6 +537,12 @@ def dispense_status():
                               })
     #e = {'dataSet': patients_list}
     return jsonify(patients_list)
+
+
+@app.route('/go', methods=['GET'])
+@auto.doc('public')
+def go():
+    return ("True")
 
 
 @app.route('/updatestatus', methods=['PUT'])
