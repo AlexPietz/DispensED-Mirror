@@ -4,6 +4,8 @@ import ev3dev.ev3 as ev3
 import time
 
 def check_identification(colour):
+    print('checking for id colour ' + colour)
+
     colour_codes = {"black": 1, "blue": 2, "green": 3, "yellow": 4, "red": 5, "white": 6, "brown": 7}
     try:
         colour_code = colour_codes[colour]
@@ -12,17 +14,23 @@ def check_identification(colour):
         return False
 
     cl = ev3.ColorSensor(ev3.INPUT_3)
-    cl.mode = 'COL-COLOR'
+    cl.mode = 'COL-REFLECT'
 
     start_time = time.time()
+    initial = cl.value()
 
-    ev3.Sound.speak("Please scan identification").wait()
-    time.sleep(1)
+    ev3.Sound.speak("Please insert and hold identification tag").wait()
+    #time.sleep(1)
+   
+    while time.time() < start_time + 40:
+        if cl.value() <= (initial - 3) or cl.value() >= (initial + 3):
+            cl.mode = 'COL-COLOR'
+            time.sleep(1)
+            if (cl.value() == colour_code):
+                ev3.Sound.speak("Identification scan successful, please remove identification tag").wait()
+                time.sleep(5)
+                return True
 
-    while time.time() < start_time + 20:
-        if (cl.value() == colour_code):
-            ev3.Sound.speak("Identification scan successful, please remove identification tag").wait()
-            time.sleep(5)
-            return True
-
+    ev3.Sound.speak("Identification scan unsuccessful, moving to next patient").wait()
+    time.sleep(5)
     return False

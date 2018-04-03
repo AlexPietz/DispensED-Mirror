@@ -5,7 +5,7 @@ import time
 
 def dispense_package_colour(colour):
 
-    if colour == None:
+    if colour == "None":
         return True
 
     cl = ev3.ColorSensor(ev3.INPUT_2)
@@ -42,7 +42,6 @@ def dispense_package_colour(colour):
         time.sleep(stop_times[colour_code])
         motor.stop()
 
-
     print('found ' + colour)
 
     cl.mode = 'COL-REFLECT'
@@ -58,6 +57,7 @@ def dispense_package_colour(colour):
     while True:
         if cl.value() <= (initial - 2) or cl.value() >= (initial + 2):
             print('Package taken')
+            time.sleep(5)
             return True
         if time.time() > start_time + 30:
             return False

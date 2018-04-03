@@ -29,7 +29,7 @@ def dispense_number(number_pills):
         value = cl_B.value()
         if value <= (initial - 4) or value >= (initial + 4):
             print('Pills taken')
-            time.sleep(3)
+            #time.sleep(10)
             return True
         if time.time() > start_time + 30:
             return False

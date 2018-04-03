@@ -21,13 +21,14 @@ def enter(state):
         start_time = time.time()
     else:
         if (time.time() - start_time > 3):
-            ev3.Sound.speak("Entered refill mode, please select medications to refill on the software system and wait for confirmation").wait()
+            ev3.Sound.speak("Entered refill mode, please select medications to refill on the software system").wait()
             time.sleep(2)
             client.publish("refilling/out", "refill_start")
             return
 
 def dispense(client, userdata, msg):
     msg_string = msg.payload.decode()
+    print(msg_string)
     m_list = msg_string.split(',')
 
     print('dispensing ' + msg_string)
@@ -45,17 +46,17 @@ def dispense(client, userdata, msg):
         if not check_identification(m_list[0]):
             client.publish("dispensing/out", "0")
             return
-
+        print(m_list[1:3])
         if m_list[1:3] != ['0','0']:
             if not dispense_number(m_list[1:3]): # List of pills to dispense for each dispenser
                 client.publish("dispensing/out", "0")
                 return
-
-        if m_list[3] != "none":
-            if not dispense_package_colour(m_list[3]): # Colour of package to dispense
-                client.publish("dispensing/out", "0")
-                return
-
+        if m_list[3] == "None":
+            time.sleep(10)
+        elif not dispense_package_colour(m_list[3]): # Colour of package to dispense
+            client.publish("dispensing/out", "0")
+            return
+        print("returning sucess")
         client.publish("dispensing/out", "1")
 
 start_time = 0

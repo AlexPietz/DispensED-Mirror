@@ -3,7 +3,12 @@ import sys
 import ev3dev.ev3 as ev3
 import time
 
-
+cl = ev3.ColorSensor(ev3.INPUT_2)
+cl.mode = 'COL-COLOR'
+motor = ev3.Motor('outC')
+colour_codes = {"black": 1, "blue": 2, "green": 3, "yellow": 4, "red": 5, "white": 6, "brown": 7}
+colour_code = 1
+attempts_count = 0  # no. of attempts at finding empty slot
 
 
 def attempt():
@@ -28,13 +33,14 @@ def attempt():
 
 def refill_pack(colours_to_add):
 
-
+    
     cl = ev3.ColorSensor(ev3.INPUT_2)
     cl.mode = 'COL-COLOR'
     motor = ev3.Motor('outC')
     colour_codes = {"black": 1, "blue": 2, "green": 3, "yellow": 4, "red": 5, "white": 6, "brown": 7}
     colour_code = 1
     attempts_count = 0  # no. of attempts at finding empty slot
+
 
 
     colours_added = []
