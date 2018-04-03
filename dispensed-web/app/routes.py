@@ -305,7 +305,7 @@ def newpatient():
     if form.validate_on_submit():
         p = Patient(name=form.name.data, age=int(form.age.data),
                     qr_code=form.qr_code.data, sex=form.sex.data,
-                    details=form.details.data, colour=form.colour.data)
+                    details=form.details.data, id_colour=form.colour.data)
         db.session.add(p)
         db.session.commit()
         flash('New Patient Registered :' + form.name.data)
@@ -394,7 +394,7 @@ def edit_patient():
         form.age.data = str(patient.age)
         form.qr_code.data = patient.qr_code
         form.details.data = patient.details
-        form.colour.data = patient.colour
+        form.colour.data = patient.id_colour
     if form.validate_on_submit():
         patient.name = form.name.data
         patient.age = int(form.age.data)
