@@ -126,13 +126,17 @@ def refill_latest():
     refill = Refill.query.order_by(desc(Refill.refill_time)).first()
     if (refill is None):
         return jsonify([])
-    r= [{'refill_time': refill.refill_time,
+    r = {'refill_time': refill.refill_time,
          'dispenser1_drugid': refill.d1_id,
          'dispenser2_drugid': refill.d2_id,
          'dispenser1_drugqty': refill.d1_qty,
-         'dispenser2_drugqty': refill.d2_qty}]
+         'dispenser2_drugqty': refill.d2_qty}
+    i = 1
+    for dp in refilling['packages']:
+        r['drug_package' + str(i)] = dp
+        i += 1
     #e = {'': patients_list}
-    return jsonify(r)
+    return jsonify([r])
 
 
 @app.route('/setup_print')
