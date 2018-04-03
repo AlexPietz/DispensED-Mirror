@@ -28,6 +28,26 @@ def on_message(client, userdata, msg):
         else:
             dispensing_return = 2
 
+    if msg.topic == "refilling/out":
+        if string == "refill_start":
+            requests.put(server_hostname + "/updatestatus", data={'status': 'refilling', 'details': ''})
+            while True:
+                r = requests.get().json()
+                if r['set']:
+                    refillstring = ''
+                    if r['singles']:
+                        refillstring += '1'
+                    else:
+                        refillstring += '0'
+                    for package in r['packages']:
+                        refillstring += ',' + package
+                    break
+
+        if string == "0":
+            requests.put(server_hostname + "/updatestatus", data={'status': 'error', 'details': 'Refilling failed'})
+        if string == "1":
+            requests.put(server_hostname + "/updatestatus", data={'status': 'idle', 'details': ''})
+
 
 def handle_qr(data):
     global line_colour
