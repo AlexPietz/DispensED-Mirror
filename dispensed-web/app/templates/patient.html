@@ -166,7 +166,7 @@
             <div class="panel-body">
                 <div class="container">
                     <div class="col-sm-12" style="float: right; margin: auto auto 0 auto">
-                        <form style="display:inline;" id='del_cp{{patient.patient_id}}' action='{{url_for('change_package',patient_id=patient.patient_id,delete="True")}}' method='post'></form>
+                        <form style="display:inline;" id='del_cp{{patient.patient_id}}' action='{{url_for('delete_package',patient_id=patient.patient_id,)}}' method='post'></form>
                         <button style="display:inline;" class='btn btn-warning' onclick="ConfirmDelete('del_cp{{patient.patient_id}}')">Unassign Drug Package</button>
                         <a href="{{url_for('edit_patient', patient_id=patient.patient_id )}}" class="btn btn-success btn-outline"> {{utils.icon('pencil')}} Edit</a>
                         <form style="display:inline;" id='del_pt{{patient.patient_id}}' action='{{url_for('delete_patient',patient_id=patient.patient_id)}}' method='post'></form>

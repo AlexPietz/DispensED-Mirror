@@ -343,12 +343,6 @@ def change_package():
     #if request.method == 'GET':
     #    return render_template('changedp.html', title='Assign Drug Package', form=form)
     #if request.method == 'POST':
-    if (request.args['delete']):
-        dp = DrugPackage.query.filter_by(patient_id=pid).first()
-        db.session.delete(dp)
-        db.session.commit()
-        flash("Successfully deleted patient's drug package")
-        return redirect(url_for('patient', patient_id=pid))
     # else:
     if form.validate_on_submit():
         dp = DrugPackage.query.filter_by(patient_id=pid).first()
@@ -362,6 +356,24 @@ def change_package():
             flash("Successfully assigned new drug package")
         return redirect(url_for('patient', patient_id=pid))
     return render_template('changedp.html', title='Assign Drug Package', form=form)
+
+
+@app.route('/patient/deletepackage', methods=['POST','GET'])
+@auto.doc('private')
+@login_required
+def delete_package():
+    """Add or delete the package assigned to a patient."""
+    form = ChangeDrugPackageForm()
+    pid = request.args['patient_id']
+    #if request.method == 'GET':
+    #    return render_template('changedp.html', title='Assign Drug Package', form=form)
+    #if request.method == 'POST':
+    dp = DrugPackage.query.filter_by(patient_id=pid).first()
+    db.session.delete(dp)
+    db.session.commit()
+    flash("Successfully deleted patient's drug package")
+    return redirect(url_for('patient', patient_id=pid))
+
 
 @app.route('/patient/delete', methods=['POST'])
 @auto.doc('private')
