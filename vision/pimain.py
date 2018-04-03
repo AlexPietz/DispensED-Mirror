@@ -59,10 +59,14 @@ def handle_qr(data):
     if string.startswith("start"):
         while True:
             r = requests.get(server_hostname + "/dbread").json()
+            print(r)
             if len(r) > 0:
-                requests.put(server_hostname + "/updatestatus", data={'status': 'dispensing', 'details': ''})
+                r2 = requests.put(server_hostname + "/updatestatus", data={'status': 'dispensing', 'details': ''})
+                print(r2.text)
                 line_colour = int(string.split(',')[1])
                 patients = r
+                break
+            time.sleep(5)
 
     # Return to base
     if string.startswith("return"):
