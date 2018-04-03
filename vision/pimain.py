@@ -9,7 +9,7 @@ import requests
 import json
 
 dispensing_return = 0
-line_colour = 0
+line_colour = 256
 server_hostname = "http://34.245.208.59:5000"
 patients = []
 
@@ -158,6 +158,8 @@ while True:
         # Loop until we find a QR
         print('SCANNING')
         while True:
+            if line_colour == 256:
+                break
             frame = vs.read()
 
             # We only want to read a QR code if we've not just seen one
