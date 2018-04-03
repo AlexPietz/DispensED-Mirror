@@ -12,7 +12,7 @@ from flask_weasyprint import HTML, render_pdf
 import pprint
 from sqlalchemy import desc
 
-r_status = {'current': "refill"}
+r_status = {'current': "idle"}
 go_status = {'current': False}
 first_time = {'setup': True}
 refilling = {'set': False, 'singles': False, 'packages': []}
@@ -340,27 +340,28 @@ def change_package():
     """Add or delete the package assigned to a patient."""
     form = ChangeDrugPackageForm()
     pid = request.args['patient_id']
-    if request.method == 'GET':
-        return render_template('changedp.html', title='Assign Drug Package', form=form)
-    if request.method == 'PST':
-        if (request.args['delete']):
-            db.session.delete(dp)
-            db.session.commit()
-            flash("Successfully deleted patient's drug package")
-            return redirect(url_for('patient', patient_id=pid))
-    else:
-        if form.validate_on_submit():
-            dp = DrugPackage.query.filter_by(patient_id=pid).first()
-            if (dp is None):  # Sanity check
-                dp = DrugPackage(
-                    patient_id=pid,
-                    time=form.time.data
-                )
-                db.session.add(dp)
-                db.session.commit()
-                flash("Successfully assigned new drug package")
+    #if request.method == 'GET':
+    #    return render_template('changedp.html', title='Assign Drug Package', form=form)
+    #if request.method == 'POST':
+    if (request.args['delete']):
+        dp = DrugPackage.query.filter_by(patient_id=pid).first()
+        db.session.delete(dp)
+        db.session.commit()
+        flash("Successfully deleted patient's drug package")
         return redirect(url_for('patient', patient_id=pid))
-
+    # else:
+    if form.validate_on_submit():
+        dp = DrugPackage.query.filter_by(patient_id=pid).first()
+        if (dp is None):  # Sanity check
+            dp = DrugPackage(
+                patient_id=pid,
+                time=form.time.data
+            )
+            db.session.add(dp)
+            db.session.commit()
+            flash("Successfully assigned new drug package")
+        return redirect(url_for('patient', patient_id=pid))
+    return render_template('changedp.html', title='Assign Drug Package', form=form)
 
 @app.route('/patient/delete', methods=['POST'])
 @auto.doc('private')
@@ -500,8 +501,8 @@ def dbread():
     """Read the database and return the patients data in json format."""
     patients = Patient.query.all()
     patients_list = []
-    time1 = datetime.datetime.now() - datetime.timedelta(minutes=15)
-    time2 = datetime.datetime.now() + datetime.timedelta(minutes=15)
+    time1 = datetime.datetime.now() - datetime.timedelta(minutes=1500)
+    time2 = datetime.datetime.now() + datetime.timedelta(minutes=1500)
     for patient in patients:
         dp = DrugPackage.query.filter_by(patient_id=patient.patient_id).first()
         drugs = []
@@ -597,6 +598,11 @@ def go_true():
 @auto.doc('public')
 def update_status():
     status = request.json.get('status')
+    print(request.json)
+    print("f")
+    print(request.form)
+    print("d")
+    print(request.data)
     valid = ["idle", "dispensing", "error", "refill"]
     if (status not in valid):  # Sanity check
         return "Error Invalid POST data."
