@@ -55,8 +55,7 @@ class RefillForm(FlaskForm):
     drug1 = SelectField('Drug to be filled into Dispenser 1', choices=[("0","Select Drug")], coerce=int)
     drug2 = SelectField('Drug to be filled into Dispenser 2', choices=[("0","Select Drug")], coerce=int)
     dps = SelectMultipleField('Packaged drugs for the following patients:'
-                                  ,choices=[(None, "<no patients have packages assigned>")]
-                              ,coerce=int)
+                                  ,choices=[(None, "<no patients have packages assigned>")])
     #qty = IntegerField('Quantity', validators=[DataRequired(),
     #                                           NumberRange(min=1)])
     submit = SubmitField('Add')

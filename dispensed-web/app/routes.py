@@ -15,6 +15,7 @@ from sqlalchemy import desc
 r_status = {'current': "refill"}
 go_status = {'current': False}
 first_time = {'setup': True}
+refilling = {'set': False, 'singles': False, 'packages': []}
 
 # Redirect to login if not logged in
 @login.unauthorized_handler
@@ -59,7 +60,7 @@ def refill():
     """Refill robot's drug compartments."""
     drugs = Drug.query.all()
     dps = DrugPackage.query.all()
-    fp_form = [(dp.package_id,
+    fp_form = [(Patient.query.filter_by(patient_id=dp.patient_id).first().id_colour,
                 Patient.query.filter_by(patient_id=dp.patient_id).first().name)
                 for dp in dps]
     form = RefillForm()
@@ -70,10 +71,19 @@ def refill():
     form.drug2.choices = form.drug1.choices
     form.dps.choices = fp_form
     if form.validate_on_submit():
-        return redirect(url_for('refill2', d1=form.drug1.data,
-                                d2=form.drug2.data, dps=form.dps.data,
-                                d1_name=dlistdict.get(form.drug1.data),
-                                d2_name=dlistdict.get(form.drug2.data)))
+        d1=form.drug1.data
+        d2=form.drug2.data
+        dps=form.dps.data
+        d1_name=dlistdict.get(form.drug1.data)
+        d2_name=dlistdict.get(form.drug2.data)
+        if(d1 == -1 and d2 == -1):
+            refilling['singles'] = False
+        else:
+            refilling['singles'] = True
+        refilling['packages'] = dps
+        refilling['set'] = True
+        return redirect(url_for('refill2',
+                        d1=d1,d2=d2,dps=dps,d1_name=d1_name,d2_name=d2_name))
     return render_template('refill.html', title='Refill Robot', form=form)
 
 
@@ -556,6 +566,14 @@ def dispense_status():
                               })
     #e = {'dataSet': patients_list}
     return jsonify(patients_list)
+
+
+@app.route('/refill/data', methods=['GET'])
+@auto.doc('public')
+def refill_data():
+    r = refilling.copy()
+    refilling['set'] = False
+    return jsonify(r)
 
 
 @app.route('/go', methods=['GET'])
