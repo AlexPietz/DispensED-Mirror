@@ -15,8 +15,8 @@ def refill_indi():
     motor_A = ev3.MediumMotor('outB')
     motor_B = ev3.MediumMotor('outD')
 
-    ev3.Sound.speak("Entered individual dispenser refill mode, please wait").wait()
-    time.sleep(2)
+    #ev3.Sound.speak("Entered individual dispenser refill mode, please wait").wait()
+    #time.sleep(2)
 
     motor_A.run_timed(speed_sp=-250, time_sp=190)
     motor_B.run_timed(speed_sp=-250, time_sp=190)

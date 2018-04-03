@@ -21,6 +21,8 @@ def enter(state):
         start_time = time.time()
     else:
         if (time.time() - start_time > 3):
+            ev3.Sound.speak("Entered refill mode, please select medications to refill on the software system and wait for confirmation").wait()
+            time.sleep(2)
             client.publish("refilling/out", "refill_start")
             return
 
