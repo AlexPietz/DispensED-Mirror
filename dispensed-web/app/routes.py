@@ -513,8 +513,8 @@ def dbread():
     """Read the database and return the patients data in json format."""
     patients = Patient.query.all()
     patients_list = []
-    time1 = datetime.datetime.now() - datetime.timedelta(minutes=1500)
-    time2 = datetime.datetime.now() + datetime.timedelta(minutes=1500)
+    time1 = datetime.datetime.now() - datetime.timedelta(minutes=150)
+    time2 = datetime.datetime.now() + datetime.timedelta(minutes=150)
     for patient in patients:
         dp = DrugPackage.query.filter_by(patient_id=patient.patient_id).first()
         drugs = []
@@ -630,19 +630,27 @@ def dispensed():
     patient_id = request.json.get('patient_id')
     drug_id = request.json.get('drug_id')
     time = request.json.get('time')
+    print("got dispensed with: pid:" + str(patient_id) + " did:" + str(drug_id) + "time:" + time)
     if (patient_id is None or drug_id is None or time is None):
+        print("Data not complete")
         return jsonify({'result': False})
     patient = Patient.query.filter_by(patient_id=patient_id).first()
     drug = Drug.query.filter_by(drug_id=drug_id).first()
     for assoc in patient.drugs:
+        #print("in assoc")
+        #print("T1="+assoc.time.strftime('%H:%M')+" T2="+time)
+        #print(str(assoc.time.strftime('%H:%M')) == time)
+        #print(assoc.drug.drug_id)
+        #print(drug_id)
         if (assoc.time.strftime('%H:%M') == time and
-                str(assoc.drug.drug_id) == drug_id):
+                assoc.drug.drug_id == drug_id):
             assoc.dispensed = 1
             drug.stock_qty -= assoc.qty
             if (drug.stock_qty < 0):
                 drug.stock_qty = 0
             db.session.commit()
             return jsonify({'result': True})
+    print("unkn")
     return jsonify({'result': False})
 
 
