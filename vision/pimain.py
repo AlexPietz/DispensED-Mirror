@@ -31,7 +31,7 @@ def on_message(client, userdata, msg):
 
     if msg.topic == "refilling/out":
         if string == "refill_start":
-            requests.put(server_hostname + "/updatestatus", data=json.dump({'status': 'refilling', 'details': ''}))
+            requests.put(server_hostname + "/updatestatus", data=json.dumps({'status': 'refilling', 'details': ''}))
             while True:
                 r = requests.get().json()
                 if r['set']:
@@ -45,9 +45,9 @@ def on_message(client, userdata, msg):
                     break
 
         if string == "0":
-            requests.put(server_hostname + "/updatestatus", data=json.dump({'status': 'error', 'details': 'Refilling failed'}))
+            requests.put(server_hostname + "/updatestatus", data=json.dumps({'status': 'error', 'details': 'Refilling failed'}))
         if string == "1":
-            requests.put(server_hostname + "/updatestatus", data=json.dump({'status': 'idle', 'details': ''}))
+            requests.put(server_hostname + "/updatestatus", data=json.dumps({'status': 'idle', 'details': ''}))
 
 
 def handle_qr(data):
@@ -62,7 +62,7 @@ def handle_qr(data):
             r = requests.get(server_hostname + "/dbread").json()
             print(r)
             if len(r) > 0:
-                r2 = requests.put(server_hostname + "/updatestatus", data=json.dump({'status': 'dispensing', 'details': ''}))
+                r2 = requests.put(server_hostname + "/updatestatus", data=json.dumps({'status': 'dispensing', 'details': ''}))
                 print(r2.text)
                 line_colour = int(string.split(',')[1])
                 patients = r
@@ -71,7 +71,7 @@ def handle_qr(data):
 
     # Return to base
     if string.startswith("return"):
-        r = requests.put(server_hostname + "/updatestatus", data=json.dump({'status': 'dispensing', 'details': 'Returning to base'}))
+        r = requests.put(server_hostname + "/updatestatus", data=json.dumps({'status': 'dispensing', 'details': 'Returning to base'}))
         line_colour = int(string.split(',')[1])
 
     # Send necessary details to dispenser
@@ -105,13 +105,13 @@ def dispense(string, id, time_a, time_b):
         if dispensing_return == 1:
             dispensing_return = 0
             if len(time_a > 0):
-                requests.put(server_hostname + "/dispensed", data=json.dump({'patient_id': id, 'drug_id': 1, 'time': time_a}))
+                requests.put(server_hostname + "/dispensed", data=json.dumps({'patient_id': id, 'drug_id': 1, 'time': time_a}))
             if len(time_b > 0):
-                requests.put(server_hostname + "/dispensed", data=json.dump({'patient_id': id, 'drug_id': 2, 'time': time_b}))
+                requests.put(server_hostname + "/dispensed", data=json.dumps({'patient_id': id, 'drug_id': 2, 'time': time_b}))
             break
         if dispensing_return == 2:
             dispensing_return = 0
-            r = requests.put(server_hostname + "/updatestatus", data=json.dump({'status': 'error', 'details': 'patient has not picked up medication'}))
+            r = requests.put(server_hostname + "/updatestatus", data=json.dumps({'status': 'error', 'details': 'patient has not picked up medication'}))
             break
 
 
@@ -148,7 +148,7 @@ while True:
                 if line_panic > 10:
                     # Failed to find the initial QR - stop
 
-                    r = requests.put(server_hostname + "/updatestatus", data=json.dump({'status': 'error', 'details': 'cannot find first QR'}))
+                    r = requests.put(server_hostname + "/updatestatus", data=json.dumps({'status': 'error', 'details': 'cannot find first QR'}))
                     break
 
 
@@ -198,7 +198,7 @@ while True:
                     time.sleep(0.2)
                     client.publish("movement", "stop")
                     break
-                    r = requests.put(server_hostname + "/updatestatus", data=json.dump({'status': 'error', 'details': 'lost line'}))
+                    r = requests.put(server_hostname + "/updatestatus", data=json.dumps({'status': 'error', 'details': 'lost line'}))
                 line_panic += 1
 
     else:
