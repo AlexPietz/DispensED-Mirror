@@ -57,7 +57,9 @@ def dispense(client, userdata, msg):
             client.publish("dispensing/out", "0")
             return
         print("returning sucess")
-        client.publish("dispensing/out", "1")
+        for i in range(0, 10):
+            client.publish("dispensing/out", "1")
+        return
 
 start_time = 0
 btn = ev3.Button()

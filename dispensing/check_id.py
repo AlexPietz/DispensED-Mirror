@@ -21,16 +21,16 @@ def check_identification(colour):
 
     ev3.Sound.speak("Please insert and hold identification tag").wait()
     #time.sleep(1)
-   
+
     while time.time() < start_time + 40:
         if cl.value() <= (initial - 3) or cl.value() >= (initial + 3):
             cl.mode = 'COL-COLOR'
             time.sleep(1)
             if (cl.value() == colour_code):
-                ev3.Sound.speak("Identification scan successful, please remove identification tag").wait()
+                ev3.Sound.speak("Identification check successful, please remove identification tag").wait()
                 time.sleep(5)
                 return True
 
-    ev3.Sound.speak("Identification scan unsuccessful, moving to next patient").wait()
+    ev3.Sound.speak("Identification check unsuccessful, moving to next patient").wait()
     time.sleep(5)
     return False
